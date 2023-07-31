@@ -1,5 +1,5 @@
-import 'package:drivn_app/screens/login_screen.dart';
-import 'package:drivn_app/screens/register_screen.dart';
+import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
+import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -31,37 +31,29 @@ class WelcomeScreen extends StatelessWidget {
                   horizontal: 40,
                   // vertical: 5,
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 350,
-                      height: 54,
-                      child: Expanded(
-                        child: MaterialButton(
-                          color: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: Text(
-                              "Login",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
+                child: Expanded(
+                  child: MaterialButton(
+                    color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -112,7 +104,7 @@ class WelcomeScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RegisterScreen(),
+                                builder: (context) => RegisterView(),
                               ),
                             );
                           },

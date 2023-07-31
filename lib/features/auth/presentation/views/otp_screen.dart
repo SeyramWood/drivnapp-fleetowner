@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class OtpScreen extends StatelessWidget {
-  const OtpScreen({super.key});
+class OTPInputView extends StatelessWidget {
+  const OTPInputView({super.key});
 
   @override
   Widget build(BuildContext context) {

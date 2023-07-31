@@ -1,5 +1,5 @@
-import 'package:drivn_app/screens/onboarding_screens/intro_page_1.dart';
-import 'package:drivn_app/screens/welcome_screen.dart';
+import 'package:drivn_app/app/onboarding_screens/intro_page_1.dart';
+import 'package:drivn_app/app/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
+import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'screens/get_started.dart';
 // import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 void main() {
@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // home: OnBoardingScreen(),
-      home: GetStarted(),
+      theme: ThemeData(useMaterial3: true),
+      home: RegisterView(),
     );
   }
 }

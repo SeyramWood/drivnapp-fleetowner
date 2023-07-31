@@ -1,9 +1,7 @@
-
-import 'package:drivn_app/screens/register_screen.dart';
+import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn_app/components/user_inputs/username_input_validator.dart';
 
-import '../components/user_inputs/email_input_decoration.dart';
 import 'enter_otp_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -88,7 +86,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     TextFormField(
                       controller: _controllerUsername,
                       keyboardType: TextInputType.name,
-                      decoration: getEmailInputDecoration(),
+                      // decoration: getEmailInputDecoration(),
                       onEditingComplete: () =>
                           _focusNodePassword.requestFocus(),
                       style: TextStyle(color: Colors.white),
@@ -102,7 +100,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         children: [
                           Expanded(
                             child: MaterialButton(
-                              color:  Colors.black,
+                              color: Colors.black,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -144,7 +142,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RegisterScreen(),
+                                builder: (context) => RegisterView(),
                               ),
                             );
                           },
