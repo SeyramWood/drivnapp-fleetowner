@@ -38,10 +38,8 @@ class WelcomeScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginView()));
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(15.0),

@@ -1,8 +1,10 @@
 import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn_app/utils/contants/colors.dart';
+import 'package:drivn_app/utils/extentions/on.elevated.button.dart';
 import 'package:flutter/material.dart';
+import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
-import 'otp_screen.dart';
+import 'otp.input.view.dart';
 
 class RegisterView extends StatefulWidget {
   RegisterView({Key? key}) : super(key: key);
@@ -119,25 +121,20 @@ class _RegisterViewState extends State<RegisterView> {
                     suffixIcon: Icons.visibility,
                   ),
                   // const SizedBox(height: 10),
-                  SizedBox(
-                    height: 50,
-                    width: MediaQuery.sizeOf(context).width,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Register'),
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                        backgroundColor: MaterialStateProperty.all(black),
-                        foregroundColor: MaterialStateProperty.all(white),
+                  CustomElevatedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OTPInputView(),
                       ),
                     ),
-                  ),
+                    child: Text('Register'),
+                  ).loading(false),
                   const SizedBox(height: 24),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                            builder: (context) => LoginScreen(key: widget.key)),
+                            builder: (context) => LoginView(key: widget.key)),
                         (route) => false),
                     child: RichText(
                       text: TextSpan(

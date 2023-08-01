@@ -7,14 +7,14 @@ class CustomFormField extends StatelessWidget {
     required this.controller,
     required this.labelText,
     this.validator,
-    required this.prefixIcon,
+    this.prefixIcon,
     this.suffixIcon,
   });
 
   final TextEditingController controller;
   final String labelText;
   final String? Function(String?)? validator;
-  final IconData prefixIcon;
+  final IconData? prefixIcon;
   final IconData? suffixIcon;
 
   @override
@@ -29,7 +29,6 @@ class CustomFormField extends StatelessWidget {
           labelStyle: TextStyle(color: yellow),
           prefixIcon: Icon(prefixIcon),
           suffixIcon: Icon(suffixIcon),
-
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: white),
