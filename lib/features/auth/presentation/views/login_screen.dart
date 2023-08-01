@@ -1,7 +1,7 @@
 import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
 import 'package:flutter/material.dart';
-import 'package:drivn_app/features/auth/presentation/views/forgot_password.view.dart';
+import 'package:drivn_app/features/auth/presentation/views/request.password.reset.view.dart';
 
 import '../../../../app/home.dart';
 import '../../../../utils/contants/colors.dart';
@@ -96,7 +96,7 @@ class _LoginViewState extends State<LoginView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ForgotPasswordView(),
+                          builder: (context) => RequestPinView(),
                         ),
                       );
                     },
