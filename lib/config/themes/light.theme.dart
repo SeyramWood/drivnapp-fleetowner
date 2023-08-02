@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/contants/colors.dart';
+import '../../utils/constants/colors.dart';
 
 class AppLightTheme {
   static ThemeData get themeData {
@@ -13,13 +13,16 @@ class AppLightTheme {
           color: Colors.blue,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-          shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-          backgroundColor: MaterialStateProperty.all(black),
-          foregroundColor: MaterialStateProperty.all(white),
-        ))
-        // Add other theme configurations as needed.
-        );
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+            backgroundColor: MaterialStateProperty.all(black),
+            foregroundColor: MaterialStateProperty.all(white),
+          ),
+        ),
+        textTheme: TextTheme(
+          headlineLarge: TextStyle(color: white),
+          headlineSmall: TextStyle(color: white, fontSize: 18),
+        ));
   }
 }

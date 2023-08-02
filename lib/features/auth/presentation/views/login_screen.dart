@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:drivn_app/features/auth/presentation/views/request.password.reset.view.dart';
 
 import '../../../../app/home.dart';
-import '../../../../utils/contants/colors.dart';
+import '../../../../utils/constants/colors.dart';
 import '../widget/formfield.dart';
 
 class LoginView extends StatefulWidget {

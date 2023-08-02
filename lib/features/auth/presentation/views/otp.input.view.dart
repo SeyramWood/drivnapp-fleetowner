@@ -1,9 +1,9 @@
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/utils/contants/colors.dart';
+import 'package:drivn_app/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
-import 'get_verified_option_screen.dart';
+import 'verifyOwner/verify.user.view.dart';
 
 class OTPInputView extends StatelessWidget {
   const OTPInputView({Key? key}) : super(key: key);
@@ -12,23 +12,18 @@ class OTPInputView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: blue,
-      appBar: AppBar(
-        title: Text(
-          'Enter Verification Code',
-          style: TextStyle(
-            color: white,
-          ),
-        ),
-        backgroundColor: blue,
-        elevation: 0,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-      ),
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Text(
+              'Enter OTP',
+              style: TextStyle(
+                color: white,
+                fontSize: 40,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Image.asset(
