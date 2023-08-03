@@ -9,13 +9,15 @@ class CustomFormField extends StatelessWidget {
     this.validator,
     this.prefixIcon,
     this.suffixIcon,
+    this.prefix,
   });
 
   final TextEditingController controller;
   final String labelText;
   final String? Function(String?)? validator;
-  final IconData? prefixIcon;
+  final Icon? prefixIcon;
   final IconData? suffixIcon;
+  final Widget? prefix;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,9 @@ class CustomFormField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(color: yellow),
-          prefixIcon: Icon(prefixIcon),
+          contentPadding: EdgeInsets.all(10),
+          prefixIcon: prefixIcon,
+          prefix: prefix,
           suffixIcon: Icon(suffixIcon),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
