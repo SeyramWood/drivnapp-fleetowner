@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 import '../components/new_card.dart';
 
-class HomePage extends StatelessWidget {
+class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,12 +20,9 @@ class HomePage extends StatelessWidget {
           body: TabBarView(
             children: [
               Center(
-              
                 child: MyCard2(),
-
               ),
               Center(
-                
                 child: MyCard2(),
               ),
             ],

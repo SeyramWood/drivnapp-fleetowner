@@ -1,5 +1,7 @@
 import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
+import 'package:drivn_app/features/auth/presentation/widget/country.picker.dart';
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn_app/features/auth/presentation/views/request.password.reset.view.dart';
 
@@ -28,7 +30,7 @@ class _LoginViewState extends State<LoginView> {
       // Navigate to the home screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => HomeView()),
       );
     }
   }
@@ -56,7 +58,7 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 50),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
         child: ListView(
           children: [
             Padding(
@@ -80,15 +82,13 @@ class _LoginViewState extends State<LoginView> {
               key: _formKey,
               child: Column(
                 children: [
-                  CustomFormField(
+                  CodePickerField(
                     controller: _emailController,
-                    labelText: 'Email',
-                    prefixIcon: Icons.email_outlined,
                   ),
                   CustomFormField(
                     controller: _passwordController,
                     labelText: 'Password',
-                    prefixIcon: Icons.password_outlined,
+                    prefixIcon: Icon(Icons.password_outlined),
                     suffixIcon: Icons.visibility,
                   ),
                   TextButton(
@@ -141,6 +141,13 @@ class _LoginViewState extends State<LoginView> {
                           ]),
                     ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GoogleButton(
+                    onTap: () {},
+                    title: 'Login',
+                  )
                 ],
               ),
             ),
