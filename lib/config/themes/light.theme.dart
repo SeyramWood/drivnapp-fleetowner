@@ -8,9 +8,9 @@ class AppLightTheme {
         // primaryColor: blue,
         colorScheme: ColorScheme.fromSeed(seedColor: blue),
         useMaterial3: true,
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: white,
         appBarTheme: AppBarTheme(
-          color: Colors.blue,
+          color: white,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(

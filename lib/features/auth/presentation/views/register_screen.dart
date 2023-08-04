@@ -3,7 +3,6 @@ import 'package:drivn_app/features/auth/presentation/widget/country.picker.dart'
 import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
 import 'package:drivn_app/utils/constants/colors.dart';
 import 'package:drivn_app/utils/extentions/on.elevated.button.dart';
-import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
@@ -48,9 +47,6 @@ class _RegisterViewState extends State<RegisterView> {
     _repeatPasswordController.dispose();
     super.dispose();
   }
-
-  final countryPicker = const FlCountryCodePicker();
-  CountryCode? code;
 
   @override
   Widget build(BuildContext context) {

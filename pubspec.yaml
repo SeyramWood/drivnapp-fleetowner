@@ -37,8 +37,6 @@ dependencies:
   flutter_native_splash: ^2.3.1
   smooth_page_indicator: ^1.1.0
   pinput: ^2.2.31
-  country_code_picker: ^3.0.0
-  fl_country_code_picker: ^0.1.4
   intl_phone_number_input: ^0.7.3+1
 
 
