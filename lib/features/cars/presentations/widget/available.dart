@@ -1,3 +1,4 @@
+import 'package:drivn_app/features/cars/presentations/switch_icon_icons.dart';
 import 'package:drivn_app/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -6,16 +7,10 @@ class CarsAvailableBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: const [
-        SizedBox(
-          height: 200,
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: CarTile(),
-        ),
-      ],
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return CarTile();
+      },
     );
   }
 }
@@ -29,18 +24,18 @@ class CarTile extends StatelessWidget {
       color: white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        child: Row(children: [
           SizedBox(
-            width: MediaQuery.sizeOf(context).width / 3,
+            width: MediaQuery.sizeOf(context).width / 3.5,
             child: Container(
-              child: Image.asset('assets/logo.png'),
+              padding: EdgeInsets.only(right: 5),
+              child: Image.asset('assets/car1.png'),
             ),
           ),
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                //this container has the cars name and it's ratings
+                //this container has the car's name and it's ratings
                 Container(
                   padding: EdgeInsets.all(5),
                   height: 45,
@@ -49,25 +44,25 @@ class CarTile extends StatelessWidget {
                     border: Border.all(color: black.withOpacity(0.2)),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Row(
-                      key: key,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Mercedes Benz'),
-                        Spacer(),
-                        Icon(
-                          Icons.star_border_outlined,
-                          color: yellow,
-                        ),
-                        Text('4.8')
-                      ]),
+                  child: Row(children: [
+                    Text('Mercedes Benz'),
+                    Spacer(),
+                    Icon(
+                      Icons.star_border_outlined,
+                      color: yellow,
+                    ),
+                    Text('4.8')
+                  ]),
                 ),
-                ///////
+                SizedBox(height: 15),
+                /*
+                 */
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('& 20'),
+                    Text('\$ 20'),
                     SizedBox(
-                      width: 5,
+                      width: 10,
                     ),
                     Row(
                       children: [
@@ -75,28 +70,27 @@ class CarTile extends StatelessWidget {
                           'With driver',
                           style: TextStyle(fontSize: 10),
                         ),
-                        Transform.scale(
-                          scale: 0.2,
-                          child: Switch(
-                            onChanged: (value) {},
-                            value: true,
-                          ),
-                        ),
+                        SizedBox(width: 5),
+                        Icon(
+                          SwitchIcon.toggle_on,
+                          color: yellow,
+                          size: 15,
+                        )
                       ],
                     ),
+                    SizedBox(width: 10),
                     Row(
                       children: [
                         Text(
-                          'With driver',
+                          'Ride sharing',
                           style: TextStyle(fontSize: 10),
                         ),
-                        Transform.scale(
-                          scale: 0.2,
-                          child: Switch(
-                            onChanged: (value) {},
-                            value: true,
-                          ),
-                        ),
+                        SizedBox(width: 5),
+                        Icon(
+                          SwitchIcon.toggle_off,
+                          color: black,
+                          size: 15,
+                        )
                       ],
                     ),
                   ],

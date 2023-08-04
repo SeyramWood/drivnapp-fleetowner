@@ -28,7 +28,7 @@ class MyCars extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () => clicked.isClicked(true),
                       child: Container(
-                        height: 50,
+                        height: 40,
                         width: MediaQuery.sizeOf(context).width / 2,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -54,7 +54,7 @@ class MyCars extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () => clicked.isClicked(false),
                       child: Container(
-                        height: 50,
+                        height: 40,
                         width: MediaQuery.sizeOf(context).width / 2,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
