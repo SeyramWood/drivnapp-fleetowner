@@ -25,11 +25,13 @@ class CustomFormField extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
         controller: controller,
-        autofocus: true,
+        // autofocus: true,
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(color: yellow),
-          contentPadding: EdgeInsets.all(10),
+          prefixIconColor: white,
+          suffixIconColor: white,
+          contentPadding: EdgeInsets.symmetric(horizontal: 50),
           prefixIcon: prefixIcon,
           prefix: prefix,
           suffixIcon: Icon(suffixIcon),
