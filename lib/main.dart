@@ -1,6 +1,5 @@
 import 'package:drivn_app/config/themes/light.theme.dart';
-import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
-import 'package:drivn_app/features/cars/presentations/views/my.cars.dart';
+import 'package:drivn_app/features/cars/presentations/views/car.detail.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppLightTheme.themeData,
-      home: MyCars(),
+      home: CarDetails(),
     );
   }
 }
