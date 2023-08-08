@@ -22,6 +22,7 @@ class AppLightTheme {
         ),
         textTheme: TextTheme(
           headlineLarge: TextStyle(color: white),
+          headlineMedium: TextStyle(fontSize: 22),
           headlineSmall: TextStyle(color: white, fontSize: 18),
         ));
   }
