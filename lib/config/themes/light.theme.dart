@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/constants/colors.dart';
+import '../../shared/utils/constants/colors.dart';
 
 class AppLightTheme {
   static ThemeData get themeData {
@@ -8,7 +8,7 @@ class AppLightTheme {
         // primaryColor: blue,
         colorScheme: ColorScheme.fromSeed(seedColor: blue),
         useMaterial3: true,
-        scaffoldBackgroundColor: white,
+        // scaffoldBackgroundColor: white,
         appBarTheme: AppBarTheme(
           color: white,
         ),

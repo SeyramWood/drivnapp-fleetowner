@@ -1,7 +1,7 @@
-import 'package:drivn_app/features/cars/presentations/widget/car.carousel.dart';
+import 'package:drivn_app/features/car/presentations/widget/car.carousel.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../utils/constants/colors.dart';
+import '../../../../shared/utils/constants/colors.dart';
 
 class CarDetails extends StatelessWidget {
   const CarDetails({super.key});
@@ -142,10 +142,7 @@ class CarDetails extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(
-          Icons.edit_square,
-          size: 40,
-        ),
+        child: ImageIcon(AssetImage('assets/icons/edit.png')),
       ),
     );
   }

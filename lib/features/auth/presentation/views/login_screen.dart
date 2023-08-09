@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:drivn_app/features/auth/presentation/views/request.password.reset.view.dart';
 
 import '../../../../app/home.dart';
-import '../../../../utils/constants/colors.dart';
+import '../../../../shared/utils/constants/colors.dart';
 import '../widget/formfield.dart';
 
 class LoginView extends StatefulWidget {
@@ -30,7 +30,7 @@ class _LoginViewState extends State<LoginView> {
       // Navigate to the home screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeView()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     }
   }

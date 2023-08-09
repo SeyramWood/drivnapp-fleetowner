@@ -1,33 +1,46 @@
+import 'package:drivn_app/features/car/presentations/views/add.car.form.dart';
+import 'package:drivn_app/features/car/presentations/views/my.cars.dart';
 import 'package:flutter/material.dart';
-import '../components/new_card.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class HomeView extends StatelessWidget {
+import '../features/user/presentation/view/profile.view.dart';
+import '../shared/utils/constants/colors.dart';
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2, // Number of tabs
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('HomePage'),
-            bottom: TabBar(
-              tabs: [
-                Tab(text: 'Tab 1'),
-                Tab(text: 'Tab 2'),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              Center(
-                child: MyCard2(),
-              ),
-              Center(
-                child: MyCard2(),
-              ),
-            ],
-          ),
-        ),
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [MyCars(), Add_A_Car_Form(), ProfileView()],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        showUnselectedLabels: false,
+        showSelectedLabels: false,
+        selectedItemColor: red,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/car.png')), label: ''),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/add-square.png')),
+              label: ''),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/profile.png')),
+              label: ''),
+        ],
       ),
     );
   }

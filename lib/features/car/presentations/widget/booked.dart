@@ -1,4 +1,5 @@
-import 'package:drivn_app/utils/constants/colors.dart';
+import 'package:drivn_app/features/car/presentations/views/booked.car.detail.page.dart';
+import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class BookedCarsBuilder extends StatelessWidget {
@@ -45,7 +46,9 @@ class InfoCard extends StatelessWidget {
                     height: 40, width: 90,
                     child: ElevatedButton(
                       onPressed: () {
-                        print('Button Pressed');
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MoreOfBookedCar(),
+                        ));
                       },
                       style: ElevatedButton.styleFrom(
                           padding:
@@ -118,4 +121,3 @@ class Tile extends StatelessWidget {
     );
   }
 }
- 

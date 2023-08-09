@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../features/auth/presentation/widget/elevated.button.dart';
+import '../../../features/auth/presentation/widget/elevated.button.dart';
 
-extension WhileWait on CustomElevatedButton {
+extension CustomExtention on CustomElevatedButton {
   Widget loading(bool isLoading) {
     return isLoading
         ? CustomElevatedButton(
@@ -15,4 +15,8 @@ extension WhileWait on CustomElevatedButton {
             ))
         : this;
   }
+  copyWith(){
+    
+  } 
 }
+

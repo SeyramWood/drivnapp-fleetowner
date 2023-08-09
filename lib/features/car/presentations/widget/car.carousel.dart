@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utils/constants/colors.dart';
+import '../../../../shared/utils/constants/colors.dart';
 
 class CarCarousel extends StatefulWidget {
   const CarCarousel({Key? key}) : super(key: key);

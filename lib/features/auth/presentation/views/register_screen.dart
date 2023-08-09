@@ -1,8 +1,8 @@
 import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn_app/features/auth/presentation/widget/country.picker.dart';
 import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
-import 'package:drivn_app/utils/constants/colors.dart';
-import 'package:drivn_app/utils/extentions/on.elevated.button.dart';
+import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn_app/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';

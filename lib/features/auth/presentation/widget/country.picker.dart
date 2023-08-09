@@ -1,4 +1,4 @@
-import 'package:drivn_app/utils/constants/colors.dart';
+import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
