@@ -136,7 +136,7 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                       print(file.name);
                     },
                     child: Text('Add a file'),
-                    backgroundColor: MaterialStateProperty.all(blue),
+                    backgroundColor: blue,
                   )
                 ],
               ),
@@ -153,7 +153,7 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                       print(file.name);
                     },
                     child: Text('Add a file'),
-                    backgroundColor: MaterialStateProperty.all(blue),
+                    backgroundColor:blue,
                   )
                 ],
               ),
@@ -165,7 +165,7 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                   CustomElevatedButton(
                     onPressed: openMultiSelectDialog,
                     child: Text('Add features'),
-                    backgroundColor: MaterialStateProperty.all(blue),
+                    backgroundColor: blue,
                   )
                 ],
               ),

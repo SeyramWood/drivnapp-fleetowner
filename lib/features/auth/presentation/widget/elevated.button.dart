@@ -9,7 +9,7 @@ class CustomElevatedButton extends StatelessWidget {
   });
   final void Function()? onPressed;
   final Widget child;
-  final MaterialStateProperty<Color?>? backgroundColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class CustomElevatedButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           child: child,
-          style: ButtonStyle(backgroundColor: backgroundColor),
+          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
         ) //this extention indicate a loading progress when the button is pressed,
         );
   }

@@ -1,9 +1,10 @@
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-class DrvierDocsView extends StatelessWidget {
-  const DrvierDocsView({super.key});
+class DriverDocsView extends StatelessWidget {
+  const DriverDocsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,12 @@ class DrvierDocsView extends StatelessWidget {
                   child: SizedBox(
                     width: width,
                     child: TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final result = await FilePicker.platform.pickFiles();
+                        if (result == null) return;
+                        final file = result.files.first;
+                        print(file.name);
+                      },
                       icon: Icon(
                         Icons.file_copy,
                       ),
@@ -48,6 +54,7 @@ class DrvierDocsView extends StatelessWidget {
                 ),
                 CustomElevatedButton(
                   onPressed: () {},
+                  backgroundColor: black,
                   child: Text('Submit for review'),
                 )
               ],

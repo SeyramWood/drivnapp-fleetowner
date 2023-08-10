@@ -87,6 +87,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                     validator: UsernameInputValidator.validate,
                   ),
                   CustomElevatedButton(
+                    backgroundColor:black,
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

@@ -31,7 +31,7 @@ class _ProfileViewState extends State<ProfileView> {
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: AssetImage('assets/logo.png'),
+                    backgroundImage: AssetImage('assets/car1.png'),
                     radius: 35,
                   ),
                   SizedBox(
@@ -95,7 +95,9 @@ class _ProfileViewState extends State<ProfileView> {
               divider,
               ListTile(
                 onTap: () {},
-                leading: Icon(Icons.person_3_outlined),
+                leading: ImageIcon(
+                  AssetImage('assets/icons/profile.png'),
+                ),
                 title: Text('My Profile'),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),
@@ -104,7 +106,7 @@ class _ProfileViewState extends State<ProfileView> {
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => Settings(),
                 )),
-                leading: Icon(Icons.settings),
+                leading: Icon(Icons.settings_outlined),
                 title: Text('Settings'),
                 trailing: Icon(Icons.arrow_forward_ios),
               ),

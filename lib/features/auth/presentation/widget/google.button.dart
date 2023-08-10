@@ -46,9 +46,11 @@ class GoogleButton extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    title,
-                  ),
+                  Text(title,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontWeight: FontWeight.w600)),
                 ],
               ),
             ),

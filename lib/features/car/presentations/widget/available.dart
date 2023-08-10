@@ -1,7 +1,9 @@
 import 'package:drivn_app/features/car/presentations/switch_icon_icons.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/car.provider.dart';
 import '../views/car.detail.dart';
 
 class CarsAvailableBuilder extends StatefulWidget {
@@ -31,6 +33,32 @@ class CarTile extends StatefulWidget {
 
 class _CarTileState extends State<CarTile> {
   int newValue = 1;
+
+  //date picker
+  void _datePicker() async {
+    await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050),
+    ).then(
+      (value) {
+        context.read<CarProvider>().setDate = value!;
+      },
+    );
+  }
+
+  //time picker
+  void _timePicker() async {
+    final selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (selectedTime != null) {
+      context.read<CarProvider>().setTime = selectedTime;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -123,7 +151,6 @@ class _CarTileState extends State<CarTile> {
                                   setState(() {
                                     newValue = value!;
                                   });
-
                                   // Check the selected value and take appropriate actions
                                   if (newValue == 2) {
                                     rideSharing();
@@ -252,47 +279,169 @@ class _CarTileState extends State<CarTile> {
     );
   }
 
-  rideSharing() {
+  void rideSharing() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        content: SingleChildScrollView(
+          child: Form(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Destination'),
-                TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: white))),
+                RideSharingFormField(
+                  title: 'Destination',
+                  controller: TextEditingController(),
+                  prefixIcon:
+                      ImageIcon(AssetImage('assets/icons/location.png')),
+                ),
+                SizedBox(height: 10),
+                RideSharingFormField(
+                  title: 'Pick up location',
+                  controller: TextEditingController(),
+                  prefixIcon:
+                      ImageIcon(AssetImage('assets/icons/location.png')),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: _datePicker,
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '${context.watch<CarProvider>().date.day}/${context.watch<CarProvider>().date.month}/${context.watch<CarProvider>().date.year.toString().split('20').last}',
+                                  ),
+                                  Spacer(),
+                                  ImageIcon(
+                                      AssetImage('assets/icons/calendar.png')),
+                                ],
+                              ),
+                            )),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: _timePicker,
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    context
+                                        .watch<CarProvider>()
+                                        .time
+                                        .format(context)
+                                        .toString(),
+                                  ),
+                                  Spacer(),
+                                  ImageIcon(
+                                      AssetImage('assets/icons/timer.png')),
+                                ],
+                              ),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 10),
+                RideSharingFormField(
+                  title: 'Price',
+                  controller: TextEditingController(),
+                  prefixIcon:
+                      ImageIcon(AssetImage('assets/icons/money-add.png')),
+                ),
+                Row(
+                  children: [
+                    Text('Number of seats'),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.remove_circle_outline),
+                          ),
+                          Text(
+                            '3',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.add_circle_outline_outlined),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 )
               ],
             ),
-            SizedBox(height: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Pick up location'),
-                TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: yellow))),
-                )
-              ],
-            ),
-          ],
+          ),
         ),
         actions: [
-          ElevatedButton(
-            onPressed: () {},
-            child: Text('Done'),
+          Center(
+            child: SizedBox(
+              width: MediaQuery.sizeOf(context).width / 3,
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Done'),
+              ),
+            ),
           )
         ],
       ),
+    );
+  }
+}
+
+class RideSharingFormField extends StatelessWidget {
+  const RideSharingFormField({
+    super.key,
+    this.controller,
+    required this.prefixIcon,
+    required this.title,
+  });
+  final TextEditingController? controller;
+  final Widget prefixIcon;
+  final String title;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(color: yellow),
+        ),
+        TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            prefixIcon: prefixIcon,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: blue),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: blue),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: blue),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

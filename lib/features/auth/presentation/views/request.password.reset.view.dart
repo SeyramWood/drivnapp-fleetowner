@@ -86,6 +86,7 @@ class _RequestPinViewState extends State<RequestPinView> {
                     height: MediaQuery.sizeOf(context).height / 2.3,
                   ),
                   CustomElevatedButton(
+                    backgroundColor: black,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -95,7 +96,7 @@ class _RequestPinViewState extends State<RequestPinView> {
                       );
                     },
                     child: Text(
-                      "Send Code",
+                      "Send Request",
                     ),
                   ),
                   const SizedBox(height: 16),
