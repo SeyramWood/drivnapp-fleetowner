@@ -1,9 +1,10 @@
 import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
-import 'package:drivn_app/features/auth/presentation/widget/country.picker.dart';
+import 'package:drivn_app/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
-import 'package:drivn_app/utils/constants/colors.dart';
-import 'package:drivn_app/utils/extentions/on.elevated.button.dart';
+import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn_app/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
 import 'otp.input.view.dart';
@@ -67,10 +68,9 @@ class _RegisterViewState extends State<RegisterView> {
               Center(
                 child: Text(
                   'Create account to get started!',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Colors.white,
+                      ),
                 ),
               ),
               const SizedBox(height: 32),
@@ -88,7 +88,7 @@ class _RegisterViewState extends State<RegisterView> {
                       labelText: 'Last Name',
                       prefixIcon: Icon(Icons.person_2_outlined),
                     ),
-                    CodePickerField(
+                    PhoneFormField(
                       controller: _emailController,
                     ),
                     CustomFormField(
@@ -105,6 +105,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     // const SizedBox(height: 10),
                     CustomElevatedButton(
+                      backgroundColor: black,
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -116,18 +117,19 @@ class _RegisterViewState extends State<RegisterView> {
                     const SizedBox(height: 24),
                     GestureDetector(
                       onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => LoginView(key: widget.key)),
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 600),
+                            child: LoginView(key: widget.key)),
                         (route) => false,
                       ),
                       child: RichText(
                         text: TextSpan(
                           text: 'Already have an account? ',
-                          style: TextStyle(
-                            color: black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
                           children: [
                             TextSpan(
                               text: 'Login',

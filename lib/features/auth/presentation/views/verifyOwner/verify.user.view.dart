@@ -1,5 +1,11 @@
-import 'package:drivn_app/utils/constants/colors.dart';
+import 'package:drivn_app/app/home.dart';
+import 'package:drivn_app/features/auth/presentation/views/verifyOwner/identity.info.view.dart';
+import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+
+import '../login_screen.dart';
+import 'driver.doc.dart';
 
 class GetVerifiedOption extends StatelessWidget {
   const GetVerifiedOption({super.key});
@@ -15,22 +21,32 @@ class GetVerifiedOption extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('Before you rent out a car, let’s get you verified',
-                    style: Theme.of(context).textTheme.headlineLarge),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge!
+                        .copyWith(fontSize: 20)),
                 SizedBox(
-                  height: MediaQuery.sizeOf(context).height * .1,
+                  height: 15,
                 ),
                 Text(
-                    'We need to check that you are really you. It helps us fight fraud and keep cars secured.',
-                    style: Theme.of(context).textTheme.headlineSmall),
+                  'We need to check that you are really you. It helps us fight fraud and keep cars secured.',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall!
+                      .copyWith(fontSize: 15),
+                ),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 Card(
                   color: white,
                   child: ListTile(
-                    leading: Icon(
-                      Icons.info,
-                      size: 45,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProofIDView(),
+                    )),
+                    leading: ImageIcon(
+                      AssetImage('assets/icons/license.png'),
+                      // size: 45,
                       color: yellow,
                     ),
                     title: Text(
@@ -46,12 +62,17 @@ class GetVerifiedOption extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 Card(
                   color: white,
                   child: ListTile(
-                    leading: Icon(
-                      Icons.car_rental,
-                      size: 45,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DriverDocsView(),
+                    ),),
+                    leading: ImageIcon(
+                      AssetImage('assets/icons/driving.png'),
                       color: yellow,
                     ),
                     title: Text(
@@ -70,7 +91,14 @@ class GetVerifiedOption extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(),
+                        ),
+                        (route) => false,
+                      );
+                    },
                     child: Text(
                       'Later',
                       style: Theme.of(context)
@@ -79,6 +107,16 @@ class GetVerifiedOption extends StatelessWidget {
                           .copyWith(color: white),
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height / 6,
+                ),
+                CustomElevatedButton(
+                  backgroundColor: black,
+                  onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => LoginView()),
+                      (route) => false),
+                  child: Text('Done'),
                 )
               ],
             ),

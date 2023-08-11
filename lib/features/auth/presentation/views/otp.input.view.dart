@@ -1,5 +1,5 @@
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/utils/constants/colors.dart';
+import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
@@ -19,10 +19,10 @@ class OTPInputView extends StatelessWidget {
           children: [
             Text(
               'Enter OTP',
-              style: TextStyle(
-                color: white,
-                fontSize: 40,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineLarge!
+                  .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.w600),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -46,6 +46,7 @@ class OTPInputView extends StatelessWidget {
                 horizontal: 10,
               ),
               child: CustomElevatedButton(
+                backgroundColor: black,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -66,12 +67,10 @@ class OTPInputView extends StatelessWidget {
               onTap: () {},
               child: RichText(
                 text: TextSpan(
-                    text: "Don't get code? ",
-                    style: TextStyle(
-                      color: black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    text: "Didn't get code? ",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                     children: [
                       TextSpan(
                           text: 'Resend.',

@@ -1,7 +1,7 @@
 import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn_app/features/auth/presentation/widget/formfield.dart';
-import 'package:drivn_app/utils/constants/colors.dart';
+import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn_app/components/user_inputs/username_input_validator.dart';
 
@@ -86,6 +86,7 @@ class _RequestPinViewState extends State<RequestPinView> {
                     height: MediaQuery.sizeOf(context).height / 2.3,
                   ),
                   CustomElevatedButton(
+                    backgroundColor: black,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -95,7 +96,7 @@ class _RequestPinViewState extends State<RequestPinView> {
                       );
                     },
                     child: Text(
-                      "Send Code",
+                      "Send Request",
                     ),
                   ),
                   const SizedBox(height: 16),
