@@ -4,6 +4,7 @@ import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:drivn_app/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
 import 'otp.input.view.dart';
@@ -116,8 +117,10 @@ class _RegisterViewState extends State<RegisterView> {
                     const SizedBox(height: 24),
                     GestureDetector(
                       onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => LoginView(key: widget.key)),
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 600),
+                            child: LoginView(key: widget.key)),
                         (route) => false,
                       ),
                       child: RichText(

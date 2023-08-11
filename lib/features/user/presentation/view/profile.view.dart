@@ -1,6 +1,5 @@
 import 'package:drivn_app/features/user/presentation/view/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../../shared/utils/constants/dimensions.dart';

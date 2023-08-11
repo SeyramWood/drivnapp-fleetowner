@@ -1,7 +1,6 @@
 import 'package:drivn_app/features/car/presentations/views/add.car.form.dart';
 import 'package:drivn_app/features/car/presentations/views/my.cars.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../features/user/presentation/view/profile.view.dart';
 import '../shared/utils/constants/colors.dart';
@@ -38,8 +37,11 @@ class _HomePageState extends State<HomePage> {
               icon: ImageIcon(AssetImage('assets/icons/add-square.png')),
               label: ''),
           BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('assets/icons/profile.png')),
-              label: ''),
+            icon: ImageIcon(
+              AssetImage('assets/icons/profile.png'),
+            ),
+            label: '',
+          ),
         ],
       ),
     );

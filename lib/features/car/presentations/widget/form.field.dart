@@ -46,43 +46,45 @@ class _AddCarFormFieldState extends State<AddCarFormField> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
-      child: TypeAheadField(
-        textFieldConfiguration: TextFieldConfiguration(
-          decoration: InputDecoration(
-            labelText: widget.labelText,
-            suffixIcon: RotatedBox(
-              quarterTurns: -1,
-              child: Icon(
-                Icons.arrow_back_ios_new,
-                color: black.withOpacity(.4),
+      child: SafeArea(
+        child: TypeAheadField(
+          textFieldConfiguration: TextFieldConfiguration(
+            controller: widget.controller,
+            decoration: InputDecoration(
+              labelText: widget.labelText,
+              suffixIcon: RotatedBox(
+                quarterTurns: -1,
+                child: Icon(
+                  Icons.arrow_back_ios_new,
+                  color: black.withOpacity(.4),
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: yellow),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: yellow),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: yellow),
               ),
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: yellow),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: yellow),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: yellow),
-            ),
           ),
+          suggestionsCallback: (pattern) async {
+            return options.where((option) =>
+                option.toLowerCase().contains(pattern.toLowerCase()));
+          },
+          itemBuilder: (context, option) {
+            return ListTile(title: Text(option));
+          },
+          onSuggestionSelected: (option) {
+            this.widget.controller.text = option;
+            print(options);
+          },
         ),
-        suggestionsCallback: (pattern) async {
-          return options.where(
-              (option) => option.toLowerCase().contains(pattern.toLowerCase()));
-        },
-        itemBuilder: (context, option) {
-          return ListTile(title: Text(option));
-        },
-        onSuggestionSelected: (option) {
-          setState(() {
-            selectedValue = option;
-          });
-        },
       ),
 
       // TextFormField(

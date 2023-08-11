@@ -4,6 +4,7 @@ import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart
 import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn_app/features/auth/presentation/views/request.password.reset.view.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../../../app/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
@@ -94,8 +95,10 @@ class _LoginViewState extends State<LoginView> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => RequestPinView(),
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          duration: Duration(milliseconds: 600),
+                          child: RequestPinView(),
                         ),
                       );
                     },

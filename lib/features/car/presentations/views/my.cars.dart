@@ -1,10 +1,11 @@
 import 'package:drivn_app/features/car/presentations/views/car.detail.dart';
-import 'package:drivn_app/features/car/presentations/widget/available.dart';
+import 'package:drivn_app/features/car/presentations/widget/available.car.tile.dart';
 import 'package:drivn_app/features/car/presentations/widget/booked.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 import '../providers/change.content.dart';
+import 'available.cars.view.dart';
 
 class MyCars extends StatelessWidget {
   const MyCars({super.key});
@@ -32,7 +33,7 @@ class MyCars extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () => clicked.isClicked(true),
                         child: Container(
-                          height: 40,
+                          height: 35,
                           width: MediaQuery.sizeOf(context).width / 2,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
@@ -59,7 +60,7 @@ class MyCars extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () => clicked.isClicked(false),
                         child: Container(
-                          height: 40,
+                          height: 35,
                           width: MediaQuery.sizeOf(context).width / 2,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(

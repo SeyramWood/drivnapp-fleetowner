@@ -17,6 +17,8 @@ class Add_A_Car_Form extends StatefulWidget {
 }
 
 class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
+  final carBrand = TextEditingController();
+  final carType = TextEditingController();
   final space = SizedBox(
     height: 10,
   );
@@ -40,6 +42,117 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
     'Option 3',
   ];
 
+  PlatformFile? imageFile;
+  PlatformFile? proofFile;
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: Text('Add Car')),
+        body: Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: 10.0).copyWith(top: 5),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                AddCarFormField(
+                  controller: carBrand,
+                  labelText: 'Car Brand',
+                ),
+                space,
+                AddCarFormField(
+                  controller: carType,
+                  labelText: 'Car Type',
+                ),
+                space,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Add image'),
+                    Visibility(
+                      visible: imageFile != null ? true : false,
+                      child: Center(
+                        child: Text(imageFile?.name ?? ''),
+                      ),
+                    ),
+                    CustomElevatedButton(
+                      onPressed: () async {
+                        final result = await FilePicker.platform.pickFiles();
+                        if (result == null) return;
+                        setState(() {
+                          imageFile = result.files.first;
+                        });
+                        print(imageFile!.name);
+                      },
+                      child: Text(imageFile != null
+                          ? 'File selected (Double tap to remove)'
+                          : 'Add a file'),
+                      backgroundColor: imageFile != null ? Colors.green : blue,
+                    )
+                  ],
+                ),
+                space,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Proof of ownership'),
+                    Visibility(
+                      visible: proofFile != null ? true : false,
+                      child: Center(
+                        child: Text(proofFile?.name ?? ''),
+                      ),
+                    ),
+                    CustomElevatedButton(
+                      onPressed: () async {
+                        final result = await FilePicker.platform.pickFiles();
+                        if (result == null) return;
+                        setState(() {
+                          proofFile = result.files.first;
+                        });
+                        print(proofFile!.name);
+                      },
+                      child: Text(proofFile != null
+                          ? 'File selected (Double tap to remove)'
+                          : 'Add a file'),
+                      backgroundColor: proofFile != null ? Colors.green : blue,
+                    )
+                  ],
+                ),
+                space,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('More features'),
+                    CustomElevatedButton(
+                      onPressed: openMultiSelectDialog,
+                      child: Text(selectedOptions.isNotEmpty
+                          ? '${selectedOptions.length} features selected'
+                          : 'Add features'),
+                      backgroundColor:
+                          selectedOptions.isNotEmpty ? Colors.green : blue,
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height / 15,
+                ),
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width / 1.5,
+                  child: CustomElevatedButton(
+                    onPressed: () {},
+                    child: Text('Done'),
+                    backgroundColor: blue,
+                  ),
+                ),
+                space
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void openMultiSelectDialog() async {
     final result = await showDialog<List<String>>(
       context: context,
@@ -56,138 +169,5 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
         selectedOptions = result;
       });
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Add Car')),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0).copyWith(top: 5),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              AddCarFormField(
-                controller: TextEditingController(),
-                labelText: 'Car Brand',
-                suffixIcon: IconButton(
-                  onPressed: () {},
-                  icon: RotatedBox(
-                    quarterTurns: -1,
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: black.withOpacity(.4),
-                    ),
-                  ),
-                ),
-              ),
-              space,
-              AddCarFormField(
-                controller: TextEditingController(),
-                labelText: 'Car Type',
-                suffixIcon: DropdownButton(
-                  // isDense: true,
-                  // isExpanded: true,
-                  iconSize: 25,
-                  icon: RotatedBox(
-                    quarterTurns: -1,
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: black.withOpacity(.4),
-                    ),
-                  ),
-                  value: 2,
-                  onChanged: (value) {},
-                  items: [
-                    DropdownMenuItem<int>(
-                      value: 1,
-                      child: Text(
-                        'Unavailable',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                    ),
-                    DropdownMenuItem<int>(
-                      value: 2,
-                      child: Text(
-                        'Ride sharing',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                    ),
-                    DropdownMenuItem<int>(
-                      value: 3,
-                      child: Text(
-                        'Rental',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              space,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Add image'),
-                  CustomElevatedButton(
-                    onPressed: () async {
-                      final result = await FilePicker.platform.pickFiles();
-                      if (result == null) return;
-                      final file = result.files.first;
-                      print(file.name);
-                    },
-                    child: Text('Add a file'),
-                    backgroundColor: blue,
-                  )
-                ],
-              ),
-              space,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Proof of ownership'),
-                  CustomElevatedButton(
-                    onPressed: () async {
-                      final result = await FilePicker.platform.pickFiles();
-                      if (result == null) return;
-                      final file = result.files.first;
-                      print(file.name);
-                    },
-                    child: Text('Add a file'),
-                    backgroundColor:blue,
-                  )
-                ],
-              ),
-              space,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('More features'),
-                  CustomElevatedButton(
-                    onPressed: openMultiSelectDialog,
-                    child: Text('Add features'),
-                    backgroundColor: blue,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height / 7,
-              ),
-              SizedBox(
-                height: 50,
-                width: MediaQuery.sizeOf(context).width / 1.5,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Done'),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(blue),
-                  ),
-                ),
-              ),
-              space
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

@@ -26,7 +26,7 @@ class PhoneFormField extends StatelessWidget {
           selectorConfig: SelectorConfig(
             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
           ),
-          ignoreBlank: false,
+          ignoreBlank: true,
           autoValidateMode: AutovalidateMode.onUserInteraction,
           selectorTextStyle: TextStyle(color: white),
           // initialValue: number,

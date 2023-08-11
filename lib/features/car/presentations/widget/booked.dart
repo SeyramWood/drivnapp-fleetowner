@@ -1,6 +1,7 @@
 import 'package:drivn_app/features/car/presentations/views/booked.car.detail.page.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class BookedCarsBuilder extends StatelessWidget {
   const BookedCarsBuilder({super.key});
@@ -46,8 +47,10 @@ class InfoCard extends StatelessWidget {
                     height: 40, width: 90,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => MoreOfBookedCar(),
+                        Navigator.of(context).push(PageTransition(
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 500),
+                          child: MoreOfBookedCar(),
                         ));
                       },
                       style: ElevatedButton.styleFrom(
