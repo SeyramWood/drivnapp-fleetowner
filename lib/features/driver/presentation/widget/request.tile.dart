@@ -1,3 +1,4 @@
+import 'package:drivn_app/features/driver/presentation/widget/request.dialog.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,17 @@ class RequestTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return BottomSheet(
+                builder: (context) => RequestInfo(),
+                onClosing: () {},
+              );
+            },
+          );
+        },
         child: Material(
           shadowColor: white,
           elevation: 5,
