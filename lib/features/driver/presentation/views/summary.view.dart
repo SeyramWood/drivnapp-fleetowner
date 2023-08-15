@@ -1,4 +1,5 @@
 import 'package:drivn_app/features/driver/presentation/provider/toggle.dart';
+import 'package:drivn_app/features/driver/presentation/views/today.summary.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -13,11 +14,11 @@ class SummaryView extends StatelessWidget {
       body: ValueListenableBuilder(
           valueListenable: Toggled(),
           builder: (context, state, child) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Container(
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Column(
+                children: [
+                  Container(
                     decoration: BoxDecoration(
                         border: Border.all(color: yellow),
                         borderRadius: BorderRadius.circular(5)),
@@ -81,8 +82,10 @@ class SummaryView extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-              ],
+                  // --------------------------------------------
+                  TodaySummaryview(),
+                ],
+              ),
             );
           }),
     );
