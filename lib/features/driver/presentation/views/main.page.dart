@@ -1,7 +1,10 @@
+import 'package:drivn_app/features/driver/presentation/views/my.trips.dart';
 import 'package:drivn_app/features/driver/presentation/views/request.view.dart';
+import 'package:drivn_app/features/driver/presentation/views/summary.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
+import '../provider/index.notifier.dart';
 
 class DMainPage extends StatelessWidget {
   const DMainPage({super.key});
@@ -13,7 +16,7 @@ class DMainPage extends StatelessWidget {
       builder: (context, value, child) => Scaffold(
         body: IndexedStack(
           index: value,
-          children: [RequestView()],
+          children: [RequestView(), MyTrips(),SummaryView()],
         ),
         bottomNavigationBar: BottomNavigationBar(
           showUnselectedLabels: false,
@@ -45,16 +48,5 @@ class DMainPage extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class IndexNotifier extends ValueNotifier<int> {
-  IndexNotifier.empty() : super(0);
-  static final IndexNotifier _empty = IndexNotifier.empty();
-  factory IndexNotifier() => _empty;
-
-  setValue(newValue) {
-    value = newValue;
-    notifyListeners();
   }
 }

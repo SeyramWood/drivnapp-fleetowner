@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
+import '../../../../shared/utils/constants/dimensions.dart';
 import '../../../auth/presentation/widget/elevated.button.dart';
 
 class RequestInfo extends StatelessWidget {
@@ -12,7 +13,7 @@ class RequestInfo extends StatelessWidget {
       height: 15,
     );
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -38,6 +39,8 @@ class RequestInfo extends StatelessWidget {
           LocAndTime(),
           space,
           LocAndTime(),
+          space,
+          divider,
           space,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,6 +75,8 @@ class RequestInfo extends StatelessWidget {
                       .copyWith(fontWeight: FontWeight.w600)),
             ],
           ),
+          space,
+          divider,
           space,
           Center(
             child: Row(

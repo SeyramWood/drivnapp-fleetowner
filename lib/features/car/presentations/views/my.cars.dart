@@ -12,7 +12,7 @@ class MyCars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Clicked clicked = Clicked();
+    final AvailabelOrBooked clicked = AvailabelOrBooked();
     return Scaffold(
       extendBody: true,
       appBar: AppBar(title: Text('My Cars')),
