@@ -1,5 +1,3 @@
-import 'package:drivn_app/features/car/presentations/views/car.detail.dart';
-import 'package:drivn_app/features/car/presentations/widget/available.car.tile.dart';
 import 'package:drivn_app/features/car/presentations/widget/booked.dart';
 import 'package:flutter/material.dart';
 

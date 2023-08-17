@@ -4,6 +4,7 @@ import 'package:drivn_app/features/driver/presentation/views/summary.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
+import '../../../user/presentation/view/driver.profile.view.dart';
 import '../provider/index.notifier.dart';
 
 class DMainPage extends StatelessWidget {
@@ -16,7 +17,12 @@ class DMainPage extends StatelessWidget {
       builder: (context, value, child) => Scaffold(
         body: IndexedStack(
           index: value,
-          children: [RequestView(), MyTrips(),SummaryView()],
+          children: [
+            RequestView(),
+            MyTrips(),
+            SummaryView(),
+            DProfileView(),
+          ],
         ),
         bottomNavigationBar: BottomNavigationBar(
           showUnselectedLabels: false,

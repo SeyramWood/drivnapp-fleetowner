@@ -1,5 +1,6 @@
 import 'package:drivn_app/features/driver/presentation/provider/toggle.dart';
 import 'package:drivn_app/features/driver/presentation/views/today.summary.view.dart';
+import 'package:drivn_app/features/driver/presentation/views/weekly.summary.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -83,7 +84,8 @@ class SummaryView extends StatelessWidget {
                     ),
                   ),
                   // --------------------------------------------
-                  TodaySummaryview(),
+                  Expanded(
+                      child: state ? TodaySummaryView() : WeeklySummaryView()),
                 ],
               ),
             );
