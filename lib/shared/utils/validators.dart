@@ -1,5 +1,21 @@
-class PasswordInputValidator {
-  static String? validate(String? value) {
+class MyFormFieldValidator{
+  static String? nameValidate(String? value) {
+    if (value == null || value.isEmpty) {
+    return "Please enter a username.";
+  }
+
+  if (value.length < 3) {
+    return "The username must be at least 3 characters long.";
+  }
+
+  if (value.length > 16) {
+    return "The username must be no more than 16 characters long.";
+  }
+
+    return null;
+  }
+
+  static String? passwordValidtor(String? value) {
     if (value == null || value.isEmpty) {
     return "Please enter password.";
   } else if (value.length < 8) {

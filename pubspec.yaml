@@ -43,6 +43,8 @@ dependencies:
   google_fonts: ^5.1.0
   smooth_page_indicator: ^1.1.0
   page_transition: ^2.0.9
+  dartz: ^0.10.1
+  http: ^1.1.0
 
 
 dev_dependencies:

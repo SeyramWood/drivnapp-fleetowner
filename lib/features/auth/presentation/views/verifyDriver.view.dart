@@ -81,12 +81,12 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
             space,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text('License Number'), FormField(controller: licenseController,)],
+              children: [Text('License Number'), MyFormField(controller: licenseController,)],
             ),
             space,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text('Years of experience'), FormField(controller: yearsController,)],
+              children: [Text('Years of experience'), MyFormField(controller: yearsController,)],
             ),
             space,
             space,
@@ -129,14 +129,15 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
   }
 }
 
-class FormField extends StatelessWidget {
-  const FormField({super.key, required this.controller});
+class MyFormField extends StatelessWidget {
+  const MyFormField({super.key, required this.controller});
 final TextEditingController controller;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
+        
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: yellow),

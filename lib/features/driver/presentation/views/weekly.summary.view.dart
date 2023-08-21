@@ -95,7 +95,7 @@ class WeeklySummaryCart extends StatelessWidget {
                         height: 150,
                         width: 30,
                         decoration: BoxDecoration(
-                            color: grey.withOpacity(.3),
+                            // color: grey.withOpacity(.3),
                             borderRadius: BorderRadius.circular(60)),
                         padding: EdgeInsets.all(13),
                         //second indicator bg//
@@ -109,7 +109,9 @@ class WeeklySummaryCart extends StatelessWidget {
                       ),
                       Text(
                         'Day',
-                        style: TextStyle(color: white),
+                        style: TextStyle(
+                          color: grey.withOpacity(.3),
+                        ),
                       )
                     ],
                   ),

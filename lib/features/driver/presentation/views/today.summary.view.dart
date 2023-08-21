@@ -1,3 +1,4 @@
+import 'package:drivn_app/features/driver/presentation/views/ride.info.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -67,56 +68,68 @@ class SummaryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: red, width: 0.5),
-            right: BorderSide(color: red, width: 0.5),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => RideInfoView(),
+            ),
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: red, width: 0.5),
+              right: BorderSide(color: red, width: 0.5),
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text('12:45'),
-                SizedBox(width: 20),
-                Text(
-                  'John Doe',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Spacer(),
-                Text('\$30'),
-              ],
-            ),
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5), color: grey),
-                  child: Text('AM'),
-                ),
-                SizedBox(width: 20),
-                Row(
-                  children: [
-                    ImageIcon(
-                      AssetImage('assets/icons/location.png'),
-                      size: 20,
-                      color: Colors.grey,
-                    ),
-                    Text(
-                      'location',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text('12:45'),
+                  SizedBox(width: 15),
+                  Text(
+                    'John Doe',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Spacer(),
+                  Text('\$30'),
+                ],
+              ),
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5), color: grey),
+                    child: Text('AM'),
+                  ),
+                  SizedBox(width: 20),
+                  Row(
+                    children: [
+                      ImageIcon(
+                        AssetImage('assets/icons/location.png'),
+                        size: 20,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'location',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

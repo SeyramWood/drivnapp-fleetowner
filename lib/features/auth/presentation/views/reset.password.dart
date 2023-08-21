@@ -2,9 +2,8 @@ import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn_app/features/auth/presentation/widget/formfield.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn_app/shared/utils/validators.dart';
 import 'package:flutter/material.dart';
-import 'package:drivn_app/components/user_inputs/username_input_validator.dart';
-
 
 class ResetPasswordView extends StatefulWidget {
   ResetPasswordView({Key? key}) : super(key: key);
@@ -79,15 +78,15 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                   CustomFormField(
                     controller: _passwordController,
                     labelText: 'Enter Password',
-                    validator: UsernameInputValidator.validate,
+                    validator: MyFormFieldValidator.passwordValidtor,
                   ),
                   CustomFormField(
                     controller: _passwordController,
                     labelText: 'Repeat Password',
-                    validator: UsernameInputValidator.validate,
+                    validator: MyFormFieldValidator.passwordValidtor,
                   ),
                   CustomElevatedButton(
-                    backgroundColor:black,
+                    backgroundColor: black,
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

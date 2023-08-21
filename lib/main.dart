@@ -4,6 +4,8 @@ import 'package:drivn_app/features/driver/presentation/views/main.page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'features/auth/presentation/views/account.type.view.dart';
+
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppLightTheme.themeData,
-      home: DMainPage(),
+      home: AccountTypeView(),
     );
   }
 }
