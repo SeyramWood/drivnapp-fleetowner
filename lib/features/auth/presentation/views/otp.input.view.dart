@@ -1,13 +1,20 @@
+import 'package:drivn_app/features/auth/presentation/providers/fleet.owner.dart';
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
 
-import 'verifyOwner/verify.user.view.dart';
-
-class OTPInputView extends StatelessWidget {
+class OTPInputView extends StatefulWidget {
   const OTPInputView({Key? key}) : super(key: key);
 
+  @override
+  State<OTPInputView> createState() => _OTPInputViewState();
+}
+
+class _OTPInputViewState extends State<OTPInputView> {
+  final _formkey = GlobalKey<FormState>();
+  String otp = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +55,11 @@ class OTPInputView extends StatelessWidget {
               child: CustomElevatedButton(
                 backgroundColor: black,
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const GetVerifiedOption(),
-                    ),
-                  );
+                  if (_formkey.currentState!.validate()) {
+                    context
+                        .read<FleetOwnerProvider>()
+                        .verifyFleetOwner(otp, context);
+                  }
                 },
                 child: Text(
                   "Verify",
@@ -88,46 +94,60 @@ class OTPInputView extends StatelessWidget {
   }
 
   Widget otpFormField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Pinput(
-        defaultPinTheme: PinTheme(
-          height: 60,
-          width: 60,
-          textStyle: const TextStyle(
-            fontSize: 25,
-          ),
-          decoration: BoxDecoration(
-            color: white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        focusedPinTheme: PinTheme(
-          height: 60,
-          width: 60,
-          textStyle: const TextStyle(
-            fontSize: 25,
-          ),
-          decoration: BoxDecoration(
-            // color: Colors.white,
-            border: Border.all(
-              color: white,
+    return Form(
+      key: _formkey,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Pinput(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Input a valid code';
+            }
+            return null;
+          },
+          onCompleted: (value) {
+            setState(() {
+              otp = value;
+            });
+          },
+          defaultPinTheme: PinTheme(
+            height: 60,
+            width: 60,
+            textStyle: const TextStyle(
+              fontSize: 25,
             ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        submittedPinTheme: PinTheme(
-          height: 60,
-          width: 60,
-          textStyle: const TextStyle(
-            fontSize: 25,
-          ),
-          decoration: BoxDecoration(
-            // color: Colors.white,
-            border: Border.all(
+            decoration: BoxDecoration(
               color: white,
+              borderRadius: BorderRadius.circular(8),
             ),
-            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedPinTheme: PinTheme(
+            height: 60,
+            width: 60,
+            textStyle: const TextStyle(
+              fontSize: 25,
+            ),
+            decoration: BoxDecoration(
+              // color: Colors.white,
+              border: Border.all(
+                color: white,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          submittedPinTheme: PinTheme(
+            height: 60,
+            width: 60,
+            textStyle: const TextStyle(
+              fontSize: 25,
+            ),
+            decoration: BoxDecoration(
+              // color: Colors.white,
+              border: Border.all(
+                color: white,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         ),
       ),

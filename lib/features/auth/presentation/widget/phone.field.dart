@@ -1,6 +1,8 @@
+import 'package:drivn_app/features/auth/presentation/providers/auth.shared.provider.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:provider/provider.dart';
 
 class PhoneFormField extends StatelessWidget {
   const PhoneFormField({super.key, required this.controller});
@@ -19,6 +21,8 @@ class PhoneFormField extends StatelessWidget {
         child: InternationalPhoneNumberInput(
           onInputChanged: (PhoneNumber number) {
             print(number.phoneNumber);
+            context.read<AuthSharedProvider>().phoneNumber =
+                number.phoneNumber.toString();
           },
           onInputValidated: (bool value) {
             print(value);

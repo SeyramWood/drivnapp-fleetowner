@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../shared/utils/constants/colors.dart';
 import '../widget/elevated.button.dart';
 
 class AccountTypeView extends StatelessWidget {

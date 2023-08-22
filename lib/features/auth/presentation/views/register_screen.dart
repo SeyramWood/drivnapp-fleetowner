@@ -1,13 +1,16 @@
+import 'package:drivn_app/features/auth/presentation/providers/auth.shared.provider.dart';
+import 'package:drivn_app/features/auth/presentation/providers/fleet.owner.dart';
 import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn_app/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
+import 'package:drivn_app/features/user/domain/entities/fleetOwner.model.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:drivn_app/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
-import 'otp.input.view.dart';
 
 class RegisterView extends StatefulWidget {
   RegisterView({Key? key}) : super(key: key);
@@ -17,8 +20,9 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repeatPasswordController =
       TextEditingController();
@@ -42,8 +46,8 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _passwordController.dispose();
     _repeatPasswordController.dispose();
     super.dispose();
@@ -79,17 +83,17 @@ class _RegisterViewState extends State<RegisterView> {
                 child: Column(
                   children: [
                     CustomFormField(
-                      controller: _nameController,
+                      controller: _firstNameController,
                       labelText: 'First Name',
                       prefixIcon: Icon(Icons.person_2_outlined),
                     ),
                     CustomFormField(
-                      controller: _nameController,
+                      controller: _lastNameController,
                       labelText: 'Last Name',
                       prefixIcon: Icon(Icons.person_2_outlined),
                     ),
                     PhoneFormField(
-                      controller: _emailController,
+                      controller: _phoneNumberController,
                     ),
                     CustomFormField(
                       controller: _passwordController,
@@ -106,12 +110,22 @@ class _RegisterViewState extends State<RegisterView> {
                     // const SizedBox(height: 10),
                     CustomElevatedButton(
                       backgroundColor: black,
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const OTPInputView(),
-                        ),
-                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          //fleetOwner object
+                          final fleetOwner = FleetOwner(
+                            lastName: _lastNameController.text,
+                            firstName: _firstNameController.text,
+                            username: context.read<AuthSharedProvider>().phone,
+                            password: _passwordController.text,
+                            confirmPassword: _repeatPasswordController.text,
+                          );
+                          //method to create a fleetowner account
+                          context
+                              .read<FleetOwnerProvider>()
+                              .postFleetOwner(fleetOwner, context);
+                        }
+                      },
                       child: Text('Register'),
                     ).loading(false),
                     const SizedBox(height: 24),
@@ -146,7 +160,9 @@ class _RegisterViewState extends State<RegisterView> {
                       height: 10,
                     ),
                     GoogleButton(
-                      onTap: () {},
+                      onTap: () {
+                        print(context.read<AuthSharedProvider>().phone);
+                      },
                       title: 'Sign up',
                     )
                   ],

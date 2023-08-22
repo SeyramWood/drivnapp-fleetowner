@@ -1,30 +1,42 @@
-import 'package:drivn_app/features/user/domain/entities/user.model.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-abstract class FleetOwnerDB {
-   Future create(FleetOwner fleetOwner);
-   Future read(FleetOwner fleetOwner);
-   Future update(FleetOwner fleetOwner);
+import 'package:drivn_app/features/user/domain/entities/fleetOwner.model.dart';
+
+import '../api/fleet.owner.api.dart';
+
+abstract class FleetOwnerDB extends ChangeNotifier {
+  Future<FleetOwner> create(FleetOwner fleetOwner);
+  Future<FleetOwner> read(FleetOwner fleetOwner);
+  Future<FleetOwner> update(FleetOwner fleetOwner);
+  Future<String> verify(String otp);
 }
 
-
-class FleetOwnerDBImpl extends ChangeNotifier implements FleetOwnerDB{
+class FleetOwnerDBImpl extends ChangeNotifier implements FleetOwnerDB {
+  FleetOwnerAPI api;
+  FleetOwnerDBImpl(this.api);
+  FleetOwnerDBImpl.empty() : api = FleetOwnerAPI();
   @override
-  Future create(FleetOwner fleetOwner) {
-    // TODO: implement create
-    throw UnimplementedError();
+  Future<FleetOwner> create(FleetOwner fleetOwner) async {
+    final requestBody = fleetOwner;
+    return await api.postFleetOwner(requestBody.toJson());
   }
 
   @override
-  Future read(FleetOwner fleetOwner) {
+  Future<FleetOwner> read(FleetOwner fleetOwner) {
     // TODO: implement read
     throw UnimplementedError();
   }
 
   @override
-  Future update(FleetOwner fleetOwner) {
+  Future<FleetOwner> update(FleetOwner fleetOwner) {
     // TODO: implement update
     throw UnimplementedError();
   }
+  
+  @override
+  Future<String> verify(String otp) async {
+    return await api.verifyFleetOwner(otp);
 
+  }
 }

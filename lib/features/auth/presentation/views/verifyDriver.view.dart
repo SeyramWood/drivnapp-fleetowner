@@ -1,5 +1,4 @@
 import 'package:drivn_app/features/auth/presentation/views/validating.view.dart';
-import 'package:drivn_app/features/auth/presentation/widget/formfield.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
