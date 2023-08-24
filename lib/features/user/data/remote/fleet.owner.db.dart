@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -14,7 +13,6 @@ abstract class UserDB extends ChangeNotifier {
   Future<SignUpBody> update(SignUpBody fleetOwner);
   Future<String> verify(String otp);
   Future<List<MultipartFile>> submitID(List<MultipartFile> file);
-
 }
 
 class UserDBImpl extends ChangeNotifier implements UserDB {
@@ -23,7 +21,7 @@ class UserDBImpl extends ChangeNotifier implements UserDB {
   UserDBImpl.empty() : api = APIService();
   @override
   Future<SignUpBody> create(SignUpBody user) async {
-    return await api.postFleetOwner(user);
+    return await api.postUser(user);
   }
 
   @override
@@ -42,7 +40,7 @@ class UserDBImpl extends ChangeNotifier implements UserDB {
   Future<String> verify(String otp) async {
     return await api.verifyFleetOwner(otp);
   }
-  
+
   @override
   Future<List<MultipartFile>> submitID(List<MultipartFile> file) async {
     return await api.submitIDs(file);

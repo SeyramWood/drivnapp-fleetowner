@@ -1,5 +1,4 @@
 import 'package:drivn_app/features/auth/presentation/providers/user.auth.provider.dart';
-import 'package:drivn_app/features/auth/presentation/views/verifyOwner/verify.user.view.dart';
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';

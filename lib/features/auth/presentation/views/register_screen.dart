@@ -1,7 +1,6 @@
 import 'package:drivn_app/features/auth/presentation/providers/auth.shared.provider.dart';
 import 'package:drivn_app/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
-import 'package:drivn_app/features/auth/presentation/views/otp.input.view.dart';
 import 'package:drivn_app/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
 import 'package:drivn_app/features/user/domain/entities/user.signup.model.dart';

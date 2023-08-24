@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../../shared/utils/usecase.dart';
 import '../../../data/repositories/fleet.owner.repo.impl.dart';
-import '../../entities/user.signup.model.dart';
 import '../../repositories/fleet.owner.repo.dart';
 
 class VerifyUser extends ChangeNotifier

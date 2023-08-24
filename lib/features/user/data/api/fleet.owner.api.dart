@@ -20,7 +20,7 @@ class APIService extends ChangeNotifier {
   String _userID = '';
   String get userID => _userID;
 
-  Future<dynamic> postFleetOwner(SignUpBody requestBody) async {
+  Future<dynamic> postUser(SignUpBody requestBody) async {
     final Uri url = Uri.parse(
         '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}'); // Replace with your actual API URL
 
@@ -31,11 +31,13 @@ class APIService extends ChangeNotifier {
     http.Response? response;
 
     try {
+      print('account creation');
       response = await http.post(
         url,
         headers: headers,
         body: requestBody.toJson(),
       );
+      print('account creation');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log('response body :' + jsonEncode(response.body));
@@ -92,7 +94,7 @@ class APIService extends ChangeNotifier {
     }
   }
 
-  Future submitIDs(
+  Future<List<http.MultipartFile>> submitIDs(
     List<http.MultipartFile> files,
   ) async {
     final url = Uri.parse('$baseUrl/proof-identity/$_userID');
@@ -102,19 +104,23 @@ class APIService extends ChangeNotifier {
         final request = http.MultipartRequest('POST', url)
           ..fields['user'] = _userID
           ..files.add(file);
-        print(_userID);
+
+        print('Uploading file: ${file.filename}');
         final response = await request.send();
+        print('sending request');
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           final responseBody = await response.stream.bytesToString();
-          print('Success: $responseBody');
-          return files;
+          print('Upload success: $responseBody');
         } else {
-          print('Error: ${response.statusCode}');
+          print('Upload error: ${response.statusCode}');
         }
       }
-    } on Exception catch (e) {
+
+      return files; // Return the list of files after all files are uploaded
+    } catch (e) {
       print('Exception: $e');
+      rethrow; // Re-throw the caught exception for better error propagation
     }
   }
 

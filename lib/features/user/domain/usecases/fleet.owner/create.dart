@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dartz/dartz.dart';
 
-import 'package:drivn_app/features/user/data/api/fleet.owner.api.dart';
 import 'package:drivn_app/shared/errors/failure.dart';
 import 'package:flutter/material.dart';
 

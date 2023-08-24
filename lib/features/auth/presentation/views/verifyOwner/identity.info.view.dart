@@ -1,7 +1,6 @@
 import 'package:drivn_app/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';

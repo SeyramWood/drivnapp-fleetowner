@@ -1,7 +1,5 @@
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
-import '';
-import '../../../auth/presentation/views/verifyDriver.view.dart';
 
 class RideInfoView extends StatefulWidget {
   const RideInfoView({super.key});

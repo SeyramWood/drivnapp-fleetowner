@@ -1,9 +1,7 @@
-import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:drivn_app/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn_app/shared/errors/failure.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -53,12 +51,8 @@ class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
       List<MultipartFile> file) async {
     try {
       final result = await db.submitID(file);
-      if (result != null) {
-        print(result);
-        return Right(result);
-      } else {
-        return Left(Failure('No result returned'));
-      }
+      print('got here');
+      return Right(result);
     } catch (e) {
       return Left(Failure(e.toString()));
     }

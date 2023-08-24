@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:drivn_app/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn_app/features/user/domain/usecases/fleet.owner/create.dart';
