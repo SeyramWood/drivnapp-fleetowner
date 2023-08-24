@@ -1,4 +1,4 @@
-import 'package:drivn_app/features/auth/presentation/views/validating.view.dart';
+import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -25,13 +25,13 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
     'Option 4',
     'Option 3',
   ];
-  var space = SizedBox(
+  var space = const SizedBox(
     height: 10,
   );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Driver Verification')),
+      appBar: AppBar(title: const Text('Driver Verification')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: SingleChildScrollView(
@@ -40,14 +40,14 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('National ID'),
+                const Text('National ID'),
                 CustomElevatedButton(
                   onPressed: () {},
+                  backgroundColor:
+                      selectedOptions.isNotEmpty ? Colors.green : black,
                   child: Text(selectedOptions.isNotEmpty
                       ? '${selectedOptions.length} file selected'
                       : 'Add file'),
-                  backgroundColor:
-                      selectedOptions.isNotEmpty ? Colors.green : black,
                 )
               ],
             ),
@@ -55,14 +55,14 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Driving License'),
+                const Text('Driving License'),
                 CustomElevatedButton(
                   onPressed: openMultiSelectDialog,
+                  backgroundColor:
+                      selectedOptions.isNotEmpty ? Colors.green : black,
                   child: Text(selectedOptions.isNotEmpty
                       ? '${selectedOptions.length} file selected'
                       : 'Add file'),
-                  backgroundColor:
-                      selectedOptions.isNotEmpty ? Colors.green : black,
                 )
               ],
             ),
@@ -70,7 +70,7 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('License Type'),
+                const Text('License Type'),
                 DropDownFormField(
                   controller: TextEditingController(),
                   labelText: '',
@@ -80,12 +80,22 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
             space,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text('License Number'), MyFormField(controller: licenseController,)],
+              children: [
+                const Text('License Number'),
+                MyFormField(
+                  controller: licenseController,
+                )
+              ],
             ),
             space,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text('Years of experience'), MyFormField(controller: yearsController,)],
+              children: [
+                const Text('Years of experience'),
+                MyFormField(
+                  controller: yearsController,
+                )
+              ],
             ),
             space,
             space,
@@ -97,10 +107,10 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               child: CustomElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => VerifyingView(),
+                    builder: (context) => const VerifyingView(),
                   ));
                 },
-                child: Text('Submit for review'),
+                child: const Text('Submit for review'),
               ),
             ),
           ]),
@@ -130,24 +140,23 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
 
 class MyFormField extends StatelessWidget {
   const MyFormField({super.key, required this.controller});
-final TextEditingController controller;
+  final TextEditingController controller;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
-        
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: yellow),
+          borderSide: const BorderSide(color: yellow),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: yellow),
+          borderSide: const BorderSide(color: yellow),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: yellow),
+          borderSide: const BorderSide(color: yellow),
         ),
       ),
     );

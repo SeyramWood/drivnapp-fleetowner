@@ -6,7 +6,7 @@ class MultiSelectDialog extends StatefulWidget {
   final List<String> options;
   final List<String> selectedOptions;
 
-  MultiSelectDialog({required this.options, required this.selectedOptions});
+  const MultiSelectDialog({super.key, required this.options, required this.selectedOptions});
 
   @override
   _MultiSelectDialogState createState() => _MultiSelectDialogState();
@@ -25,7 +25,7 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      title: Text(
+      title: const Text(
         'Select Options',
         style: TextStyle(color: black),
       ),
@@ -48,7 +48,7 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
                     });
                   },
                 ),
-                SizedBox(width: 8), // Adjust spacing between checkbox and text
+                const SizedBox(width: 8), // Adjust spacing between checkbox and text
                 Text(option),
               ],
             );
@@ -60,7 +60,7 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
           onPressed: () {
             Navigator.pop(context, _selectedOptions);
           },
-          child: Text('OK'),
+          child: const Text('OK'),
         ),
       ],
     );

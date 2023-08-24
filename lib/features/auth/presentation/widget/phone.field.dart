@@ -1,5 +1,5 @@
-import 'package:drivn_app/features/auth/presentation/providers/auth.shared.provider.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +13,7 @@ class PhoneFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Container(
-        padding: EdgeInsets.only(left: 10),
+        padding: const EdgeInsets.only(left: 10),
         decoration: BoxDecoration(
           border: Border.all(color: white),
           borderRadius: BorderRadius.circular(10),
@@ -27,25 +27,25 @@ class PhoneFormField extends StatelessWidget {
           onInputValidated: (bool value) {
             print(value);
           },
-          selectorConfig: SelectorConfig(
+          selectorConfig: const SelectorConfig(
             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
           ),
           ignoreBlank: true,
           autoValidateMode: AutovalidateMode.onUserInteraction,
-          selectorTextStyle: TextStyle(color: white),
+          selectorTextStyle: const TextStyle(color: white),
           // initialValue: number,
           textFieldController: controller,
           formatInput: true,
-          keyboardType: TextInputType.numberWithOptions(
+          keyboardType: const TextInputType.numberWithOptions(
             signed: true,
             decimal: true,
           ),
           inputBorder: InputBorder.none,
-          textStyle: TextStyle(color: white),
+          textStyle: const TextStyle(color: white),
           onSaved: (PhoneNumber number) {
             print('On Saved: $number');
           },
-          inputDecoration: InputDecoration(
+          inputDecoration: const InputDecoration(
             hintStyle: TextStyle(color: white),
             hintText: 'Phone Number',
             border: OutlineInputBorder(borderSide: BorderSide.none),

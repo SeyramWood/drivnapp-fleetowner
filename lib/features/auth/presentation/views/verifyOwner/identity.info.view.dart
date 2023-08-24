@@ -1,6 +1,6 @@
-import 'package:drivn_app/features/auth/presentation/providers/user.auth.provider.dart';
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
@@ -40,10 +40,10 @@ class ProofIDView extends StatelessWidget {
                       onPressed: () async {
                         context.read<UserAuthProvider>().selectFiles();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.file_copy,
                       ),
-                      label: Text('Add a file (Front and Back)'),
+                      label: const Text('Add a file (Front and Back)'),
                       style: ButtonStyle(
                           foregroundColor: MaterialStateProperty.all(white)),
                     ),
@@ -51,14 +51,14 @@ class ProofIDView extends StatelessWidget {
                 ),
                 SizedBox(
                   height: height / 2.5,
-                  child: Center(child: Text('')),
+                  child: const Center(child: Text('')),
                 ),
                 CustomElevatedButton(
                   onPressed: () {
                     context.read<UserAuthProvider>().submitUserID(context);
                   },
                   backgroundColor: black,
-                  child: Text('Submit for review'),
+                  child: const Text('Submit for review'),
                 )
               ],
             ),

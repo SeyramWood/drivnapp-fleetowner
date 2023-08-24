@@ -10,9 +10,9 @@ class MoreOfBookedCar extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: GridView(
-        padding: EdgeInsets.all(10),
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        padding: const EdgeInsets.all(10),
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,

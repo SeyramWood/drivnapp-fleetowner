@@ -1,12 +1,12 @@
-import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/features/auth/presentation/widget/formfield.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
-import 'package:drivn_app/shared/utils/validators.dart';
+import 'package:drivn/features/auth/presentation/views/login_screen.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/auth/presentation/widget/formfield.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/validators.dart';
 import 'package:flutter/material.dart';
 
 class ResetPasswordView extends StatefulWidget {
-  ResetPasswordView({Key? key}) : super(key: key);
+  const ResetPasswordView({Key? key}) : super(key: key);
 
   @override
   _ResetPasswordViewState createState() => _ResetPasswordViewState();
@@ -48,7 +48,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
     return Scaffold(
       backgroundColor: blue,
       appBar: AppBar(
-        title: Text('Change Password',
+        title: const Text('Change Password',
             style: TextStyle(fontSize: 20, color: Colors.white)),
         backgroundColor: blue,
         elevation: 0,
@@ -59,10 +59,10 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
       body: Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 50),
         child: ListView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             const SizedBox(height: 25),
-            Text(
+            const Text(
               "Enter a password not easy to guess. Must not be less than 8 characters.",
               style: TextStyle(
                 color: Colors.white70,
@@ -91,18 +91,18 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                     backgroundColor: black,
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('Password changed successful'),
                         ),
                       );
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginView(),
+                          builder: (context) => const LoginView(),
                         ),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       "Change Password",
                     ),
                   ),

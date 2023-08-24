@@ -1,6 +1,6 @@
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/features/car/presentations/widget/form.field.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/car/presentations/widget/form.field.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -16,7 +16,7 @@ class Add_A_Car_Form extends StatefulWidget {
 class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
   final carBrand = TextEditingController();
   final carType = TextEditingController();
-  final space = SizedBox(
+  final space = const SizedBox(
     height: 10,
   );
   List<String> selectedOptions = [];
@@ -45,7 +45,7 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text('Add Car')),
+        appBar: AppBar(title: const Text('Add Car')),
         body: Padding(
           padding:
               const EdgeInsets.symmetric(horizontal: 10.0).copyWith(top: 5),
@@ -65,7 +65,7 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Add image'),
+                    const Text('Add image'),
                     Visibility(
                       visible: imageFile != null ? true : false,
                       child: Center(
@@ -80,12 +80,11 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                           imageFile = result.files.first;
                         });
                         print(imageFile!.name);
-                        
                       },
+                      backgroundColor: imageFile != null ? Colors.green : blue,
                       child: Text(imageFile != null
                           ? 'File selected (Double tap to remove)'
                           : 'Add a file'),
-                      backgroundColor: imageFile != null ? Colors.green : blue,
                     )
                   ],
                 ),
@@ -93,7 +92,7 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Proof of ownership'),
+                    const Text('Proof of ownership'),
                     Visibility(
                       visible: proofFile != null ? true : false,
                       child: Center(
@@ -109,10 +108,10 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                         });
                         print(proofFile!.name);
                       },
+                      backgroundColor: proofFile != null ? Colors.green : blue,
                       child: Text(proofFile != null
                           ? 'File selected (Double tap to remove)'
                           : 'Add a file'),
-                      backgroundColor: proofFile != null ? Colors.green : blue,
                     )
                   ],
                 ),
@@ -120,14 +119,14 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('More features'),
+                    const Text('More features'),
                     CustomElevatedButton(
                       onPressed: openMultiSelectDialog,
+                      backgroundColor:
+                          selectedOptions.isNotEmpty ? Colors.green : blue,
                       child: Text(selectedOptions.isNotEmpty
                           ? '${selectedOptions.length} features selected'
                           : 'Add features'),
-                      backgroundColor:
-                          selectedOptions.isNotEmpty ? Colors.green : blue,
                     )
                   ],
                 ),
@@ -138,8 +137,8 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                   width: MediaQuery.sizeOf(context).width / 1.5,
                   child: CustomElevatedButton(
                     onPressed: () {},
-                    child: Text('Done'),
                     backgroundColor: blue,
+                    child: const Text('Done'),
                   ),
                 ),
                 space

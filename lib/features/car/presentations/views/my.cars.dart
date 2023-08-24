@@ -1,4 +1,4 @@
-import 'package:drivn_app/features/car/presentations/widget/booked.dart';
+import 'package:drivn/features/car/presentations/widget/booked.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -13,7 +13,7 @@ class MyCars extends StatelessWidget {
     final AvailabelOrBooked clicked = AvailabelOrBooked();
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(title: Text('My Cars')),
+      appBar: AppBar(title: const Text('My Cars')),
       body: ValueListenableBuilder(
         valueListenable: clicked,
         builder: (ctx, stateOfContainer, child) => Column(
@@ -34,7 +34,7 @@ class MyCars extends StatelessWidget {
                           height: 35,
                           width: MediaQuery.sizeOf(context).width / 2,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(5),
                                 bottomLeft: Radius.circular(5)),
                             color: stateOfContainer ? blue : white,
@@ -61,7 +61,7 @@ class MyCars extends StatelessWidget {
                           height: 35,
                           width: MediaQuery.sizeOf(context).width / 2,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(5),
                                 bottomRight: Radius.circular(5)),
                             color: stateOfContainer ? white : blue,

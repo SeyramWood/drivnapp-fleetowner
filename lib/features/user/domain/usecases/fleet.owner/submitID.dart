@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:drivn_app/shared/errors/failure.dart';
+import 'package:drivn/shared/errors/failure.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 

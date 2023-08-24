@@ -19,48 +19,67 @@ class APIService extends ChangeNotifier {
 
   String _userID = '';
   String get userID => _userID;
+  // Future<void> postUser(SignUpBody requestBody) async {
+  //   final url = Uri.parse('https://devapi.drivnapp.net/api/fleet-owners');
+  //   final headers = {
+  //     'Content-Type': 'application/json',
+  //   };
 
-  Future<dynamic> postUser(SignUpBody requestBody) async {
-    final Uri url = Uri.parse(
-        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}'); // Replace with your actual API URL
+  //   http.Response? response;
+  //   try {
+  //     response =
+  //         await http.post(url, headers: headers, body: requestBody.toJson());
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       print('success');
+  //     }
+  //   } on Exception catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json',
-    };
-
-    http.Response? response;
-
+  Future<void> postUser(SignUpBody requestBody) async {
     try {
+      final Uri url = Uri.parse(
+        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}',
+      );
+
+      final Map<String, String> headers = {
+        'content-type': 'application/json',
+      };
+      /*
+    with how I made the post request, did I do anything wrong
+     */
+      http.Response? response;
       print('account creation');
       response = await http.post(
         url,
         headers: headers,
         body: requestBody.toJson(),
       );
-      print('account creation');
+      print('account creation done');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log('response body :' + jsonEncode(response.body));
-        return await requestBody;
+        log('response body :${jsonEncode(response.body)}');
+        // return await requestBody;
       } else {
-        log('error 1 :${response.reasonPhrase}');
-        log('error 2 :' + response.body.toString());
+        log('else 1 :${response.reasonPhrase}');
+        log('else 2 :${response.body}');
       }
-    } on Exception catch (e) {
+    } catch (e) {
       log(e.toString());
     }
   }
 
   Future verifyFleetOwner(String requestBody) async {
-    final Uri url = Uri.parse(
-        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/verify/$requestBody'); // Replace with your actual API URL
-
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json',
-    };
-    http.Response? response;
-
     try {
+      final Uri url = Uri.parse(
+          '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/verify/$requestBody');
+
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+      };
+      http.Response? response;
+
       response = await http.post(
         url,
         headers: headers,
@@ -68,14 +87,11 @@ class APIService extends ChangeNotifier {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log('$requestBody => ${response.body}');
-        // Parse the JSON response
         final responseBody = response.body;
         log(requestBody);
 
-        // Parse the JSON response
         final jsonResponse = jsonDecode(responseBody) as Map<String, dynamic>;
 
-        // Access the 'data' object
         final data = jsonResponse['data'] as Map<String, dynamic>;
 
         // Access the 'id' field from the 'data' object
@@ -86,10 +102,10 @@ class APIService extends ChangeNotifier {
         notifyListeners();
         return '$id';
       } else {
-        log('error 1 :' + response.reasonPhrase.toString());
-        log('error 2 :' + response.body.toString());
+        log('error 1 :${response.reasonPhrase}');
+        log('error 2 :${response.body}');
       }
-    } on Exception catch (e) {
+    } catch (e) {
       log(e.toString());
     }
   }
@@ -101,9 +117,7 @@ class APIService extends ChangeNotifier {
 
     try {
       for (var file in files) {
-        final request = http.MultipartRequest('POST', url)
-          ..fields['user'] = _userID
-          ..files.add(file);
+        final request = http.MultipartRequest('POST', url);
 
         print('Uploading file: ${file.filename}');
         final response = await request.send();

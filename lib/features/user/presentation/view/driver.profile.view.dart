@@ -9,14 +9,14 @@ class DProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
+        actions: const [
           Text(
             'Edit',
             style: TextStyle(color: yellow),
           )
         ],
       ),
-      body: Column(
+      body: const Column(
         children: [
           SizedBox(
             height: 30,

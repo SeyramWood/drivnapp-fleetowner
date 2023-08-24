@@ -4,8 +4,8 @@ class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     super.key,
     required this.onPressed,
-    required this.child, this.backgroundColor,
-
+    required this.child,
+    this.backgroundColor,
   });
   final void Function()? onPressed;
   final Widget child;
@@ -18,8 +18,9 @@ class CustomElevatedButton extends StatelessWidget {
         width: MediaQuery.sizeOf(context).width,
         child: ElevatedButton(
           onPressed: onPressed,
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(backgroundColor)),
           child: child,
-          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
         ) //this extention indicate a loading progress when the button is pressed,
         );
   }

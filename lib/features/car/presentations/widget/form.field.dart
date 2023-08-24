@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 
 class DropDownFormField extends StatefulWidget {
   const DropDownFormField({
@@ -61,15 +61,15 @@ class _DropDownFormFieldState extends State<DropDownFormField> {
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: yellow),
+                borderSide: const BorderSide(color: yellow),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: yellow),
+                borderSide: const BorderSide(color: yellow),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: yellow),
+                borderSide: const BorderSide(color: yellow),
               ),
             ),
           ),
@@ -81,7 +81,7 @@ class _DropDownFormFieldState extends State<DropDownFormField> {
             return ListTile(title: Text(option));
           },
           onSuggestionSelected: (option) {
-            this.widget.controller.text = option;
+            widget.controller.text = option;
             print(options);
           },
         ),

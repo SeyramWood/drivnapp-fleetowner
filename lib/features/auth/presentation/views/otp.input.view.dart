@@ -1,6 +1,6 @@
-import 'package:drivn_app/features/auth/presentation/providers/user.auth.provider.dart';
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +40,7 @@ class _OTPInputViewState extends State<OTPInputView> {
                     color: white,
                   ),
                 ),
-                Text(
+                const Text(
                   "Enter the 4 digits code via your email",
                   style: TextStyle(
                     color: white,
@@ -62,7 +62,7 @@ class _OTPInputViewState extends State<OTPInputView> {
                             .verifyUser(otp, context);
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       "Verify",
                     ),
                   ),
@@ -78,7 +78,7 @@ class _OTPInputViewState extends State<OTPInputView> {
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
-                        children: [
+                        children: const [
                           TextSpan(
                               text: 'Resend.',
                               style: TextStyle(

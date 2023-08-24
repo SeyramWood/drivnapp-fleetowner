@@ -8,8 +8,8 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Settings')),
-      body: SafeArea(
+      appBar: AppBar(title: const Text('Settings')),
+      body: const SafeArea(
           child: Column(
         children: [
           ListTile(

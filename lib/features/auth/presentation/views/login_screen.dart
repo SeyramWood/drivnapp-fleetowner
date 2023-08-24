@@ -1,9 +1,9 @@
-import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
-import 'package:drivn_app/features/auth/presentation/widget/phone.field.dart';
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
+import 'package:drivn/features/auth/presentation/views/register_screen.dart';
+import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/auth/presentation/widget/google.button.dart';
 import 'package:flutter/material.dart';
-import 'package:drivn_app/features/auth/presentation/views/request.password.reset.view.dart';
+import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../../../app/home.dart';
@@ -11,7 +11,7 @@ import '../../../../shared/utils/constants/colors.dart';
 import '../widget/formfield.dart';
 
 class LoginView extends StatefulWidget {
-  LoginView({Key? key}) : super(key: key);
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   _LoginViewState createState() => _LoginViewState();
@@ -31,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
       // Navigate to the home screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     }
   }
@@ -88,7 +88,7 @@ class _LoginViewState extends State<LoginView> {
                   CustomFormField(
                     controller: _passwordController,
                     labelText: 'Password',
-                    prefixIcon: Icon(Icons.password_outlined),
+                    prefixIcon: const Icon(Icons.password_outlined),
                     suffixIcon: Icons.visibility,
                   ),
                   TextButton(
@@ -97,12 +97,12 @@ class _LoginViewState extends State<LoginView> {
                         context,
                         PageTransition(
                           type: PageTransitionType.rightToLeft,
-                          duration: Duration(milliseconds: 600),
-                          child: RequestPinView(),
+                          duration: const Duration(milliseconds: 600),
+                          child: const RequestPinView(),
                         ),
                       );
                     },
-                    child: Align(
+                    child: const Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         'Forgot Password?',
@@ -118,11 +118,11 @@ class _LoginViewState extends State<LoginView> {
                     backgroundColor: black,
                     onPressed: () {
                       Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => HomePage()),
+                        MaterialPageRoute(builder: (context) => const HomePage()),
                         (route) => false,
                       );
                     },
-                    child: Text('Login'),
+                    child: const Text('Login'),
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(
@@ -137,7 +137,7 @@ class _LoginViewState extends State<LoginView> {
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
-                        children: [
+                        children: const [
                           TextSpan(
                             text: 'Register.',
                             style: TextStyle(
@@ -149,7 +149,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   GoogleButton(

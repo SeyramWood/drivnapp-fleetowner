@@ -1,5 +1,5 @@
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -40,10 +40,10 @@ class DriverDocsView extends StatelessWidget {
                         final file = result.files.first;
                         print(file.name);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.file_copy,
                       ),
-                      label: Text('Add a file'),
+                      label: const Text('Add a file'),
                       style: ButtonStyle(
                           foregroundColor: MaterialStateProperty.all(white)),
                     ),
@@ -55,7 +55,7 @@ class DriverDocsView extends StatelessWidget {
                 CustomElevatedButton(
                   onPressed: () {},
                   backgroundColor: black,
-                  child: Text('Submit for review'),
+                  child: const Text('Submit for review'),
                 )
               ],
             ),

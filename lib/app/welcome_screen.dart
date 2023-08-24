@@ -1,5 +1,5 @@
-import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
-import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
+import 'package:drivn/features/auth/presentation/views/login_screen.dart';
+import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -8,7 +8,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF554AF0),
+      backgroundColor: const Color(0xFF554AF0),
       body: SafeArea(
         child: Center(
           child: Column(
@@ -33,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginView()));
+                          MaterialPageRoute(builder: (context) => const LoginView()));
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(15.0),
@@ -59,24 +59,24 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: 350,
                       height: 56,
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                          side: BorderSide(color: Colors.white, width: 1.5),
+                          side: const BorderSide(color: Colors.white, width: 1.5),
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RegisterView(),
+                              builder: (context) => const RegisterView(),
                             ),
                           );
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(15.0),
                           child: Text(
                             "Register",
                             style: TextStyle(

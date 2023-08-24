@@ -9,14 +9,14 @@ class MyTrips extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Trips'),
+        title: const Text('My Trips'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: ListView.builder(
           itemCount: 10,
           itemBuilder: (context, index) {
-            return TripCard();
+            return const TripCard();
           },
         ),
       ),

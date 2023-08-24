@@ -1,4 +1,4 @@
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/dimensions.dart';
@@ -10,43 +10,43 @@ class VerifyingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Verifying')),
+      appBar: AppBar(title: const Text('Verifying')),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           Container(
             height: 100,
             width: 100,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: blue,
             ),
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           Text(
             'Checking your documents',
             style: Theme.of(context).textTheme.headlineMedium,
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           ListTile(
             leading: Container(
-              padding: EdgeInsets.all(9),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: black),
-              child: Text(
+              padding: const EdgeInsets.all(9),
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: black),
+              child: const Text(
                 '1',
                 style: TextStyle(color: white, fontSize: 15),
               ),
             ),
-            title: Text('asdfghkl'),
+            title: const Text('asdfghkl'),
             trailing: Container(
-                padding: EdgeInsets.all(2),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(2),
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: grey,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.done_outlined,
                   size: 20,
                   color: white,
@@ -55,33 +55,33 @@ class VerifyingView extends StatelessWidget {
           divider,
           ListTile(
             leading: Container(
-              padding: EdgeInsets.all(9),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: black),
-              child: Text(
+              padding: const EdgeInsets.all(9),
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: black),
+              child: const Text(
                 '2',
                 style: TextStyle(color: white, fontSize: 15),
               ),
             ),
-            title: Text('asdfghkl'),
+            title: const Text('asdfghkl'),
             trailing: Container(
-                padding: EdgeInsets.all(2),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(2),
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: grey,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.done_outlined,
                   size: 20,
                   color: white,
                 )),
           ),
           divider,
-          SizedBox(height: 60),
+          const SizedBox(height: 60),
           SizedBox(
             width: 150,
             child: CustomElevatedButton(
               onPressed: () => () {},
-              child: Text('Go Home'),
+              child: const Text('Go Home'),
             ),
           )
         ],

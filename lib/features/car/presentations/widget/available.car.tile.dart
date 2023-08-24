@@ -1,6 +1,6 @@
-import 'package:drivn_app/features/car/presentations/switch_icon_icons.dart';
-import 'package:drivn_app/features/car/presentations/widget/ride.sharing.form.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/features/car/presentations/switch_icon_icons.dart';
+import 'package:drivn/features/car/presentations/widget/ride.sharing.form.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -50,8 +50,8 @@ class _CarTileState extends State<CarTile> {
         Navigator.of(context).push(
           PageTransition(
             type: PageTransitionType.rightToLeft,
-            duration: Duration(milliseconds: 600),
-            child: CarDetails(),
+            duration: const Duration(milliseconds: 600),
+            child: const CarDetails(),
           ),
         );
       },
@@ -65,7 +65,7 @@ class _CarTileState extends State<CarTile> {
               SizedBox(
                 width: MediaQuery.sizeOf(context).width / 3.5,
                 child: Container(
-                  padding: EdgeInsets.only(right: 5),
+                  padding: const EdgeInsets.only(right: 5),
                   child: Image.asset('assets/car1.png'),
                 ),
               ),
@@ -73,12 +73,12 @@ class _CarTileState extends State<CarTile> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Text('Mercedes Benz'),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          padding: EdgeInsets.symmetric(horizontal: 5.0),
                           child: Row(
                             children: [
                               Text(
@@ -96,8 +96,8 @@ class _CarTileState extends State<CarTile> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 5),
-                    Row(
+                    const SizedBox(height: 5),
+                    const Row(
                       children: [
                         Icon(
                           Icons.star_border_outlined,
@@ -109,18 +109,18 @@ class _CarTileState extends State<CarTile> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'GHS 900000',
                           style: TextStyle(fontSize: 15),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 3.2,
                           child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              padding: const EdgeInsets.symmetric(horizontal: 5),
                               decoration: BoxDecoration(
                                 color: white,
                                 borderRadius: BorderRadius.circular(5),
@@ -151,7 +151,7 @@ class _CarTileState extends State<CarTile> {
                                     // Handle the case when "Rental" is selected
                                   }
                                 },
-                                items: [
+                                items: const [
                                   DropdownMenuItem<int>(
                                     value: 1,
                                     child: Text(

@@ -1,7 +1,8 @@
+import 'dart:developer';
 
-import 'package:drivn_app/features/user/domain/entities/user.signup.model.dart';
-import 'package:drivn_app/features/user/domain/usecases/fleet.owner/create.dart';
-import 'package:drivn_app/features/user/domain/usecases/fleet.owner/submitID.dart';
+import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
+import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
+import 'package:drivn/features/user/domain/usecases/fleet.owner/submitID.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -23,7 +24,7 @@ class UserAuthProvider extends ChangeNotifier {
         submitID = SubmitID.empty();
   List<MultipartFile>? files;
 
-  void postUser(SignUpBody fleetOwner, context) async {
+  Future<void> postUser(SignUpBody fleetOwner, context) async {
     final result = await post.call(Params(fleetOwner));
     result.fold(
       (l) => print(l.message),
@@ -42,7 +43,7 @@ class UserAuthProvider extends ChangeNotifier {
   Future<void> verifyUser(String otp, context) async {
     final result = await verify.call(Params(otp));
     result.fold(
-      (l) => print('error 1 :' + l.message),
+      (l) => {print('error 1 :${l.message}')},
       (r) {
         Navigator.push(
           context,
@@ -59,9 +60,9 @@ class UserAuthProvider extends ChangeNotifier {
 //select files to be uploaded
   Future<List<MultipartFile>?> selectFiles() async {
     final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
-    List<MultipartFile>? _files;
+    List<MultipartFile>? files;
     if (fileResult != null) {
-      _files = fileResult.files
+      files = fileResult.files
           // .where((file) => file.bytes != null)
           .map(
             (file) => MultipartFile.fromBytes(
@@ -71,10 +72,10 @@ class UserAuthProvider extends ChangeNotifier {
             ),
           )
           .toList();
-      files = await _files;
-      print('files :${_files.length}');
+      files = files;
+      print('files :${files.length}');
 
-      return await _files;
+      return files;
     }
     return [];
   }
@@ -82,7 +83,9 @@ class UserAuthProvider extends ChangeNotifier {
   Future submitUserID(context) async {
     final result = await submitID.call(Params(files!));
     result.fold(
-      (l) => print(l.message),
+      (l) {
+        log(l.message);
+      },
       (r) {
         Navigator.of(context).pop();
         return r;

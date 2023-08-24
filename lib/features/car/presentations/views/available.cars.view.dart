@@ -14,7 +14,7 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemBuilder: (context, index) {
-        return CarTile();
+        return const CarTile();
       },
     );
   }

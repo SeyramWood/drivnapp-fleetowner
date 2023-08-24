@@ -21,7 +21,7 @@ class RideSharingFormField extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(color: yellow),
+          style: const TextStyle(color: yellow),
         ),
         TextFormField(
           controller: controller,
@@ -29,15 +29,15 @@ class RideSharingFormField extends StatelessWidget {
             prefixIcon: prefixIcon,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: blue),
+              borderSide: const BorderSide(color: blue),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: blue),
+              borderSide: const BorderSide(color: blue),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: blue),
+              borderSide: const BorderSide(color: blue),
             ),
           ),
         ),
@@ -50,8 +50,8 @@ class RideSharingFormField extends StatelessWidget {
 
 void rideSharing(
   BuildContext context,
-  _datePicker,
-  _timePicker,
+  datePicker,
+  timePicker,
 ) {
   showDialog(
     context: context,
@@ -66,20 +66,20 @@ void rideSharing(
               RideSharingFormField(
                 title: 'Destination',
                 controller: TextEditingController(),
-                prefixIcon: ImageIcon(AssetImage('assets/icons/location.png')),
+                prefixIcon: const ImageIcon(AssetImage('assets/icons/location.png')),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               RideSharingFormField(
                 title: 'Pick up location',
                 controller: TextEditingController(),
-                prefixIcon: ImageIcon(AssetImage('assets/icons/location.png')),
+                prefixIcon: const ImageIcon(AssetImage('assets/icons/location.png')),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: _datePicker,
+                      onTap: datePicker,
                       child: Card(
                           surfaceTintColor: white,
                           shape: RoundedRectangleBorder(
@@ -91,8 +91,8 @@ void rideSharing(
                                 Text(
                                   '${context.watch<CarProvider>().date.day}/${context.watch<CarProvider>().date.month}/${context.watch<CarProvider>().date.year.toString().split('20').last}',
                                 ),
-                                Spacer(),
-                                ImageIcon(
+                                const Spacer(),
+                                const ImageIcon(
                                     AssetImage('assets/icons/calendar.png')),
                               ],
                             ),
@@ -101,7 +101,7 @@ void rideSharing(
                   ),
                   Expanded(
                     child: GestureDetector(
-                      onTap: _timePicker,
+                      onTap: timePicker,
                       child: Card(
                           surfaceTintColor: white,
                           shape: RoundedRectangleBorder(
@@ -117,8 +117,8 @@ void rideSharing(
                                       .format(context)
                                       .toString(),
                                 ),
-                                Spacer(),
-                                ImageIcon(AssetImage('assets/icons/timer.png')),
+                                const Spacer(),
+                                const ImageIcon(AssetImage('assets/icons/timer.png')),
                               ],
                             ),
                           )),
@@ -126,30 +126,30 @@ void rideSharing(
                   )
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               RideSharingFormField(
                 title: 'Price',
                 controller: TextEditingController(),
-                prefixIcon: ImageIcon(AssetImage('assets/icons/money-add.png')),
+                prefixIcon: const ImageIcon(AssetImage('assets/icons/money-add.png')),
               ),
               Row(
                 children: [
-                  Text('Number of seats'),
+                  const Text('Number of seats'),
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(Icons.remove_circle_outline),
+                          icon: const Icon(Icons.remove_circle_outline),
                         ),
-                        Text(
+                        const Text(
                           '3',
                           style: TextStyle(fontSize: 18),
                         ),
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(Icons.add_circle_outline_outlined),
+                          icon: const Icon(Icons.add_circle_outline_outlined),
                         ),
                       ],
                     ),
@@ -166,7 +166,7 @@ void rideSharing(
             width: MediaQuery.sizeOf(context).width / 3,
             child: ElevatedButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Done'),
+              child: const Text('Done'),
             ),
           ),
         )

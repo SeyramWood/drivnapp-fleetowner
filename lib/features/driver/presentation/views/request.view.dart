@@ -27,7 +27,7 @@ class _RequestViewState extends State<RequestView> {
                       underline: Container(),
                       value: 1,
                       onChanged: (value) {},
-                      items: [
+                      items: const [
                         DropdownMenuItem<int>(
                           value: 1,
                           child: Text(
@@ -52,8 +52,8 @@ class _RequestViewState extends State<RequestView> {
                       ],
                     ),
                   ),
-                  Spacer(),
-                  Text('offline'),
+                  const Spacer(),
+                  const Text('offline'),
                   Transform.scale(
                     scale: 0.8,
                     child: Switch(
@@ -67,7 +67,7 @@ class _RequestViewState extends State<RequestView> {
                 child: ListView.builder(
                   itemCount: 10,
                   itemBuilder: (context, index) {
-                    return RequestTile();
+                    return const RequestTile();
                   },
                 ),
               )

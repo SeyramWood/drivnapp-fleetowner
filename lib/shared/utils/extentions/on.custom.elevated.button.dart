@@ -5,7 +5,7 @@ import '../../../features/auth/presentation/widget/elevated.button.dart';
 extension CustomExtention on CustomElevatedButton {
   Widget loading(bool isLoading) {
     return isLoading
-        ? CustomElevatedButton(
+        ? const CustomElevatedButton(
             onPressed: null,
             child: SizedBox.square(
               dimension: 20,

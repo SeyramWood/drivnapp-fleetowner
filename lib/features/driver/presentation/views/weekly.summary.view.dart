@@ -1,4 +1,4 @@
-import 'package:drivn_app/features/driver/presentation/views/today.summary.view.dart';
+import 'package:drivn/features/driver/presentation/views/today.summary.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -11,12 +11,12 @@ class WeeklySummaryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: SizedBox(
             height: 15,
           ),
         ),
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -26,14 +26,14 @@ class WeeklySummaryView extends StatelessWidget {
             ],
           ),
         ),
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: SizedBox(height: 15),
         ),
-        WeeklySummaryCart(),
-        SliverToBoxAdapter(
+        const WeeklySummaryCart(),
+        const SliverToBoxAdapter(
           child: SizedBox(height: 15),
         ),
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: Row(
             children: [
               SummaryContainer(
@@ -62,7 +62,7 @@ class WeeklySummaryView extends StatelessWidget {
         ),
         SliverList.builder(
           itemBuilder: (context, index) {
-            return SummaryTile();
+            return const SummaryTile();
           },
         )
       ],
@@ -97,7 +97,7 @@ class WeeklySummaryCart extends StatelessWidget {
                         decoration: BoxDecoration(
                             // color: grey.withOpacity(.3),
                             borderRadius: BorderRadius.circular(60)),
-                        padding: EdgeInsets.all(13),
+                        padding: const EdgeInsets.all(13),
                         //second indicator bg//
                         child: Container(
                             color: grey,

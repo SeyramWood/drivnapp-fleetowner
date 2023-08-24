@@ -1,4 +1,4 @@
-import 'package:drivn_app/features/car/presentations/widget/car.carousel.dart';
+import 'package:drivn/features/car/presentations/widget/car.carousel.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -9,13 +9,13 @@ class CarDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Car details')),
+      appBar: AppBar(title: const Text('Car details')),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
               height: MediaQuery.of(context).size.height / 3.5,
-              child: CarCarousel(),
+              child: const CarCarousel(),
             ),
           ),
           SliverPadding(
@@ -32,7 +32,7 @@ class CarDetails extends StatelessWidget {
                           'Car ID:idhiei53i  ',
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
-                        Icon(Icons.copy)
+                        const Icon(Icons.copy)
                       ],
                     ),
                     Text(
@@ -45,7 +45,7 @@ class CarDetails extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.star_border_outlined,
                           color: yellow,
                         ),
@@ -66,7 +66,7 @@ class CarDetails extends StatelessWidget {
                         )
                       ],
                     ),
-                    Divider(),
+                    const Divider(),
                     Text(
                       'All Features',
                       style:
@@ -85,12 +85,12 @@ class CarDetails extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(horizontal: 10.0).copyWith(top: 20),
             sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
                 mainAxisExtent: 150,
               ),
               delegate: SliverChildBuilderDelegate(
-                (context, index) => Card(
+                (context, index) => const Card(
                   surfaceTintColor: white,
                   color: white,
                   shadowColor: white,
@@ -111,7 +111,7 @@ class CarDetails extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: ImageIcon(AssetImage('assets/icons/edit.png')),
+        child: const ImageIcon(AssetImage('assets/icons/edit.png')),
       ),
     );
   }

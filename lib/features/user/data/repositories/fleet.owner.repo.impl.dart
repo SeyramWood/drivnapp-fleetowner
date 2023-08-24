@@ -1,7 +1,6 @@
-
 import 'package:dartz/dartz.dart';
-import 'package:drivn_app/features/user/domain/entities/user.signup.model.dart';
-import 'package:drivn_app/shared/errors/failure.dart';
+import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
+import 'package:drivn/shared/errors/failure.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -18,9 +17,9 @@ class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
   Future<Either<Failure, void>> create(SignUpBody fleetOwner) async {
     try {
       await db.create(fleetOwner);
-      return Right<Failure, void>(null);
+      return Right<Failure, void>(fleetOwner);
     } catch (e) {
-      return Left(Failure('error 1:' + e.toString()));
+      return Left(Failure('error 1:$e'));
     }
   }
 
@@ -42,7 +41,7 @@ class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
       final result = await db.verify(otp);
       return Right(result);
     } catch (e) {
-      return Left(Failure('error 1:' + e.toString()));
+      return Left(Failure('error 1:$e'));
     }
   }
 

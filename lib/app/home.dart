@@ -1,11 +1,13 @@
-import 'package:drivn_app/features/car/presentations/views/add.car.form.dart';
-import 'package:drivn_app/features/car/presentations/views/my.cars.dart';
+import 'package:drivn/features/car/presentations/views/add.car.form.dart';
+import 'package:drivn/features/car/presentations/views/my.cars.dart';
 import 'package:flutter/material.dart';
 
 import '../features/user/presentation/view/profile.view.dart';
 import '../shared/utils/constants/colors.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -18,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: [MyCars(), Add_A_Car_Form(), ProfileView()],
+        children: const [MyCars(), Add_A_Car_Form(), ProfileView()],
       ),
       bottomNavigationBar: BottomNavigationBar(
         showUnselectedLabels: false,
@@ -30,7 +32,7 @@ class _HomePageState extends State<HomePage> {
             _currentIndex = index;
           });
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: ImageIcon(AssetImage('assets/icons/car.png')), label: ''),
           BottomNavigationBarItem(

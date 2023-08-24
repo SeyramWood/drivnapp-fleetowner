@@ -1,5 +1,5 @@
-import 'package:drivn_app/features/car/presentations/views/booked.car.detail.page.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/features/car/presentations/views/booked.car.detail.page.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -10,7 +10,7 @@ class BookedCarsBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemBuilder: (context, index) {
-        return InfoCard();
+        return const InfoCard();
       },
     );
   }
@@ -32,8 +32,8 @@ class InfoCard extends StatelessWidget {
           Container(
             width: MediaQuery.sizeOf(context).width,
             height: MediaQuery.sizeOf(context).height / 4.5,
-            padding: EdgeInsets.only(right: 5),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.only(right: 5),
+            decoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
                 image: DecorationImage(
                     image: AssetImage('assets/bg.png'), fit: BoxFit.fitWidth)),
@@ -49,18 +49,18 @@ class InfoCard extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(PageTransition(
                           type: PageTransitionType.fade,
-                          duration: Duration(milliseconds: 500),
-                          child: MoreOfBookedCar(),
+                          duration: const Duration(milliseconds: 500),
+                          child: const MoreOfBookedCar(),
                         ));
                       },
                       style: ElevatedButton.styleFrom(
                           padding:
-                              EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                              const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           backgroundColor: Colors.red),
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text('More', style: TextStyle(fontSize: 12)),
@@ -78,28 +78,28 @@ class InfoCard extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
-                Tile(
+                const Tile(
                   leading: 'leadingText',
                   trailing: 'trailingText',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
-                Tile(
+                const Tile(
                   leading: 'leadingText',
                   trailing: 'trailingText',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
-                Tile(
+                const Tile(
                   leading: 'leadingText',
                   trailing: 'trailingText',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
-                Tile(
+                const Tile(
                   leading: 'leadingText',
                   trailing: 'trailingText',
                 ),
