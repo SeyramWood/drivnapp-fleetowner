@@ -1,5 +1,3 @@
-import 'package:drivn_app/features/car/presentations/views/car.detail.dart';
-import 'package:drivn_app/features/car/presentations/widget/available.car.tile.dart';
 import 'package:drivn_app/features/car/presentations/widget/booked.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +10,7 @@ class MyCars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Clicked clicked = Clicked();
+    final AvailabelOrBooked clicked = AvailabelOrBooked();
     return Scaffold(
       extendBody: true,
       appBar: AppBar(title: Text('My Cars')),

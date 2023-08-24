@@ -14,12 +14,6 @@ class WelcomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Image.asset(
-              //   "assets/img-3.png",
-              //   height: MediaQuery.of(context).size.height * 0.55,
-              //   width: MediaQuery.of(context).size.width,
-              //   fit: BoxFit.cover,
-              // ),
               Image.asset(
                 "assets/logo.png",
                 fit: BoxFit.cover,
@@ -68,52 +62,26 @@ class WelcomeScreen extends StatelessWidget {
                     Container(
                       width: 350,
                       height: 56,
-                      // child: Expanded(
-                      //   child: MaterialButton(
-                      //     color: Colors.white,
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //     ),
-                      //     onPressed: () {
-                      //       Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //               builder: (context) => RegisterScreen()));
-                      //     },
-                      //     child: const Padding(
-                      //       padding: EdgeInsets.all(15.0),
-                      //       child: Text(
-                      //         "Register",
-                      //         style: TextStyle(
-                      //           color: Colors.black,
-                      //           fontSize: 16,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      child: Expanded(
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: BorderSide(color: Colors.white, width: 1.5),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterView(),
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Text(
-                              "Register",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          side: BorderSide(color: Colors.white, width: 1.5),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterView(),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            "Register",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
                             ),
                           ),
                         ),

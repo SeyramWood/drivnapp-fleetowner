@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/features/auth/presentation/widget/formfield.dart';
 import 'package:drivn_app/features/car/presentations/widget/form.field.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
@@ -55,12 +52,12 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                AddCarFormField(
+                DropDownFormField(
                   controller: carBrand,
                   labelText: 'Car Brand',
                 ),
                 space,
-                AddCarFormField(
+                DropDownFormField(
                   controller: carType,
                   labelText: 'Car Type',
                 ),
@@ -83,6 +80,7 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                           imageFile = result.files.first;
                         });
                         print(imageFile!.name);
+                        
                       },
                       child: Text(imageFile != null
                           ? 'File selected (Double tap to remove)'

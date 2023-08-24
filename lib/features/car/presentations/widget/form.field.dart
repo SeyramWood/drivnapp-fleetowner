@@ -4,8 +4,8 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 
-class AddCarFormField extends StatefulWidget {
-  const AddCarFormField({
+class DropDownFormField extends StatefulWidget {
+  const DropDownFormField({
     Key? key,
     required this.controller,
     required this.labelText,
@@ -19,10 +19,10 @@ class AddCarFormField extends StatefulWidget {
   final Widget? suffixIcon;
 
   @override
-  State<AddCarFormField> createState() => _AddCarFormFieldState();
+  State<DropDownFormField> createState() => _DropDownFormFieldState();
 }
 
-class _AddCarFormFieldState extends State<AddCarFormField> {
+class _DropDownFormFieldState extends State<DropDownFormField> {
   String selectedValue = '';
 
   List<String> options = [
@@ -86,33 +86,6 @@ class _AddCarFormFieldState extends State<AddCarFormField> {
           },
         ),
       ),
-
-      // TextFormField(
-      //   controller: controller,
-      //   // autofocus: true,
-      //   decoration: InputDecoration(
-      //     labelText: labelText,
-      //     labelStyle: TextStyle(color: yellow),
-      //     prefixIconColor: white,
-      //     suffixIconColor: white,
-      //     contentPadding: EdgeInsets.symmetric(horizontal: 15),
-      //     suffixIcon: suffixIcon,
-      //   border: OutlineInputBorder(
-      //     borderRadius: BorderRadius.circular(10),
-      //     borderSide: BorderSide(color: yellow),
-      //   ),
-      //   enabledBorder: OutlineInputBorder(
-      //     borderRadius: BorderRadius.circular(10),
-      //     borderSide: BorderSide(color: yellow),
-      //   ),
-      //   focusedBorder: OutlineInputBorder(
-      //     borderRadius: BorderRadius.circular(10),
-      //     borderSide: BorderSide(color: yellow),
-      //   ),
-      // ),
-      //   style: TextStyle(color: black),
-      //   validator: validator,
-      // ),
     );
   }
 }

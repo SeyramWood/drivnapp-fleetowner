@@ -21,12 +21,14 @@ class AppLightTheme {
         ),
       ),
       textTheme: TextTheme(
-          headlineLarge: TextStyle(
-              color: white, fontFamily: 'Inter', fontWeight: FontWeight.w600),
-          headlineMedium: TextStyle(fontSize: 22),
-          headlineSmall:
-              TextStyle(color: white, fontFamily: 'Inter', fontSize: 18),
-          bodyLarge: TextStyle(fontFamily: 'Inter')),
+        headlineLarge: TextStyle(
+            color: white, fontFamily: 'Inter', fontWeight: FontWeight.w600),
+        headlineMedium: TextStyle(fontSize: 22),
+        headlineSmall:
+            TextStyle(color: white, fontFamily: 'Inter', fontSize: 18),
+        bodyLarge: TextStyle(fontFamily: 'Inter'),
+        bodyMedium: TextStyle(fontFamily: 'Inter'),
+      ),
     );
   }
 }

@@ -1,7 +1,10 @@
+import 'package:drivn_app/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
 class ProofIDView extends StatelessWidget {
   const ProofIDView({super.key});
@@ -10,6 +13,7 @@ class ProofIDView extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
+    MultipartFile? files;
     return Scaffold(
         appBar: AppBar(backgroundColor: blue),
         backgroundColor: blue,
@@ -35,15 +39,12 @@ class ProofIDView extends StatelessWidget {
                     width: width,
                     child: TextButton.icon(
                       onPressed: () async {
-                        final result = await FilePicker.platform.pickFiles();
-                        if (result == null) return;
-                        final file = result.files.first;
-                        print(file.name);
+                        context.read<UserAuthProvider>().selectFiles();
                       },
                       icon: Icon(
                         Icons.file_copy,
                       ),
-                      label: Text('Add a file'),
+                      label: Text('Add a file (Front and Back)'),
                       style: ButtonStyle(
                           foregroundColor: MaterialStateProperty.all(white)),
                     ),
@@ -51,9 +52,12 @@ class ProofIDView extends StatelessWidget {
                 ),
                 SizedBox(
                   height: height / 2.5,
+                  child: Center(child: Text('')),
                 ),
                 CustomElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<UserAuthProvider>().submitUserID(context);
+                  },
                   backgroundColor: black,
                   child: Text('Submit for review'),
                 )
