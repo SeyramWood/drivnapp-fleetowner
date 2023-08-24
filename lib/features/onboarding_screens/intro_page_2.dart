@@ -18,14 +18,14 @@ class IntroPage2 extends StatelessWidget {
             children: [
               Padding(
                 // padding: const EdgeInsets.all(8.0),
-                padding: EdgeInsets.only(top: 32, left: 24, right: 24),
+                padding: const EdgeInsets.only(top: 32, left: 24, right: 24),
                 child: Image.asset(
                   'assets/step_1_image.png', // Replace with your image path
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
                   'Drive confidently',
@@ -35,7 +35,7 @@ class IntroPage2 extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
                   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '

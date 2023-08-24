@@ -2,8 +2,7 @@
 import 'package:flutter/material.dart';
 
 class GoogleButton extends StatelessWidget {
-  const GoogleButton({
-    Key? key,
+  const GoogleButton({super.key, 
     required this.title,
     required this.onTap,
   });
@@ -14,20 +13,20 @@ class GoogleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
+        const Row(
           children: [
             Expanded(
                 child: Divider(
               indent: 5,
             )),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text('Or'),
             ),
             Expanded(child: Divider())
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         GestureDetector(
@@ -40,10 +39,10 @@ class GoogleButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image(
+                  const Image(
                     image: AssetImage('assets/google.png'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(title,

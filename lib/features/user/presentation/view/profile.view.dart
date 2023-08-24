@@ -1,4 +1,4 @@
-import 'package:drivn_app/features/user/presentation/view/settings.dart';
+import 'package:drivn/features/user/presentation/view/settings.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -13,9 +13,9 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   final icons = [
-    ImageIcon(AssetImage('assets/icons/license.png')),
-    ImageIcon(AssetImage('assets/icons/gov_id.png')),
-    ImageIcon(AssetImage('assets/icons/others.png')),
+    const ImageIcon(AssetImage('assets/icons/license.png')),
+    const ImageIcon(AssetImage('assets/icons/gov_id.png')),
+    const ImageIcon(AssetImage('assets/icons/others.png')),
   ];
   final title = ['License', "Gov'tID", 'Others'];
   @override
@@ -29,11 +29,11 @@ class _ProfileViewState extends State<ProfileView> {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     backgroundImage: AssetImage('assets/car1.png'),
                     radius: 35,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   Column(
@@ -49,7 +49,7 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             'Edit profile',
                             style: TextStyle(color: red),
                           ),
@@ -58,7 +58,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                           IconButton(
                               onPressed: () {},
-                              icon: ImageIcon(
+                              icon: const ImageIcon(
                                 AssetImage('assets/icons/edit.png'),
                                 color: blue,
                               )),
@@ -75,7 +75,7 @@ class _ProfileViewState extends State<ProfileView> {
                   (index) => Card(
                     elevation: 0,
                     color: white,
-                    child: Container(
+                    child: SizedBox(
                       height: 100,
                       width: 100,
                       child: Center(
@@ -94,26 +94,26 @@ class _ProfileViewState extends State<ProfileView> {
               divider,
               ListTile(
                 onTap: () {},
-                leading: ImageIcon(
+                leading: const ImageIcon(
                   AssetImage('assets/icons/profile.png'),
                 ),
-                title: Text('My Profile'),
-                trailing: Icon(Icons.arrow_forward_ios),
+                title: const Text('My Profile'),
+                trailing: const Icon(Icons.arrow_forward_ios),
               ),
               divider,
               ListTile(
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => Settings(),
+                  builder: (context) => const Settings(),
                 )),
-                leading: Icon(Icons.settings_outlined),
-                title: Text('Settings'),
-                trailing: Icon(Icons.arrow_forward_ios),
+                leading: const Icon(Icons.settings_outlined),
+                title: const Text('Settings'),
+                trailing: const Icon(Icons.arrow_forward_ios),
               ),
-              Spacer(),
+              const Spacer(),
               ListTile(
                 onTap: () {},
-                leading: ImageIcon(AssetImage('assets/icons/logout.png')),
-                title: Text('Logout'),
+                leading: const ImageIcon(AssetImage('assets/icons/logout.png')),
+                title: const Text('Logout'),
               ),
             ],
           ),

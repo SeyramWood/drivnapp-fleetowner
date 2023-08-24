@@ -1,7 +1,5 @@
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
-import '';
-import '../../../auth/presentation/views/verifyDriver.view.dart';
 
 class RideInfoView extends StatefulWidget {
   const RideInfoView({super.key});
@@ -17,7 +15,7 @@ class _RideInfoViewState extends State<RideInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ride Info'),
+        title: const Text('Ride Info'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -30,7 +28,7 @@ class _RideInfoViewState extends State<RideInfoView> {
                   .headlineLarge!
                   .copyWith(color: black),
             ),
-            Text('Total trip earns'),
+            const Text('Total trip earns'),
             ListTile(
               leading: Container(
                   decoration: BoxDecoration(
@@ -44,7 +42,7 @@ class _RideInfoViewState extends State<RideInfoView> {
                     .bodyLarge!
                     .copyWith(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text('car number'),
+              subtitle: const Text('car number'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,10 +54,10 @@ class _RideInfoViewState extends State<RideInfoView> {
                       .bodyLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
-                Text('asdfjo09'),
+                const Text('asdfjo09'),
               ],
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -70,21 +68,21 @@ class _RideInfoViewState extends State<RideInfoView> {
                       .bodyLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
-                Text('asdfjo09'),
+                const Text('asdfjo09'),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Car pickup location'),
+                const Text('Car pickup location'),
                 Container(
-                  padding: EdgeInsets.only(left: 5),
+                  padding: const EdgeInsets.only(left: 5),
                   height: 50,
                   decoration: BoxDecoration(
                       border: Border.all(color: yellow),
                       borderRadius: BorderRadius.circular(10)),
-                  child: Row(
+                  child: const Row(
                     children: [
                       ImageIcon(
                         AssetImage('assets/icons/location.png'),
@@ -95,18 +93,18 @@ class _RideInfoViewState extends State<RideInfoView> {
                 )
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Customer pickup location'),
+                const Text('Customer pickup location'),
                 Container(
-                  padding: EdgeInsets.only(left: 5),
+                  padding: const EdgeInsets.only(left: 5),
                   height: 50,
                   decoration: BoxDecoration(
                       border: Border.all(color: yellow),
                       borderRadius: BorderRadius.circular(10)),
-                  child: Row(
+                  child: const Row(
                     children: [
                       ImageIcon(
                         AssetImage('assets/icons/location.png'),

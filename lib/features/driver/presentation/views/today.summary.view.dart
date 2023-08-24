@@ -1,4 +1,4 @@
-import 'package:drivn_app/features/driver/presentation/views/ride.info.view.dart';
+import 'package:drivn/features/driver/presentation/views/ride.info.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -11,20 +11,20 @@ class TodaySummaryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: SizedBox(
             height: 10,
           ),
         ),
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: Text('Tue, Aug 15, 2023'),
         ),
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: SizedBox(
             height: 10,
           ),
         ),
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: Row(
             children: [
               SummaryContainer(
@@ -53,7 +53,7 @@ class TodaySummaryView extends StatelessWidget {
         ),
         SliverList.builder(
           itemBuilder: (context, index) {
-            return SummaryTile();
+            return const SummaryTile();
           },
         )
       ],
@@ -72,13 +72,13 @@ class SummaryTile extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => RideInfoView(),
+              builder: (context) => const RideInfoView(),
             ),
           );
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          decoration: BoxDecoration(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(color: red, width: 0.5),
               right: BorderSide(color: red, width: 0.5),
@@ -88,33 +88,33 @@ class SummaryTile extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text('12:45'),
-                  SizedBox(width: 15),
+                  const Text('12:45'),
+                  const SizedBox(width: 15),
                   Text(
                     'John Doe',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  Spacer(),
-                  Text('\$30'),
+                  const Spacer(),
+                  const Text('\$30'),
                 ],
               ),
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5), color: grey),
-                    child: Text('AM'),
+                    child: const Text('AM'),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   Row(
                     children: [
-                      ImageIcon(
+                      const ImageIcon(
                         AssetImage('assets/icons/location.png'),
                         size: 20,
                         color: Colors.grey,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Text(

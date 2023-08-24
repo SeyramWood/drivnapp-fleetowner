@@ -1,7 +1,7 @@
-import 'package:drivn_app/app/home.dart';
-import 'package:drivn_app/features/auth/presentation/views/verifyOwner/identity.info.view.dart';
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/app/home.dart';
+import 'package:drivn/features/auth/presentation/views/verifyOwner/identity.info.view.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../login_screen.dart';
@@ -25,7 +25,7 @@ class GetVerifiedOption extends StatelessWidget {
                         .textTheme
                         .headlineLarge!
                         .copyWith(fontSize: 20)),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Text(
@@ -35,55 +35,57 @@ class GetVerifiedOption extends StatelessWidget {
                       .headlineSmall!
                       .copyWith(fontSize: 15),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Card(
                   color: white,
                   child: ListTile(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ProofIDView(),
+                      builder: (context) => const ProofIDView(),
                     )),
-                    leading: ImageIcon(
+                    leading: const ImageIcon(
                       AssetImage('assets/icons/license.png'),
                       // size: 45,
                       color: yellow,
                     ),
-                    title: Text(
+                    title: const Text(
                       'Proof of Identity',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(
+                    subtitle: const Text(
                       'Upload a passport,national ID...',
                       overflow: TextOverflow.ellipsis,
                     ),
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.arrow_forward_ios,
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Card(
                   color: white,
                   child: ListTile(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DriverDocsView(),
-                    ),),
-                    leading: ImageIcon(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const DriverDocsView(),
+                      ),
+                    ),
+                    leading: const ImageIcon(
                       AssetImage('assets/icons/driving.png'),
                       color: yellow,
                     ),
-                    title: Text(
+                    title: const Text(
                       'Driving Documents',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(
+                    subtitle: const Text(
                       'Upload a valid driving license...',
                       overflow: TextOverflow.ellipsis,
                     ),
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.arrow_forward_ios,
                     ),
                   ),
@@ -94,7 +96,7 @@ class GetVerifiedOption extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                          builder: (context) => HomePage(),
+                          builder: (context) => const HomePage(),
                         ),
                         (route) => false,
                       );
@@ -114,9 +116,9 @@ class GetVerifiedOption extends StatelessWidget {
                 CustomElevatedButton(
                   backgroundColor: black,
                   onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => LoginView()),
+                      MaterialPageRoute(builder: (context) => const LoginView()),
                       (route) => false),
-                  child: Text('Done'),
+                  child: const Text('Done'),
                 )
               ],
             ),

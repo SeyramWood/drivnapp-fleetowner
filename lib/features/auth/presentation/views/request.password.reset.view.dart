@@ -1,13 +1,13 @@
-import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/features/auth/presentation/widget/formfield.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/features/auth/presentation/views/register_screen.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/auth/presentation/widget/formfield.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import '../../../../shared/utils/validators.dart';
 import 'otp.input.view.dart';
 
 class RequestPinView extends StatefulWidget {
-  RequestPinView({Key? key}) : super(key: key);
+  const RequestPinView({Key? key}) : super(key: key);
 
   @override
   _RequestPinViewState createState() => _RequestPinViewState();
@@ -49,7 +49,7 @@ class _RequestPinViewState extends State<RequestPinView> {
     return Scaffold(
       backgroundColor: blue,
       appBar: AppBar(
-        title: Text('Forgot Your Password?',
+        title: const Text('Forgot Your Password?',
             style: TextStyle(fontSize: 20, color: Colors.white)),
         backgroundColor: blue,
         elevation: 0,
@@ -60,10 +60,10 @@ class _RequestPinViewState extends State<RequestPinView> {
       body: Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 50),
         child: ListView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             const SizedBox(height: 25),
-            Text(
+            const Text(
               "Don't worry! It occurs. Please enter the email address linked with your account.",
               style: TextStyle(
                 color: Colors.white70,
@@ -95,7 +95,7 @@ class _RequestPinViewState extends State<RequestPinView> {
                         ),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       "Send Request",
                     ),
                   ),
@@ -107,7 +107,7 @@ class _RequestPinViewState extends State<RequestPinView> {
                                 RegisterView(key: widget.key)),
                         (route) => false),
                     child: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: "Don't have an account?  ",
                         style: TextStyle(
                           color: black,

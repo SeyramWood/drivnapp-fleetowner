@@ -1,12 +1,13 @@
-import 'package:drivn_app/features/auth/presentation/providers/auth.shared.provider.dart';
-import 'package:drivn_app/features/auth/presentation/providers/user.auth.provider.dart';
-import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
-import 'package:drivn_app/features/auth/presentation/views/otp.input.view.dart';
-import 'package:drivn_app/features/auth/presentation/widget/phone.field.dart';
-import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
-import 'package:drivn_app/features/user/domain/entities/user.signup.model.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
-import 'package:drivn_app/shared/utils/extentions/on.custom.elevated.button.dart';
+// import 'dart:convert';
+
+import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/auth/presentation/views/login_screen.dart';
+import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
+import 'package:drivn/features/auth/presentation/widget/google.button.dart';
+import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
 
 class RegisterView extends StatefulWidget {
-  RegisterView({Key? key}) : super(key: key);
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
   _RegisterViewState createState() => _RegisterViewState();
@@ -92,13 +93,13 @@ class _RegisterViewState extends State<RegisterView> {
                         validator: (p0) => _validator.nameValidate(p0),
                         controller: _firstNameController,
                         labelText: 'First Name',
-                        prefixIcon: Icon(Icons.person_2_outlined),
+                        prefixIcon: const Icon(Icons.person_2_outlined),
                       ),
                       CustomFormField(
                         validator: (p0) => _validator.nameValidate(p0),
                         controller: _lastNameController,
                         labelText: 'Last Name',
-                        prefixIcon: Icon(Icons.person_2_outlined),
+                        prefixIcon: const Icon(Icons.person_2_outlined),
                       ),
                       PhoneFormField(
                         controller: _phoneNumberController,
@@ -107,20 +108,20 @@ class _RegisterViewState extends State<RegisterView> {
                         validator: (p0) => _validator.passwordValidtor(p0),
                         controller: _passwordController,
                         labelText: 'Password',
-                        prefixIcon: Icon(Icons.password_outlined),
+                        prefixIcon: const Icon(Icons.password_outlined),
                         suffixIcon: Icons.visibility,
                       ),
                       CustomFormField(
                         validator: (p0) => _validator.passwordValidtor(p0),
                         controller: _repeatPasswordController,
                         labelText: 'Repeat password',
-                        prefixIcon: Icon(Icons.password_outlined),
+                        prefixIcon: const Icon(Icons.password_outlined),
                         suffixIcon: Icons.visibility,
                       ),
                       // const SizedBox(height: 10),
                       CustomElevatedButton(
                         backgroundColor: black,
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             //fleetOwner object
                             final fleetOwner = SignUpBody(
@@ -133,11 +134,10 @@ class _RegisterViewState extends State<RegisterView> {
                             );
                             if (_phoneNumberController.text.isEmpty) {
                               ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
+                                  .showSnackBar(const SnackBar(
                                 content: Text('Phone number required'),
                               ));
                             }
-
                             //method to create a fleetowner account
                             else {
                               context
@@ -146,14 +146,14 @@ class _RegisterViewState extends State<RegisterView> {
                             }
                           }
                         },
-                        child: Text('Register'),
+                        child: const Text('Register'),
                       ).loading(false),
                       const SizedBox(height: 24),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pushAndRemoveUntil(
                           PageTransition(
                               type: PageTransitionType.fade,
-                              duration: Duration(milliseconds: 600),
+                              duration: const Duration(milliseconds: 600),
                               child: LoginView(key: widget.key)),
                           (route) => false,
                         ),
@@ -164,7 +164,7 @@ class _RegisterViewState extends State<RegisterView> {
                                 Theme.of(context).textTheme.bodyLarge!.copyWith(
                                       fontWeight: FontWeight.w500,
                                     ),
-                            children: [
+                            children: const [
                               TextSpan(
                                 text: 'Login',
                                 style: TextStyle(
@@ -176,13 +176,11 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       GoogleButton(
-                        onTap: () {
-                          print(context.read<AuthSharedProvider>().phone);
-                        },
+                        onTap: () {},
                         title: 'Sign up',
                       )
                     ],
@@ -196,3 +194,22 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 }
+
+// void main() async {
+//   final url = Uri.parse('https://devapi.drivnapp.net/api/fleet-owners');
+//   http.Response? response;
+//   try {
+//     response = await http.get(
+//       url,
+//       // headers: {'content-type': 'application/json'},
+//       // body: jsonEncode(fleetOwner)
+//     );
+//     if (response.statusCode == 200) {
+//       print('success made');
+//     } else {
+//       print('${response.reasonPhrase}');
+//     }
+//   } on Exception catch (e) {
+//     log(e.toString());
+//   }
+// }

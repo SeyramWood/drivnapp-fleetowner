@@ -1,6 +1,6 @@
-import 'package:drivn_app/features/driver/presentation/views/my.trips.dart';
-import 'package:drivn_app/features/driver/presentation/views/request.view.dart';
-import 'package:drivn_app/features/driver/presentation/views/summary.view.dart';
+import 'package:drivn/features/driver/presentation/views/my.trips.dart';
+import 'package:drivn/features/driver/presentation/views/request.view.dart';
+import 'package:drivn/features/driver/presentation/views/summary.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -17,7 +17,7 @@ class DMainPage extends StatelessWidget {
       builder: (context, value, child) => Scaffold(
         body: IndexedStack(
           index: value,
-          children: [
+          children: const [
             RequestView(),
             MyTrips(),
             SummaryView(),
@@ -33,7 +33,7 @@ class DMainPage extends StatelessWidget {
           onTap: (index) {
             IndexNotifier().setValue(index);
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
                 icon: ImageIcon(
                   AssetImage('assets/icons/group.png'),

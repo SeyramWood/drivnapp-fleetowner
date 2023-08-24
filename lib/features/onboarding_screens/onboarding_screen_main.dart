@@ -1,8 +1,7 @@
-import 'package:drivn_app/features/onboarding_screens/intro_page_1.dart';
-import 'package:drivn_app/app/welcome_screen.dart';
+import 'package:drivn/features/onboarding_screens/intro_page_1.dart';
+import 'package:drivn/app/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 
 import 'intro_page_2.dart';
 import 'intro_page_3.dart';
@@ -15,7 +14,7 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
-  PageController _controller = PageController();
+  final PageController _controller = PageController();
   bool onLastPage = false;
 
   @override
@@ -30,14 +29,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 onLastPage = (index == 2);
               });
             },
-            children: [
+            children: const [
               IntroPage1(),
               IntroPage2(),
               IntroPage3(),
             ],
           ),
           Container(
-            alignment: Alignment(0, 0.75),
+            alignment: const Alignment(0, 0.75),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -46,7 +45,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   onTap: () {
                     if (onLastPage) {
                       _controller.previousPage(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
                       );
                     } else {
@@ -58,7 +57,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 SmoothPageIndicator(
                   controller: _controller,
                   count: 3,
-                  effect: ExpandingDotsEffect(),
+                  effect: const ExpandingDotsEffect(),
                 ),
                 // Next or Done
                 GestureDetector(
@@ -68,13 +67,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return WelcomeScreen();
+                            return const WelcomeScreen();
                           },
                         ),
                       );
                     } else {
                       _controller.nextPage(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
                       );
                     }

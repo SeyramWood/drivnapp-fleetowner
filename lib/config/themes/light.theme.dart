@@ -9,7 +9,7 @@ class AppLightTheme {
       colorScheme: ColorScheme.fromSeed(seedColor: blue),
       useMaterial3: true,
       // scaffoldBackgroundColor: white,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         color: white,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -20,7 +20,7 @@ class AppLightTheme {
           foregroundColor: MaterialStateProperty.all(white),
         ),
       ),
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         headlineLarge: TextStyle(
             color: white, fontFamily: 'Inter', fontWeight: FontWeight.w600),
         headlineMedium: TextStyle(fontSize: 22),

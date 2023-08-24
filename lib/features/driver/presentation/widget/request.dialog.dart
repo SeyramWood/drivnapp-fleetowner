@@ -9,7 +9,7 @@ class RequestInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var space = SizedBox(
+    var space = const SizedBox(
       height: 15,
     );
     return Padding(
@@ -36,9 +36,9 @@ class RequestInfo extends StatelessWidget {
             ),
           ),
           space,
-          LocAndTime(),
+          const LocAndTime(),
           space,
-          LocAndTime(),
+          const LocAndTime(),
           space,
           divider,
           space,
@@ -88,10 +88,10 @@ class RequestInfo extends StatelessWidget {
                   child: CustomElevatedButton(
                     backgroundColor: red,
                     onPressed: () {},
-                    child: Text('reject'),
+                    child: const Text('reject'),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 ElevatedButton(
@@ -99,7 +99,7 @@ class RequestInfo extends StatelessWidget {
                     showDialog(
                         context: context,
                         builder: (context) => BottomSheet(
-                              builder: (context) => Container(
+                              builder: (context) => SizedBox(
                                 height: 100,
                                 child: Center(
                                   child: Row(
@@ -111,15 +111,15 @@ class RequestInfo extends StatelessWidget {
                                         child: CustomElevatedButton(
                                           backgroundColor: red,
                                           onPressed: () {},
-                                          child: Text('call'),
+                                          child: const Text('call'),
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 20,
                                       ),
                                       ElevatedButton(
                                         onPressed: () {},
-                                        child: Text('Message'),
+                                        child: const Text('Message'),
                                       )
                                     ],
                                   ),
@@ -128,7 +128,7 @@ class RequestInfo extends StatelessWidget {
                               onClosing: () {},
                             ));
                   },
-                  child: Text('Accept'),
+                  child: const Text('Accept'),
                 )
               ],
             ),
@@ -159,16 +159,16 @@ class LocAndTime extends StatelessWidget {
                   .bodySmall!
                   .copyWith(fontWeight: FontWeight.w500),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Container(
               width: MediaQuery.sizeOf(context).width * .5,
-              padding: EdgeInsets.all(3),
+              padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                   border: Border.all(
                     color: yellow,
                   ),
                   borderRadius: BorderRadius.circular(5)),
-              child: Row(
+              child: const Row(
                 children: [
                   ImageIcon(
                     AssetImage('assets/icons/location_tick.png'),
@@ -181,7 +181,7 @@ class LocAndTime extends StatelessWidget {
             )
           ],
         ),
-        Spacer(),
+        const Spacer(),
         Column(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -190,16 +190,16 @@ class LocAndTime extends StatelessWidget {
                     .textTheme
                     .bodySmall!
                     .copyWith(fontWeight: FontWeight.w500)),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Container(
               width: MediaQuery.sizeOf(context).width * .3,
-              padding: EdgeInsets.all(3),
+              padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                   border: Border.all(
                     color: yellow,
                   ),
                   borderRadius: BorderRadius.circular(5)),
-              child: Center(child: Text('10:57 AM')),
+              child: const Center(child: Text('10:57 AM')),
             )
           ],
         )

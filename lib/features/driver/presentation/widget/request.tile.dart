@@ -1,5 +1,5 @@
-import 'package:drivn_app/features/driver/presentation/widget/request.dialog.dart';
-import 'package:drivn_app/shared/utils/constants/colors.dart';
+import 'package:drivn/features/driver/presentation/widget/request.dialog.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class RequestTile extends StatelessWidget {
@@ -15,7 +15,7 @@ class RequestTile extends StatelessWidget {
             context: context,
             builder: (context) {
               return BottomSheet(
-                builder: (context) => RequestInfo(),
+                builder: (context) => const RequestInfo(),
                 onClosing: () {},
               );
             },
@@ -25,7 +25,7 @@ class RequestTile extends StatelessWidget {
           shadowColor: white,
           elevation: 5,
           child: Container(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: 10,
               horizontal: 5,
             ),
@@ -36,10 +36,10 @@ class RequestTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5)),
             child: Row(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 28,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Column(
@@ -52,7 +52,7 @@ class RequestTile extends StatelessWidget {
                           .headlineMedium!
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
-                    Row(
+                    const Row(
                       children: [
                         ImageIcon(
                           AssetImage('assets/icons/location_tick.png'),
@@ -64,20 +64,20 @@ class RequestTile extends StatelessWidget {
                     )
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('23th July'),
-                    SizedBox(height: 5),
+                    const Text('23th July'),
+                    const SizedBox(height: 5),
                     Container(
-                      padding: EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                           border: Border.all(
                             color: yellow,
                           ),
                           borderRadius: BorderRadius.circular(5)),
-                      child: Text('10:57 AM'),
+                      child: const Text('10:57 AM'),
                     )
                   ],
                 )

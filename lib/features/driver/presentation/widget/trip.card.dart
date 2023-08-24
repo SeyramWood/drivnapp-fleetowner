@@ -1,5 +1,5 @@
-import 'package:drivn_app/features/driver/presentation/widget/request.dialog.dart';
-import 'package:drivn_app/shared/utils/constants/dimensions.dart';
+import 'package:drivn/features/driver/presentation/widget/request.dialog.dart';
+import 'package:drivn/shared/utils/constants/dimensions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -10,7 +10,7 @@ class TripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var space = SizedBox(
+    var space = const SizedBox(
       height: 15,
     );
     return Card(
@@ -41,9 +41,9 @@ class TripCard extends StatelessWidget {
               ),
             ),
             space,
-            LocAndTime(),
+            const LocAndTime(),
             space,
-            LocAndTime(),
+            const LocAndTime(),
             space,
             divider,
             space,
@@ -97,7 +97,7 @@ class TripCard extends StatelessWidget {
                     child: CustomElevatedButton(
                       backgroundColor: red,
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Icon(Icons.call_outlined),
@@ -106,7 +106,7 @@ class TripCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   SizedBox(
@@ -114,7 +114,7 @@ class TripCard extends StatelessWidget {
                     height: 40,
                     child: CustomElevatedButton(
                       onPressed: () {},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Icon(Icons.message_outlined),

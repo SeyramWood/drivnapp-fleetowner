@@ -1,4 +1,4 @@
-import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
+import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +11,7 @@ class AccountTypeView extends StatelessWidget {
   void _setFleetOwner(bool isFleetOwner, BuildContext context) {
     context.read<APIService>().fleetOwner(isFleetOwner);
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => RegisterView(),
+      builder: (context) => const RegisterView(),
     ));
   }
 
@@ -28,15 +28,15 @@ class AccountTypeView extends StatelessWidget {
             children: [
               Text('Continue as a',
                   style: Theme.of(context).textTheme.headlineMedium),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               CustomElevatedButton(
                 onPressed: () => _setFleetOwner(true, context),
-                child: Text('Fleet Owner'),
+                child: const Text('Fleet Owner'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               CustomElevatedButton(
                 onPressed: () => _setFleetOwner(false, context),
-                child: Text('Driver'),
+                child: const Text('Driver'),
               ),
             ],
           ),

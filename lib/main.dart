@@ -1,7 +1,7 @@
-import 'package:drivn_app/config/themes/light.theme.dart';
-import 'package:drivn_app/features/auth/presentation/providers/auth.shared.provider.dart';
-import 'package:drivn_app/features/car/presentations/providers/car.provider.dart';
-import 'package:drivn_app/features/user/presentation/bindings/fleet.owner.bindings.dart';
+import 'package:drivn/config/themes/light.theme.dart';
+import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
+import 'package:drivn/features/car/presentations/providers/car.provider.dart';
+import 'package:drivn/features/user/presentation/bindings/fleet.owner.bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'features/auth/presentation/views/account.type.view.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppLightTheme.themeData,
-        home: AccountTypeView(),
+        home: const AccountTypeView(),
       ),
     );
   }

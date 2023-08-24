@@ -1,4 +1,4 @@
-# drivn_app
+# drivn
 
 A new Flutter project.
 
