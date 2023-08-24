@@ -1,21 +1,24 @@
-import 'package:drivn_app/features/auth/presentation/views/register_screen.dart';
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/auth/presentation/views/register_screen.dart';
+import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/auth/presentation/widget/google.button.dart';
 import 'package:flutter/material.dart';
-import 'package:drivn_app/features/auth/presentation/views/request.password.reset.view.dart';
+import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../../../app/home.dart';
-import '../../../../utils/constants/colors.dart';
+import '../../../../shared/utils/constants/colors.dart';
 import '../widget/formfield.dart';
 
 class LoginView extends StatefulWidget {
-  LoginView({Key? key}) : super(key: key);
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   _LoginViewState createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
@@ -28,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
       // Navigate to the home screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     }
   }
@@ -56,7 +59,7 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 50),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
         child: ListView(
           children: [
             Padding(
@@ -69,10 +72,9 @@ class _LoginViewState extends State<LoginView> {
             Center(
               child: Text(
                 'Welcome back, you\'ve been missed!',
-                style: TextStyle(
-                  color: white,
-                  fontSize: 16,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: white,
+                    ),
               ),
             ),
             const SizedBox(height: 25),
@@ -80,27 +82,27 @@ class _LoginViewState extends State<LoginView> {
               key: _formKey,
               child: Column(
                 children: [
-                  CustomFormField(
-                    controller: _emailController,
-                    labelText: 'Email',
-                    prefixIcon: Icons.email_outlined,
+                  PhoneFormField(
+                    controller: _phoneController,
                   ),
                   CustomFormField(
                     controller: _passwordController,
                     labelText: 'Password',
-                    prefixIcon: Icons.password_outlined,
+                    prefixIcon: const Icon(Icons.password_outlined),
                     suffixIcon: Icons.visibility,
                   ),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => RequestPinView(),
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          duration: const Duration(milliseconds: 600),
+                          child: const RequestPinView(),
                         ),
                       );
                     },
-                    child: Align(
+                    child: const Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         'Forgot Password?',
@@ -113,8 +115,14 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   // const SizedBox(height: 16),
                   CustomElevatedButton(
-                    onPressed: () {},
-                    child: Text('Login'),
+                    backgroundColor: black,
+                    onPressed: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => const HomePage()),
+                        (route) => false,
+                      );
+                    },
+                    child: const Text('Login'),
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(
@@ -125,22 +133,29 @@ class _LoginViewState extends State<LoginView> {
                         (route) => false),
                     child: RichText(
                       text: TextSpan(
-                          text: "Don't have an account? ",
-                          style: TextStyle(
-                            color: black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                        text: "Don't have an account? ",
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                        children: const [
+                          TextSpan(
+                            text: 'Register.',
+                            style: TextStyle(
+                              color: yellow,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
-                          children: [
-                            TextSpan(
-                                text: 'Register.',
-                                style: TextStyle(
-                                  color: yellow,
-                                  fontWeight: FontWeight.w700,
-                                ))
-                          ]),
+                        ],
+                      ),
                     ),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GoogleButton(
+                    onTap: () {},
+                    title: 'Login',
+                  )
                 ],
               ),
             ),

@@ -1,37 +1,50 @@
-
+import 'package:drivn/features/car/presentations/views/add.car.form.dart';
+import 'package:drivn/features/car/presentations/views/my.cars.dart';
 import 'package:flutter/material.dart';
-import '../components/new_card.dart';
 
-class HomePage extends StatelessWidget {
+import '../features/user/presentation/view/profile.view.dart';
+import '../shared/utils/constants/colors.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2, // Number of tabs
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('HomePage'),
-            bottom: TabBar(
-              tabs: [
-                Tab(text: 'Tab 1'),
-                Tab(text: 'Tab 2'),
-              ],
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: const [MyCars(), Add_A_Car_Form(), ProfileView()],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        showUnselectedLabels: false,
+        showSelectedLabels: false,
+        selectedItemColor: red,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/car.png')), label: ''),
+          BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/add-square.png')),
+              label: ''),
+          BottomNavigationBarItem(
+            icon: ImageIcon(
+              AssetImage('assets/icons/profile.png'),
             ),
+            label: '',
           ),
-          body: TabBarView(
-            children: [
-              Center(
-              
-                child: MyCard2(),
-
-              ),
-              Center(
-                
-                child: MyCard2(),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

@@ -1,6 +1,9 @@
-import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn_app/utils/constants/colors.dart';
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
 class ProofIDView extends StatelessWidget {
   const ProofIDView({super.key});
@@ -9,6 +12,7 @@ class ProofIDView extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
+    MultipartFile? files;
     return Scaffold(
         appBar: AppBar(backgroundColor: blue),
         backgroundColor: blue,
@@ -33,11 +37,13 @@ class ProofIDView extends StatelessWidget {
                   child: SizedBox(
                     width: width,
                     child: TextButton.icon(
-                      onPressed: () {},
-                      icon: Icon(
+                      onPressed: () async {
+                        context.read<UserAuthProvider>().selectFiles();
+                      },
+                      icon: const Icon(
                         Icons.file_copy,
                       ),
-                      label: Text('Add a file'),
+                      label: const Text('Add a file (Front and Back)'),
                       style: ButtonStyle(
                           foregroundColor: MaterialStateProperty.all(white)),
                     ),
@@ -45,10 +51,14 @@ class ProofIDView extends StatelessWidget {
                 ),
                 SizedBox(
                   height: height / 2.5,
+                  child: const Center(child: Text('')),
                 ),
                 CustomElevatedButton(
-                  onPressed: () {},
-                  child: Text('Submit for review'),
+                  onPressed: () {
+                    context.read<UserAuthProvider>().submitUserID(context);
+                  },
+                  backgroundColor: black,
+                  child: const Text('Submit for review'),
                 )
               ],
             ),

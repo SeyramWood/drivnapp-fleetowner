@@ -1,1 +1,0 @@
-      backgroundColor: Color(0xFF554AF0),

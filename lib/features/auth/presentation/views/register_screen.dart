@@ -1,21 +1,31 @@
-import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
-import 'package:drivn_app/utils/constants/colors.dart';
-import 'package:drivn_app/utils/extentions/on.elevated.button.dart';
+// import 'dart:convert';
+
+import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/auth/presentation/views/login_screen.dart';
+import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
+import 'package:drivn/features/auth/presentation/widget/google.button.dart';
+import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+import '../../../../shared/utils/validators.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
-import 'otp.input.view.dart';
 
 class RegisterView extends StatefulWidget {
-  RegisterView({Key? key}) : super(key: key);
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
   _RegisterViewState createState() => _RegisterViewState();
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repeatPasswordController =
       TextEditingController();
@@ -24,30 +34,6 @@ class _RegisterViewState extends State<RegisterView> {
   bool _obscureRepeatPassword = true;
 
   final _formKey = GlobalKey<FormState>();
-  bool _isRegistering = false;
-
-  void registerUser(BuildContext context) {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() {
-        _isRegistering = true;
-      });
-
-      // Simulate an asynchronous registration process
-      Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          _isRegistering = false;
-        });
-
-        // Navigate to the OTP screen
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OTPInputView(),
-          ),
-        );
-      });
-    }
-  }
 
   void togglePasswordVisibility() {
     setState(() {
@@ -63,103 +49,167 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneNumberController.dispose();
     _passwordController.dispose();
     _repeatPasswordController.dispose();
     super.dispose();
   }
 
+  final _validator = MyFormFieldValidator();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF554AF0),
+      backgroundColor: blue,
       body: Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 50),
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Image.asset(
-                "assets/logo.png",
-                fit: BoxFit.cover,
-              ),
-            ),
-            Center(
-              child: Text(
-                'Create account to get started!',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 5),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Image.asset(
+                    "assets/logo.png",
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 32),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  CustomFormField(
-                      controller: _nameController,
-                      labelText: 'Full Name',
-                      prefixIcon: Icons.person_2_outlined),
-                  CustomFormField(
-                    controller: _emailController,
-                    labelText: 'Email',
-                    prefixIcon: Icons.email_outlined,
+                Center(
+                  child: Text(
+                    'Create account to get started!',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.white,
+                        ),
                   ),
-                  CustomFormField(
-                    controller: _passwordController,
-                    labelText: 'Password',
-                    prefixIcon: Icons.password_outlined,
-                    suffixIcon: Icons.visibility,
-                  ),
-                  CustomFormField(
-                    controller: _repeatPasswordController,
-                    labelText: 'Repeat password',
-                    prefixIcon: Icons.password_outlined,
-                    suffixIcon: Icons.visibility,
-                  ),
-                  // const SizedBox(height: 10),
-                  CustomElevatedButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const OTPInputView(),
+                ),
+                const SizedBox(height: 32),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      CustomFormField(
+                        validator: (p0) => _validator.nameValidate(p0),
+                        controller: _firstNameController,
+                        labelText: 'First Name',
+                        prefixIcon: const Icon(Icons.person_2_outlined),
                       ),
-                    ),
-                    child: Text('Register'),
-                  ).loading(false),
-                  const SizedBox(height: 24),
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => LoginView(key: widget.key)),
-                        (route) => false),
-                    child: RichText(
-                      text: TextSpan(
-                          text: 'Already have an account? ',
-                          style: TextStyle(
-                            color: black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          children: [
-                            TextSpan(
-                                text: 'Login.',
+                      CustomFormField(
+                        validator: (p0) => _validator.nameValidate(p0),
+                        controller: _lastNameController,
+                        labelText: 'Last Name',
+                        prefixIcon: const Icon(Icons.person_2_outlined),
+                      ),
+                      PhoneFormField(
+                        controller: _phoneNumberController,
+                      ),
+                      CustomFormField(
+                        validator: (p0) => _validator.passwordValidtor(p0),
+                        controller: _passwordController,
+                        labelText: 'Password',
+                        prefixIcon: const Icon(Icons.password_outlined),
+                        suffixIcon: Icons.visibility,
+                      ),
+                      CustomFormField(
+                        validator: (p0) => _validator.passwordValidtor(p0),
+                        controller: _repeatPasswordController,
+                        labelText: 'Repeat password',
+                        prefixIcon: const Icon(Icons.password_outlined),
+                        suffixIcon: Icons.visibility,
+                      ),
+                      // const SizedBox(height: 10),
+                      CustomElevatedButton(
+                        backgroundColor: black,
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            //fleetOwner object
+                            final fleetOwner = SignUpBody(
+                              lastName: _lastNameController.text,
+                              firstName: _firstNameController.text,
+                              username:
+                                  context.read<AuthSharedProvider>().phone,
+                              password: _passwordController.text,
+                              confirmPassword: _repeatPasswordController.text,
+                            );
+                            if (_phoneNumberController.text.isEmpty) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('Phone number required'),
+                              ));
+                            }
+                            //method to create a fleetowner account
+                            else {
+                              context
+                                  .read<UserAuthProvider>()
+                                  .postUser(fleetOwner, context);
+                            }
+                          }
+                        },
+                        child: const Text('Register'),
+                      ).loading(false),
+                      const SizedBox(height: 24),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pushAndRemoveUntil(
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              duration: const Duration(milliseconds: 600),
+                              child: LoginView(key: widget.key)),
+                          (route) => false,
+                        ),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Already have an account? ',
+                            style:
+                                Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                            children: const [
+                              TextSpan(
+                                text: 'Login',
                                 style: TextStyle(
                                   color: yellow,
                                   fontWeight: FontWeight.w700,
-                                ))
-                          ]),
-                    ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      GoogleButton(
+                        onTap: () {},
+                        title: 'Sign up',
+                      )
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
+
+// void main() async {
+//   final url = Uri.parse('https://devapi.drivnapp.net/api/fleet-owners');
+//   http.Response? response;
+//   try {
+//     response = await http.get(
+//       url,
+//       // headers: {'content-type': 'application/json'},
+//       // body: jsonEncode(fleetOwner)
+//     );
+//     if (response.statusCode == 200) {
+//       print('success made');
+//     } else {
+//       print('${response.reasonPhrase}');
+//     }
+//   } on Exception catch (e) {
+//     log(e.toString());
+//   }
+// }
