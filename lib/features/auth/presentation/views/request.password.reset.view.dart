@@ -79,7 +79,8 @@ class _RequestPinViewState extends State<RequestPinView> {
                   CustomFormField(
                     controller: _controllerUsername,
                     labelText: 'Enter Address',
-                    validator: MyFormFieldValidator.nameValidate,
+                    validator: (p0) => MyFormFieldValidator()
+                        .nameValidate(_controllerUsername.text),
                   ),
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height / 2.3,

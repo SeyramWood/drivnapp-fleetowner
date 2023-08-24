@@ -1,57 +1,120 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../../domain/entities/fleetOwner.model.dart';
+import '../../../../shared/utils/constants/baseUrl.dart';
+import '../../domain/entities/user.signup.model.dart';
 
-class FleetOwnerAPI extends ChangeNotifier {
-  FleetOwnerAPI();
-  Future postFleetOwner(String requestBody) async {
+class APIService extends ChangeNotifier {
+  APIService();
+
+  bool _accTypeIsOwner = true;
+  bool get accTypeIsOwner => _accTypeIsOwner;
+  void fleetOwner(bool isOwner) {
+    _accTypeIsOwner = isOwner;
+    notifyListeners();
+  }
+
+  String _userID = '';
+  String get userID => _userID;
+
+  Future<dynamic> postFleetOwner(SignUpBody requestBody) async {
     final Uri url = Uri.parse(
-        'https://devapi.drivnapp.net/api/fleet-owners'); // Replace with your actual API URL
+        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}'); // Replace with your actual API URL
 
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
 
-    final http.Response response = await http.post(
-      url,
-      headers: headers,
-      body: requestBody,
-    );
+    http.Response? response;
 
-    if (response.statusCode == 200) {
-      log(requestBody);
+    try {
+      response = await http.post(
+        url,
+        headers: headers,
+        body: requestBody.toJson(),
+      );
 
-      // return
-    } else {
-      print('error:${response.reasonPhrase}');
-      log(response.body.toString());
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log('response body :' + jsonEncode(response.body));
+        return await requestBody;
+      } else {
+        log('error 1 :${response.reasonPhrase}');
+        log('error 2 :' + response.body.toString());
+      }
+    } on Exception catch (e) {
+      log(e.toString());
     }
   }
 
- Future verifyFleetOwner(String requestBody) async {
+  Future verifyFleetOwner(String requestBody) async {
     final Uri url = Uri.parse(
-        'https://devapi.drivnapp.net/api/fleet-owners/verify/$requestBody'); // Replace with your actual API URL
+        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/verify/$requestBody'); // Replace with your actual API URL
 
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
+    http.Response? response;
 
-    final http.Response response = await http.post(
-      url,
-      headers: headers,
-      body: null,
-    );
+    try {
+      response = await http.post(
+        url,
+        headers: headers,
+      );
 
-    if (response.statusCode == 200) {
-      log(requestBody);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log('$requestBody => ${response.body}');
+        // Parse the JSON response
+        final responseBody = response.body;
+        log(requestBody);
 
-      // return
-    } else {
-      print('error:${response.reasonPhrase}');
-      log(response.body.toString());
+        // Parse the JSON response
+        final jsonResponse = jsonDecode(responseBody) as Map<String, dynamic>;
+
+        // Access the 'data' object
+        final data = jsonResponse['data'] as Map<String, dynamic>;
+
+        // Access the 'id' field from the 'data' object
+        final id = data['id'] as int?;
+
+        log('Extracted ID: $id');
+        _userID = '$id';
+        notifyListeners();
+        return '$id';
+      } else {
+        log('error 1 :' + response.reasonPhrase.toString());
+        log('error 2 :' + response.body.toString());
+      }
+    } on Exception catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future submitIDs(
+    List<http.MultipartFile> files,
+  ) async {
+    final url = Uri.parse('$baseUrl/proof-identity/$_userID');
+
+    try {
+      for (var file in files) {
+        final request = http.MultipartRequest('POST', url)
+          ..fields['user'] = _userID
+          ..files.add(file);
+        print(_userID);
+        final response = await request.send();
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          final responseBody = await response.stream.bytesToString();
+          print('Success: $responseBody');
+          return files;
+        } else {
+          print('Error: ${response.statusCode}');
+        }
+      }
+    } on Exception catch (e) {
+      print('Exception: $e');
     }
   }
 

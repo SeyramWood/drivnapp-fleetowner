@@ -1,4 +1,5 @@
-import 'package:drivn_app/features/auth/presentation/providers/fleet.owner.dart';
+import 'package:drivn_app/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn_app/features/auth/presentation/views/verifyOwner/verify.user.view.dart';
 import 'package:drivn_app/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
@@ -20,74 +21,77 @@ class _OTPInputViewState extends State<OTPInputView> {
     return Scaffold(
       backgroundColor: blue,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Enter OTP',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineLarge!
-                  .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.w600),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Image.asset(
-                "assets/otp.png",
-                fit: BoxFit.cover,
-                color: white,
-              ),
-            ),
-            Text(
-              "Enter the 4 digits code via your email",
-              style: TextStyle(
-                color: white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            otpFormField(),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
-              child: CustomElevatedButton(
-                backgroundColor: black,
-                onPressed: () {
-                  if (_formkey.currentState!.validate()) {
-                    context
-                        .read<FleetOwnerProvider>()
-                        .verifyFleetOwner(otp, context);
-                  }
-                },
-                child: Text(
-                  "Verify",
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Enter OTP',
+                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                      fontFamily: 'Inter', fontWeight: FontWeight.w600),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Image.asset(
+                    "assets/otp.png",
+                    fit: BoxFit.cover,
+                    color: white,
+                  ),
+                ),
+                Text(
+                  "Enter the 4 digits code via your email",
+                  style: TextStyle(
+                    color: white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                otpFormField(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: CustomElevatedButton(
+                    backgroundColor: black,
+                    onPressed: () {
+                      if (_formkey.currentState!.validate()) {
+                        context
+                            .read<UserAuthProvider>()
+                            .verifyUser(otp, context);
+                      }
+                    },
+                    child: Text(
+                      "Verify",
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: RichText(
+                    text: TextSpan(
+                        text: "Didn't get code? ",
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                        children: [
+                          TextSpan(
+                              text: 'Resend.',
+                              style: TextStyle(
+                                color: yellow,
+                                fontWeight: FontWeight.w700,
+                              ))
+                        ]),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: RichText(
-                text: TextSpan(
-                    text: "Didn't get code? ",
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                    children: [
-                      TextSpan(
-                          text: 'Resend.',
-                          style: TextStyle(
-                            color: yellow,
-                            fontWeight: FontWeight.w700,
-                          ))
-                    ]),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

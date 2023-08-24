@@ -6,7 +6,7 @@ class CustomFormField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.labelText,
-    this.validator,
+    this.validator ,
     this.prefixIcon,
     this.suffixIcon,
     this.prefix,

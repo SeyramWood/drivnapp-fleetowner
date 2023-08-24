@@ -50,6 +50,7 @@ class PhoneFormField extends StatelessWidget {
             hintText: 'Phone Number',
             border: OutlineInputBorder(borderSide: BorderSide.none),
           ),
+          // validator: (p0) => p0 == null||p0.isEmpty ? 'Phone number is required' : null,
         ),
       ),
     );

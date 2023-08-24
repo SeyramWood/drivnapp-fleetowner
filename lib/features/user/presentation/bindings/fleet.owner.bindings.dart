@@ -1,42 +1,45 @@
- import 'package:drivn_app/features/user/data/api/fleet.owner.api.dart';
+import 'package:drivn_app/features/user/data/api/fleet.owner.api.dart';
 import 'package:drivn_app/features/user/domain/repositories/fleet.owner.repo.dart';
 import 'package:drivn_app/features/user/domain/usecases/fleet.owner/create.dart';
 import 'package:drivn_app/features/user/domain/usecases/fleet.owner/verify.fleetOwner.dart';
 import 'package:provider/provider.dart';
-import '../../../auth/presentation/providers/fleet.owner.dart';
+import '../../../auth/presentation/providers/user.auth.provider.dart';
 import '../../data/remote/fleet.owner.db.dart';
 import '../../data/repositories/fleet.owner.repo.impl.dart';
+import '../../domain/usecases/fleet.owner/submitID.dart';
 
-class FleetOwnerBindings {
-  final fleetOwnerAPI = ChangeNotifierProvider<FleetOwnerAPI>(
-    create: (context) => FleetOwnerAPI(),
+class UserBindings {
+  final apiService = ChangeNotifierProvider<APIService>(
+    create: (context) => APIService(),
   );
-  final fleetOwnerDB = ChangeNotifierProxyProvider<FleetOwnerAPI, FleetOwnerDB>(
-    create: (context) => FleetOwnerDBImpl.empty(),
-    update: (context, api, previous) => FleetOwnerDBImpl(api),
+  final userDB = ChangeNotifierProxyProvider<APIService, UserDB>(
+    create: (context) => UserDBImpl.empty(),
+    update: (context, api, previous) => UserDBImpl(api),
   );
 
-  final fleetOwnerRepo =
-      ChangeNotifierProxyProvider<FleetOwnerDB, FleetOwnerRepo>(
+  final userRepo = ChangeNotifierProxyProvider<UserDB, UserRepo>(
     create: (context) => FleetOwnerRepoImpl.empty(),
     update: (context, db, previous) => FleetOwnerRepoImpl(db),
   );
 
-  final postFleetOwner =
-      ChangeNotifierProxyProvider<FleetOwnerRepo, PostUseCase>(
+  final postUser = ChangeNotifierProxyProvider<UserRepo, PostUseCase>(
     create: (context) => PostUseCase.empty(),
     update: (context, fleetOwnerRepo, previous) => PostUseCase(fleetOwnerRepo),
   );
 
-final verifyFleetOwner =
-      ChangeNotifierProxyProvider<FleetOwnerRepo, VerifyFleetOwner>(
-    create: (context) => VerifyFleetOwner.empty(),
-    update: (context, fleetOwnerRepo, previous) => VerifyFleetOwner(fleetOwnerRepo),
+  final verifUser = ChangeNotifierProxyProvider<UserRepo, VerifyUser>(
+    create: (context) => VerifyUser.empty(),
+    update: (context, fleetOwnerRepo, previous) => VerifyUser(fleetOwnerRepo),
+  );
+  final submitID = ChangeNotifierProxyProvider<UserRepo, SubmitID>(
+    create: (context) => SubmitID.empty(),
+    update: (context, fleetOwnerRepo, previous) => SubmitID(fleetOwnerRepo),
   );
 
-  final fleetOwnerProvider =
-      ChangeNotifierProxyProvider<PostUseCase, FleetOwnerProvider>(
-    create: (context) => FleetOwnerProvider.empty(),
-    update: (context, postUseCase, previous) => FleetOwnerProvider(postUseCase,context.read<VerifyFleetOwner>()),
+  final userAuthProvider =
+      ChangeNotifierProxyProvider<PostUseCase, UserAuthProvider>(
+    create: (context) => UserAuthProvider.empty(),
+    update: (context, postUseCase, previous) => UserAuthProvider(
+        postUseCase, context.read<VerifyUser>(), context.read<SubmitID>()),
   );
 }

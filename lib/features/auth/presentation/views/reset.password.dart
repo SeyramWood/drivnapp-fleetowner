@@ -78,12 +78,14 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                   CustomFormField(
                     controller: _passwordController,
                     labelText: 'Enter Password',
-                    validator: MyFormFieldValidator.passwordValidtor,
+                    validator: (p0) =>
+                        MyFormFieldValidator().passwordValidtor(p0),
                   ),
                   CustomFormField(
                     controller: _passwordController,
                     labelText: 'Repeat Password',
-                    validator: MyFormFieldValidator.passwordValidtor,
+                    validator: (p0) =>
+                        MyFormFieldValidator().passwordValidtor(p0),
                   ),
                   CustomElevatedButton(
                     backgroundColor: black,

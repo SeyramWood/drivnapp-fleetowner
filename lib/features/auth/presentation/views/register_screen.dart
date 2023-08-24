@@ -1,14 +1,16 @@
 import 'package:drivn_app/features/auth/presentation/providers/auth.shared.provider.dart';
-import 'package:drivn_app/features/auth/presentation/providers/fleet.owner.dart';
+import 'package:drivn_app/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn_app/features/auth/presentation/views/login_screen.dart';
+import 'package:drivn_app/features/auth/presentation/views/otp.input.view.dart';
 import 'package:drivn_app/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn_app/features/auth/presentation/widget/google.button.dart';
-import 'package:drivn_app/features/user/domain/entities/fleetOwner.model.dart';
+import 'package:drivn_app/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn_app/shared/utils/constants/colors.dart';
 import 'package:drivn_app/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import '../../../../shared/utils/validators.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
 
@@ -48,127 +50,146 @@ class _RegisterViewState extends State<RegisterView> {
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _phoneNumberController.dispose();
     _passwordController.dispose();
     _repeatPasswordController.dispose();
     super.dispose();
   }
 
+  final _validator = MyFormFieldValidator();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: blue,
       body: Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 5),
         child: SafeArea(
-          child: ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Image.asset(
-                  "assets/logo.png",
-                  fit: BoxFit.cover,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Image.asset(
+                    "assets/logo.png",
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              Center(
-                child: Text(
-                  'Create account to get started!',
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Colors.white,
-                      ),
+                Center(
+                  child: Text(
+                    'Create account to get started!',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.white,
+                        ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 32),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    CustomFormField(
-                      controller: _firstNameController,
-                      labelText: 'First Name',
-                      prefixIcon: Icon(Icons.person_2_outlined),
-                    ),
-                    CustomFormField(
-                      controller: _lastNameController,
-                      labelText: 'Last Name',
-                      prefixIcon: Icon(Icons.person_2_outlined),
-                    ),
-                    PhoneFormField(
-                      controller: _phoneNumberController,
-                    ),
-                    CustomFormField(
-                      controller: _passwordController,
-                      labelText: 'Password',
-                      prefixIcon: Icon(Icons.password_outlined),
-                      suffixIcon: Icons.visibility,
-                    ),
-                    CustomFormField(
-                      controller: _repeatPasswordController,
-                      labelText: 'Repeat password',
-                      prefixIcon: Icon(Icons.password_outlined),
-                      suffixIcon: Icons.visibility,
-                    ),
-                    // const SizedBox(height: 10),
-                    CustomElevatedButton(
-                      backgroundColor: black,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          //fleetOwner object
-                          final fleetOwner = FleetOwner(
-                            lastName: _lastNameController.text,
-                            firstName: _firstNameController.text,
-                            username: context.read<AuthSharedProvider>().phone,
-                            password: _passwordController.text,
-                            confirmPassword: _repeatPasswordController.text,
-                          );
-                          //method to create a fleetowner account
-                          context
-                              .read<FleetOwnerProvider>()
-                              .postFleetOwner(fleetOwner, context);
-                        }
-                      },
-                      child: Text('Register'),
-                    ).loading(false),
-                    const SizedBox(height: 24),
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            duration: Duration(milliseconds: 600),
-                            child: LoginView(key: widget.key)),
-                        (route) => false,
+                const SizedBox(height: 32),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      CustomFormField(
+                        validator: (p0) => _validator.nameValidate(p0),
+                        controller: _firstNameController,
+                        labelText: 'First Name',
+                        prefixIcon: Icon(Icons.person_2_outlined),
                       ),
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Already have an account? ',
-                          style:
-                              Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                          children: [
-                            TextSpan(
-                              text: 'Login',
-                              style: TextStyle(
-                                color: yellow,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            )
-                          ],
+                      CustomFormField(
+                        validator: (p0) => _validator.nameValidate(p0),
+                        controller: _lastNameController,
+                        labelText: 'Last Name',
+                        prefixIcon: Icon(Icons.person_2_outlined),
+                      ),
+                      PhoneFormField(
+                        controller: _phoneNumberController,
+                      ),
+                      CustomFormField(
+                        validator: (p0) => _validator.passwordValidtor(p0),
+                        controller: _passwordController,
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.password_outlined),
+                        suffixIcon: Icons.visibility,
+                      ),
+                      CustomFormField(
+                        validator: (p0) => _validator.passwordValidtor(p0),
+                        controller: _repeatPasswordController,
+                        labelText: 'Repeat password',
+                        prefixIcon: Icon(Icons.password_outlined),
+                        suffixIcon: Icons.visibility,
+                      ),
+                      // const SizedBox(height: 10),
+                      CustomElevatedButton(
+                        backgroundColor: black,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            //fleetOwner object
+                            final fleetOwner = SignUpBody(
+                              lastName: _lastNameController.text,
+                              firstName: _firstNameController.text,
+                              username:
+                                  context.read<AuthSharedProvider>().phone,
+                              password: _passwordController.text,
+                              confirmPassword: _repeatPasswordController.text,
+                            );
+                            if (_phoneNumberController.text.isEmpty) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text('Phone number required'),
+                              ));
+                            }
+
+                            //method to create a fleetowner account
+                            else {
+                              context
+                                  .read<UserAuthProvider>()
+                                  .postUser(fleetOwner, context);
+                            }
+                          }
+                        },
+                        child: Text('Register'),
+                      ).loading(false),
+                      const SizedBox(height: 24),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pushAndRemoveUntil(
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              duration: Duration(milliseconds: 600),
+                              child: LoginView(key: widget.key)),
+                          (route) => false,
+                        ),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Already have an account? ',
+                            style:
+                                Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                            children: [
+                              TextSpan(
+                                text: 'Login',
+                                style: TextStyle(
+                                  color: yellow,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    GoogleButton(
-                      onTap: () {
-                        print(context.read<AuthSharedProvider>().phone);
-                      },
-                      title: 'Sign up',
-                    )
-                  ],
+                      SizedBox(
+                        height: 10,
+                      ),
+                      GoogleButton(
+                        onTap: () {
+                          print(context.read<AuthSharedProvider>().phone);
+                        },
+                        title: 'Sign up',
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

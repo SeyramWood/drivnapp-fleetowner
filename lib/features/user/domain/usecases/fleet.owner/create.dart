@@ -7,17 +7,17 @@ import 'package:flutter/material.dart';
 
 import '../../../../../shared/utils/usecase.dart';
 import '../../../data/repositories/fleet.owner.repo.impl.dart';
-import '../../entities/fleetOwner.model.dart';
+import '../../entities/user.signup.model.dart';
 import '../../repositories/fleet.owner.repo.dart';
 
 class PostUseCase extends ChangeNotifier
-    implements UseCase<FleetOwner, Params<FleetOwner>> {
-  final FleetOwnerRepo repo;
+    implements UseCase<void, Params<SignUpBody>> {
+  final UserRepo repo;
   PostUseCase(this.repo);
   PostUseCase.empty() : repo = FleetOwnerRepoImpl.empty();
 
   @override
-  Future<Either<FleetOwner, Failure>> call(Params<FleetOwner> params) async {
+  Future<Either<Failure, void>> call(Params<SignUpBody> params) async {
     return await repo.create(params.data);
   }
 }

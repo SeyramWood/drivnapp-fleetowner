@@ -1,42 +1,50 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
-import 'package:drivn_app/features/user/domain/entities/fleetOwner.model.dart';
+import 'package:drivn_app/features/user/domain/entities/user.signup.model.dart';
+import 'package:http/http.dart';
 
 import '../api/fleet.owner.api.dart';
 
-abstract class FleetOwnerDB extends ChangeNotifier {
-  Future<FleetOwner> create(FleetOwner fleetOwner);
-  Future<FleetOwner> read(FleetOwner fleetOwner);
-  Future<FleetOwner> update(FleetOwner fleetOwner);
+abstract class UserDB extends ChangeNotifier {
+  Future<SignUpBody> create(SignUpBody fleetOwner);
+  Future<SignUpBody> read(SignUpBody fleetOwner);
+  Future<SignUpBody> update(SignUpBody fleetOwner);
   Future<String> verify(String otp);
+  Future<List<MultipartFile>> submitID(List<MultipartFile> file);
+
 }
 
-class FleetOwnerDBImpl extends ChangeNotifier implements FleetOwnerDB {
-  FleetOwnerAPI api;
-  FleetOwnerDBImpl(this.api);
-  FleetOwnerDBImpl.empty() : api = FleetOwnerAPI();
+class UserDBImpl extends ChangeNotifier implements UserDB {
+  APIService api;
+  UserDBImpl(this.api);
+  UserDBImpl.empty() : api = APIService();
   @override
-  Future<FleetOwner> create(FleetOwner fleetOwner) async {
-    final requestBody = fleetOwner;
-    return await api.postFleetOwner(requestBody.toJson());
+  Future<SignUpBody> create(SignUpBody user) async {
+    return await api.postFleetOwner(user);
   }
 
   @override
-  Future<FleetOwner> read(FleetOwner fleetOwner) {
+  Future<SignUpBody> read(SignUpBody fleetOwner) {
     // TODO: implement read
     throw UnimplementedError();
   }
 
   @override
-  Future<FleetOwner> update(FleetOwner fleetOwner) {
+  Future<SignUpBody> update(SignUpBody fleetOwner) {
     // TODO: implement update
     throw UnimplementedError();
   }
-  
+
   @override
   Future<String> verify(String otp) async {
     return await api.verifyFleetOwner(otp);
-
+  }
+  
+  @override
+  Future<List<MultipartFile>> submitID(List<MultipartFile> file) async {
+    return await api.submitIDs(file);
   }
 }

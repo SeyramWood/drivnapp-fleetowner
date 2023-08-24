@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class FleetOwner {
-  FleetOwner({
+class SignUpBody {
+  SignUpBody({
     required this.firstName,
     required this.lastName,
     required this.username,
@@ -15,8 +15,6 @@ class FleetOwner {
   final String password;
   final String confirmPassword;
 
-  
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'lastName': lastName,
@@ -27,8 +25,8 @@ class FleetOwner {
     };
   }
 
-  factory FleetOwner.fromMap(Map<String, dynamic> map) {
-    return FleetOwner(
+  factory SignUpBody.fromMap(Map<String, dynamic> map) {
+    return SignUpBody(
       lastName: map['lastName'] as String,
       firstName: map['firstName'] as String,
       username: map['username'] as String,
@@ -39,5 +37,6 @@ class FleetOwner {
 
   String toJson() => json.encode(toMap());
 
-  factory FleetOwner.fromJson(String source) => FleetOwner.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SignUpBody.fromJson(String source) =>
+      SignUpBody.fromMap(json.decode(source) as Map<String, dynamic>);
 }
