@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,23 +20,6 @@ class APIService extends ChangeNotifier {
 
   String _userID = '';
   String get userID => _userID;
-  // Future<void> postUser(SignUpBody requestBody) async {
-  //   final url = Uri.parse('https://devapi.drivnapp.net/api/fleet-owners');
-  //   final headers = {
-  //     'Content-Type': 'application/json',
-  //   };
-
-  //   http.Response? response;
-  //   try {
-  //     response =
-  //         await http.post(url, headers: headers, body: requestBody.toJson());
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       print('success');
-  //     }
-  //   } on Exception catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
 
   Future<void> postUser(SignUpBody requestBody) async {
     try {
@@ -110,30 +94,33 @@ class APIService extends ChangeNotifier {
     }
   }
 
-  Future<List<http.MultipartFile>> submitIDs(
-    List<http.MultipartFile> files,
+  Future<List<File>> submitIDs(
+    List<File> files,
   ) async {
-    final url = Uri.parse('$baseUrl/proof-identity/$_userID');
+    final url = Uri.parse('$baseUrl/fleet-owners/proof-identity/$userID');
 
     try {
-      for (var file in files) {
-        final request = http.MultipartRequest('POST', url);
+      if (files.isNotEmpty) {
+        var request = http.MultipartRequest('POST', url);
 
-        print('Uploading file: ${file.filename}');
-        final response = await request.send();
-        print('sending request');
+        for (var file in files) {
+          request.files.add(
+            await http.MultipartFile.fromPath('idCard', file.path),
+          );
+        }
+
+        var response = await request.send();
 
         if (response.statusCode == 200 || response.statusCode == 201) {
-          final responseBody = await response.stream.bytesToString();
-          print('Upload success: $responseBody');
         } else {
-          print('Upload error: ${response.statusCode}');
-        }
+         }
+      } else {
+        print('No files to upload');
       }
 
       return files; // Return the list of files after all files are uploaded
     } catch (e) {
-      print('Exception: $e');
+      print('Error: $e');
       rethrow; // Re-throw the caught exception for better error propagation
     }
   }

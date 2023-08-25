@@ -1,8 +1,8 @@
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 class ProofIDView extends StatelessWidget {
@@ -12,7 +12,7 @@ class ProofIDView extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
-    MultipartFile? files;
+    final provider = context.read<UserAuthProvider>();
     return Scaffold(
         appBar: AppBar(backgroundColor: blue),
         backgroundColor: blue,
@@ -51,15 +51,35 @@ class ProofIDView extends StatelessWidget {
                 ),
                 SizedBox(
                   height: height / 2.5,
-                  child: const Center(child: Text('')),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        context.watch<UserAuthProvider>().files?.length ?? 0,
+                        (index) {
+                          String filename = context
+                              .watch<UserAuthProvider>()
+                              .files![index]
+                              .path
+                              .split('/')
+                              .last;
+                          return Container(
+                            padding: const EdgeInsets.all(10),
+                            color: white,
+                            child: Text(filename),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 ),
                 CustomElevatedButton(
                   onPressed: () {
-                    context.read<UserAuthProvider>().submitUserID(context);
+                    provider.submitUserID(context);
                   },
                   backgroundColor: black,
                   child: const Text('Submit for review'),
-                )
+                ).loading(provider.isLoading)
               ],
             ),
           ),

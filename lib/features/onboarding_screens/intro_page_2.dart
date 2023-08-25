@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/utils/constants/colors.dart';
+
 class IntroPage2 extends StatelessWidget {
   const IntroPage2({super.key});
 
@@ -10,41 +12,44 @@ class IntroPage2 extends StatelessWidget {
         automaticallyImplyLeading: false,
         toolbarHeight: 16,
       ),
-      body: Center(
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                // padding: const EdgeInsets.all(8.0),
-                padding: const EdgeInsets.only(top: 32, left: 24, right: 24),
-                child: Image.asset(
-                  'assets/step_1_image.png', // Replace with your image path
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  'Drive confidently',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Center(
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  // padding: const EdgeInsets.all(8.0),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child: Image.asset(
+                    'assets/step_1_image.png', // Replace with your image path
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                  ),
+                  child: Text(
+                    'Drive confidently',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge!
+                        .copyWith(color: black, fontSize: 30),
+                  ),
+                ),
+                Text(
                   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
                   'Sed aliquam risus sit amet turpis dictum, in ultrices odio '
                   'lobortis. Nulla facilisi. Suspendisse at tempor lectus.',
-                  style: TextStyle(fontSize: 16),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

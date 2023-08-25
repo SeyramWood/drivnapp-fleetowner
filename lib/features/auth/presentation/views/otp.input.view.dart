@@ -1,6 +1,7 @@
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
@@ -14,18 +15,23 @@ class OTPInputView extends StatefulWidget {
 
 class _OTPInputViewState extends State<OTPInputView> {
   final _formkey = GlobalKey<FormState>();
-  String otp = '';
+  final otpController = TextEditingController();
+  @override
+  void dispose() {
+    super.dispose();
+    otpController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: blue,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   'Enter OTP',
@@ -41,7 +47,7 @@ class _OTPInputViewState extends State<OTPInputView> {
                   ),
                 ),
                 const Text(
-                  "Enter the 4 digits code via your email",
+                  "Enter the 4 digits code via your sms",
                   style: TextStyle(
                     color: white,
                     fontSize: 16,
@@ -59,12 +65,20 @@ class _OTPInputViewState extends State<OTPInputView> {
                       if (_formkey.currentState!.validate()) {
                         context
                             .read<UserAuthProvider>()
-                            .verifyUser(otp, context);
+                            .verifyUser(
+                              otpController.text,
+                              context,
+                            )
+                            .then(
+                              (value) => otpController.clear(),
+                            );
                       }
                     },
                     child: const Text(
-                      "Verify",
+                      "Continue",
                     ),
+                  ).loading(
+                    context.watch<UserAuthProvider>().isLoading,
                   ),
                 ),
                 const SizedBox(
@@ -108,11 +122,7 @@ class _OTPInputViewState extends State<OTPInputView> {
             }
             return null;
           },
-          onCompleted: (value) {
-            setState(() {
-              otp = value;
-            });
-          },
+          controller: otpController,
           defaultPinTheme: PinTheme(
             height: 60,
             width: 60,

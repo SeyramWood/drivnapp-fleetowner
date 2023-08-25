@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/shared/errors/failure.dart';
@@ -6,6 +8,7 @@ import 'package:http/http.dart';
 
 import '../../domain/repositories/fleet.owner.repo.dart';
 import '../remote/fleet.owner.db.dart';
+import 'package:http/http.dart' as http;
 
 class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
   final UserDB db;
@@ -17,7 +20,7 @@ class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
   Future<Either<Failure, void>> create(SignUpBody fleetOwner) async {
     try {
       await db.create(fleetOwner);
-      return Right<Failure, void>(fleetOwner);
+      return const Right<Failure, void>(null);
     } catch (e) {
       return Left(Failure('error 1:$e'));
     }
@@ -46,8 +49,8 @@ class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
   }
 
   @override
-  Future<Either<Failure, List<MultipartFile>>> submitID(
-      List<MultipartFile> file) async {
+  Future<Either<Failure, List<File>>> submitID(
+      List<File> file) async {
     try {
       final result = await db.submitID(file);
       print('got here');

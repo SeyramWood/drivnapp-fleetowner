@@ -57,6 +57,14 @@ class _RegisterViewState extends State<RegisterView> {
     super.dispose();
   }
 
+  void clearControllers() {
+    _firstNameController.clear();
+    _lastNameController.clear();
+    _phoneNumberController.clear();
+    _passwordController.clear();
+    _repeatPasswordController.clear();
+  }
+
   final _validator = MyFormFieldValidator();
   @override
   Widget build(BuildContext context) {
@@ -67,14 +75,10 @@ class _RegisterViewState extends State<RegisterView> {
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Image.asset(
-                    "assets/logo.png",
-                    fit: BoxFit.cover,
-                  ),
+                Image.asset(
+                  "assets/logo.png",
+                  fit: BoxFit.cover,
                 ),
                 Center(
                   child: Text(
@@ -84,7 +88,7 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 25),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -118,7 +122,7 @@ class _RegisterViewState extends State<RegisterView> {
                         prefixIcon: const Icon(Icons.password_outlined),
                         suffixIcon: Icons.visibility,
                       ),
-                      // const SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       CustomElevatedButton(
                         backgroundColor: black,
                         onPressed: () async {
@@ -132,23 +136,20 @@ class _RegisterViewState extends State<RegisterView> {
                               password: _passwordController.text,
                               confirmPassword: _repeatPasswordController.text,
                             );
-                            if (_phoneNumberController.text.isEmpty) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text('Phone number required'),
-                              ));
-                            }
                             //method to create a fleetowner account
-                            else {
-                              context
-                                  .read<UserAuthProvider>()
-                                  .postUser(fleetOwner, context);
-                            }
+                            context
+                                .read<UserAuthProvider>()
+                                .postUser(fleetOwner, context)
+                                .then(
+                                  (value) => clearControllers(),
+                                );
                           }
                         },
                         child: const Text('Register'),
-                      ).loading(false),
-                      const SizedBox(height: 24),
+                      ).loading(
+                        context.watch<UserAuthProvider>().isLoading,
+                      ),
+                      const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pushAndRemoveUntil(
                           PageTransition(

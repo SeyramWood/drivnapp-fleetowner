@@ -1,9 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
-import 'package:http/http.dart';
 
 import '../api/fleet.owner.api.dart';
 
@@ -12,7 +13,7 @@ abstract class UserDB extends ChangeNotifier {
   Future<SignUpBody> read(SignUpBody fleetOwner);
   Future<SignUpBody> update(SignUpBody fleetOwner);
   Future<String> verify(String otp);
-  Future<List<MultipartFile>> submitID(List<MultipartFile> file);
+  Future<List<File>> submitID(List<File> file);
 }
 
 class UserDBImpl extends ChangeNotifier implements UserDB {
@@ -42,7 +43,7 @@ class UserDBImpl extends ChangeNotifier implements UserDB {
   }
 
   @override
-  Future<List<MultipartFile>> submitID(List<MultipartFile> file) async {
+  Future<List<File>> submitID(List<File> file) async {
     return await api.submitIDs(file);
   }
 }

@@ -1,10 +1,13 @@
 import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
+import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/car/presentations/providers/car.provider.dart';
 import 'package:drivn/features/user/presentation/bindings/fleet.owner.bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'features/auth/presentation/views/account.type.view.dart';
+import 'features/auth/presentation/views/verifyOwner/verify.user.view.dart';
+import 'features/onboarding_screens/onboarding_screen_main.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
@@ -35,8 +38,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppLightTheme.themeData,
-        home: const AccountTypeView(),
+        home: const OnBoardingScreen(),
       ),
+      // home: const RegisterView()),
     );
   }
 }

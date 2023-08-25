@@ -1,5 +1,5 @@
+import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/features/onboarding_screens/intro_page_1.dart';
-import 'package:drivn/app/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -63,13 +63,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 GestureDetector(
                   onTap: () {
                     if (onLastPage) {
-                      Navigator.push(
-                        context,
+                      Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) {
-                            return const WelcomeScreen();
+                            return const LoginView();
                           },
                         ),
+                        (route) => false,
                       );
                     } else {
                       _controller.nextPage(

@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
@@ -11,23 +13,35 @@ import '../../../../shared/utils/usecase.dart';
 import '../../../user/domain/usecases/fleet.owner/verify.fleetOwner.dart';
 import '../views/otp.input.view.dart';
 import '../views/verifyOwner/verify.user.view.dart';
+import 'package:http/http.dart' as http;
 
 class UserAuthProvider extends ChangeNotifier {
   final PostUseCase post;
   final VerifyUser verify;
   final SubmitID submitID;
-  bool isLoading = false;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   UserAuthProvider(this.post, this.verify, this.submitID);
   UserAuthProvider.empty()
       : post = PostUseCase.empty(),
         verify = VerifyUser.empty(),
         submitID = SubmitID.empty();
-  List<MultipartFile>? files;
+  List<File>? _filesToDB;
+  List<File>? get files => _filesToDB;
 
   Future<void> postUser(SignUpBody fleetOwner, context) async {
+    _isLoading = true;
+    notifyListeners();
+
     final result = await post.call(Params(fleetOwner));
     result.fold(
-      (l) => print(l.message),
+      (l) {
+        _isLoading = false;
+        notifyListeners();
+
+        print(l.message);
+      },
       (r) {
         Navigator.push(
           context,
@@ -35,15 +49,23 @@ class UserAuthProvider extends ChangeNotifier {
             builder: (context) => const OTPInputView(),
           ),
         );
+        _isLoading = false;
+        notifyListeners();
         return r;
       },
     );
   }
 
   Future<void> verifyUser(String otp, context) async {
+    _isLoading = true;
+    notifyListeners();
     final result = await verify.call(Params(otp));
     result.fold(
-      (l) => {print('error 1 :${l.message}')},
+      (l) {
+        _isLoading = false;
+        notifyListeners();
+        print('error 1 :${l.message}');
+      },
       (r) {
         Navigator.push(
           context,
@@ -51,6 +73,8 @@ class UserAuthProvider extends ChangeNotifier {
             builder: (context) => const GetVerifiedOption(),
           ),
         );
+        _isLoading = false;
+        notifyListeners();
         print('verified');
         return r;
       },
@@ -58,39 +82,34 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 //select files to be uploaded
-  Future<List<MultipartFile>?> selectFiles() async {
+  Future<List<File>?> selectFiles() async {
     final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
-    List<MultipartFile>? files;
     if (fileResult != null) {
-      files = fileResult.files
-          // .where((file) => file.bytes != null)
-          .map(
-            (file) => MultipartFile.fromBytes(
-              'file',
-              file.bytes ?? [],
-              filename: file.name,
-            ),
-          )
+      _filesToDB = fileResult.files
+          .map((platformFile) => File(platformFile.path.toString()))
           .toList();
-      files = files;
-      print('files :${files.length}');
-
-      return files;
+      notifyListeners();
+      return _filesToDB;
     }
     return [];
   }
 
   Future submitUserID(context) async {
-    final result = await submitID.call(Params(files!));
+    _isLoading = true;
+    notifyListeners();
+
+    final result = await submitID.call(Params(_filesToDB ?? []));
     result.fold(
       (l) {
         log(l.message);
       },
       (r) {
         Navigator.of(context).pop();
+        _isLoading = false;
+        notifyListeners();
         return r;
       },
     );
-    files = [];
+    _filesToDB = [];
   }
 }
