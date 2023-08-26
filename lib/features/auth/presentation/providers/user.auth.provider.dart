@@ -1,19 +1,16 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
-import 'package:drivn/features/user/domain/usecases/fleet.owner/submitID.dart';
+import 'package:drivn/features/user/domain/usecases/fleet.owner/submit.id.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 import '../../../../shared/utils/usecase.dart';
 import '../../../user/domain/usecases/fleet.owner/verify.fleetOwner.dart';
 import '../views/otp.input.view.dart';
 import '../views/verifyOwner/verify.user.view.dart';
-import 'package:http/http.dart' as http;
 
 class UserAuthProvider extends ChangeNotifier {
   final PostUseCase post;

@@ -4,11 +4,9 @@ import 'package:dartz/dartz.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/shared/errors/failure.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 import '../../domain/repositories/fleet.owner.repo.dart';
 import '../remote/fleet.owner.db.dart';
-import 'package:http/http.dart' as http;
 
 class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
   final UserDB db;

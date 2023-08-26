@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../auth/presentation/providers/user.auth.provider.dart';
 import '../../data/remote/fleet.owner.db.dart';
 import '../../data/repositories/fleet.owner.repo.impl.dart';
-import '../../domain/usecases/fleet.owner/submitID.dart';
+import '../../domain/usecases/fleet.owner/submit.id.dart';
 
 class UserBindings {
   final apiService = ChangeNotifierProvider<APIService>(
