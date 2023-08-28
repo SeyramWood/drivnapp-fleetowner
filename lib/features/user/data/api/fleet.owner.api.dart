@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:drivn/shared/errors/exception.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,7 +14,7 @@ class APIService extends ChangeNotifier {
 
   bool _accTypeIsOwner = true;
   bool get accTypeIsOwner => _accTypeIsOwner;
-  void fleetOwner(bool isOwner) {
+  void isOwner(bool isOwner) {
     _accTypeIsOwner = isOwner;
     notifyListeners();
   }
@@ -23,38 +24,54 @@ class APIService extends ChangeNotifier {
 
   Future<void> postUser(SignUpBody requestBody) async {
     try {
-      final Uri url = Uri.parse(
+      Uri url = Uri.parse(
         '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}',
       );
 
-      final Map<String, String> headers = {
+      Map<String, String> headers = {
         'content-type': 'application/json',
       };
-      /*
-    with how I made the post request, did I do anything wrong
-     */
+
       http.Response? response;
-      print('account creation');
       response = await http.post(
         url,
         headers: headers,
         body: requestBody.toJson(),
       );
-      print('account creation done');
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        log('response body :${jsonEncode(response.body)}');
-        // return await requestBody;
-      } else {
-        log('else 1 :${response.reasonPhrase}');
-        log('else 2 :${response.body}');
+      print(response.body);
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        print(response.statusCode);
+
+        final errorsMap =
+            jsonDecode(response.body)['errors'] as Map<String, dynamic>?;
+
+        if (errorsMap != null) {
+          final List<String> errorMessages = [];
+
+          // Iterate over each key-value pair in the errorsMap
+          errorsMap.forEach((key, value) {
+            if (value is String && value.isNotEmpty) {
+              errorMessages.add(value);
+            }
+          });
+
+          if (errorMessages.isNotEmpty) {
+            final errorMessage =
+                errorMessages.join('\n\n'); // Join messages with line breaks
+            throw CustomException(errorMessage);
+          }
+        }
+
+        throw CustomException("An error occurred");
       }
     } catch (e) {
-      log(e.toString());
+      rethrow;
     }
   }
 
-  Future verifyFleetOwner(String requestBody) async {
+  Future verifyUser(String requestBody) async {
     try {
       final Uri url = Uri.parse(
           '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/verify/$requestBody');
@@ -68,29 +85,18 @@ class APIService extends ChangeNotifier {
         url,
         headers: headers,
       );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        log('$requestBody => ${response.body}');
-        final responseBody = response.body;
-        log(requestBody);
-
-        final jsonResponse = jsonDecode(responseBody) as Map<String, dynamic>;
-
-        final data = jsonResponse['data'] as Map<String, dynamic>;
-
-        // Access the 'id' field from the 'data' object
-        final id = data['id'] as int?;
-
-        log('Extracted ID: $id');
-        _userID = '$id';
-        notifyListeners();
-        return '$id';
-      } else {
-        log('error 1 :${response.reasonPhrase}');
-        log('error 2 :${response.body}');
+      log(response.body);
+      if (response.statusCode != 201) {
+        final errorMessage = jsonDecode(response.body)['error'] as String?;
+        if (errorMessage != null) {
+          throw CustomException('An error occurred');
+        } else {
+          throw CustomException('An error occurred');
+        }
       }
     } catch (e) {
-      log(e.toString());
+      print('this $e');
+      rethrow;
     }
   }
 
@@ -112,8 +118,7 @@ class APIService extends ChangeNotifier {
         var response = await request.send();
 
         if (response.statusCode == 200 || response.statusCode == 201) {
-        } else {
-         }
+        } else {}
       } else {
         print('No files to upload');
       }

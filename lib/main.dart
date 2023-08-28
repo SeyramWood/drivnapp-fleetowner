@@ -1,5 +1,6 @@
 import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
+import 'package:drivn/features/auth/presentation/views/otp.input.view.dart';
 import 'package:drivn/features/car/presentations/providers/car.provider.dart';
 import 'package:drivn/features/user/presentation/bindings/fleet.owner.bindings.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthSharedProvider()),
         bindings.apiService,
-        bindings.userDB,
         bindings.userRepo,
         bindings.postUser,
         bindings.verifUser,
@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppLightTheme.themeData,
         home: const OnBoardingScreen(),
+        // home: const OTPInputView(),
       ),
-      // home: const RegisterView()),
     );
   }
 }

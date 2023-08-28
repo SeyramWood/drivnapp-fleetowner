@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -5,22 +6,26 @@ import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/shared/errors/failure.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../shared/errors/exception.dart';
 import '../../domain/repositories/fleet.owner.repo.dart';
-import '../remote/fleet.owner.db.dart';
+import '../api/fleet.owner.api.dart';
 
 class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
-  final UserDB db;
+  APIService api;
 
-  FleetOwnerRepoImpl(this.db);
-  FleetOwnerRepoImpl.empty() : db = UserDBImpl.empty();
+  FleetOwnerRepoImpl(this.api);
+  FleetOwnerRepoImpl.empty() : api = APIService();
 
   @override
   Future<Either<Failure, void>> create(SignUpBody fleetOwner) async {
     try {
-      await db.create(fleetOwner);
+      await api.postUser(fleetOwner);
       return const Right<Failure, void>(null);
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('error 1:$e'));
+      log('$e');
+      return Left(Failure('Unkown error'));
     }
   }
 
@@ -39,19 +44,20 @@ class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
   @override
   Future<Either<Failure, String>> verify(String otp) async {
     try {
-      final result = await db.verify(otp);
-      return Right(result);
+      final result = await api.verifyUser(otp);
+      return Right(result ?? '');
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('error 1:$e'));
+      log(e.toString());
+      return Left(Failure('Unkown Error'));
     }
   }
 
   @override
-  Future<Either<Failure, List<File>>> submitID(
-      List<File> file) async {
+  Future<Either<Failure, List<File>>> submitID(List<File> file) async {
     try {
-      final result = await db.submitID(file);
-      print('got here');
+      final result = await api.submitIDs(file);
       return Right(result);
     } catch (e) {
       return Left(Failure(e.toString()));

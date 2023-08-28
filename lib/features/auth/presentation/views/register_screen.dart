@@ -6,6 +6,7 @@ import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/google.button.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,7 @@ class _RegisterViewState extends State<RegisterView> {
                 Image.asset(
                   "assets/logo.png",
                   fit: BoxFit.cover,
+                  height: 80,
                 ),
                 Center(
                   child: Text(
@@ -122,7 +124,7 @@ class _RegisterViewState extends State<RegisterView> {
                         prefixIcon: const Icon(Icons.password_outlined),
                         suffixIcon: Icons.visibility,
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       CustomElevatedButton(
                         backgroundColor: black,
                         onPressed: () async {
@@ -141,8 +143,18 @@ class _RegisterViewState extends State<RegisterView> {
                                 .read<UserAuthProvider>()
                                 .postUser(fleetOwner, context)
                                 .then(
-                                  (value) => clearControllers(),
-                                );
+                              (failure) {
+                                if (failure != null) {
+                                  showErrorDialogue(
+                                    context,
+                                    failure,
+                                  );
+                                }
+                                // if (failure == null) {
+                                //   clearControllers();
+                                // }
+                              },
+                            );
                           }
                         },
                         child: const Text('Register'),
@@ -164,6 +176,7 @@ class _RegisterViewState extends State<RegisterView> {
                             style:
                                 Theme.of(context).textTheme.bodyLarge!.copyWith(
                                       fontWeight: FontWeight.w500,
+                                      color: white,
                                     ),
                             children: const [
                               TextSpan(
@@ -177,13 +190,6 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      GoogleButton(
-                        onTap: () {},
-                        title: 'Sign up',
-                      )
                     ],
                   ),
                 ),
@@ -195,22 +201,3 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 }
-
-// void main() async {
-//   final url = Uri.parse('https://devapi.drivnapp.net/api/fleet-owners');
-//   http.Response? response;
-//   try {
-//     response = await http.get(
-//       url,
-//       // headers: {'content-type': 'application/json'},
-//       // body: jsonEncode(fleetOwner)
-//     );
-//     if (response.statusCode == 200) {
-//       print('success made');
-//     } else {
-//       print('${response.reasonPhrase}');
-//     }
-//   } on Exception catch (e) {
-//     log(e.toString());
-//   }
-// }

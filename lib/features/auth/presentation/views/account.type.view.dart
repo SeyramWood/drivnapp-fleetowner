@@ -9,7 +9,7 @@ class AccountTypeView extends StatelessWidget {
   const AccountTypeView({super.key});
 
   void _setFleetOwner(bool isFleetOwner, BuildContext context) {
-    context.read<APIService>().fleetOwner(isFleetOwner);
+    context.read<APIService>().isOwner(isFleetOwner);
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const RegisterView(),
     ));

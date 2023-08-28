@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../shared/errors/error.alert.dart';
+
 class OTPInputView extends StatefulWidget {
   const OTPInputView({Key? key}) : super(key: key);
 
@@ -70,8 +72,14 @@ class _OTPInputViewState extends State<OTPInputView> {
                               context,
                             )
                             .then(
-                              (value) => otpController.clear(),
-                            );
+                          (failure) {
+                            if (failure != null) {
+                              showErrorDialogue(context, failure);
+                              print(failure);
+                            }
+                            otpController.clear();
+                          },
+                        );
                       }
                     },
                     child: const Text(
@@ -91,6 +99,7 @@ class _OTPInputViewState extends State<OTPInputView> {
                         text: "Didn't get code? ",
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w500,
+                              color: white,
                             ),
                         children: const [
                           TextSpan(
@@ -118,7 +127,10 @@ class _OTPInputViewState extends State<OTPInputView> {
         child: Pinput(
           validator: (value) {
             if (value!.isEmpty) {
-              return 'Input a valid code';
+              return "Code required to continue";
+            }
+            if (value.length < 4) {
+              return "Enter a valid code";
             }
             return null;
           },

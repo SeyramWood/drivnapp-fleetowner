@@ -113,12 +113,13 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                   ),
-                  // const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   CustomElevatedButton(
                     backgroundColor: black,
                     onPressed: () {
                       Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => const HomePage()),
+                        MaterialPageRoute(
+                            builder: (context) => const HomePage()),
                         (route) => false,
                       );
                     },
@@ -136,6 +137,7 @@ class _LoginViewState extends State<LoginView> {
                         text: "Don't have an account? ",
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w500,
+                              color: white,
                             ),
                         children: const [
                           TextSpan(
@@ -152,10 +154,6 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(
                     height: 20,
                   ),
-                  GoogleButton(
-                    onTap: () {},
-                    title: 'Login',
-                  )
                 ],
               ),
             ),

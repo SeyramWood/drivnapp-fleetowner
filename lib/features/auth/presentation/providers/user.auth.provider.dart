@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/submit.id.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -27,19 +28,18 @@ class UserAuthProvider extends ChangeNotifier {
   List<File>? _filesToDB;
   List<File>? get files => _filesToDB;
 
-  Future<void> postUser(SignUpBody fleetOwner, context) async {
+  Future<String?> postUser(SignUpBody fleetOwner, context) async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await post.call(Params(fleetOwner));
-    result.fold(
-      (l) {
+    final result = await post(Params(fleetOwner));
+    return result.fold(
+      (failure) {
         _isLoading = false;
         notifyListeners();
-
-        print(l.message);
+        return failure.message;
       },
-      (r) {
+      (success) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -48,22 +48,23 @@ class UserAuthProvider extends ChangeNotifier {
         );
         _isLoading = false;
         notifyListeners();
-        return r;
+        return null;
       },
     );
   }
 
-  Future<void> verifyUser(String otp, context) async {
+  Future<String?> verifyUser(String otp, context) async {
     _isLoading = true;
     notifyListeners();
     final result = await verify.call(Params(otp));
-    result.fold(
-      (l) {
+    return result.fold(
+      (failure) {
         _isLoading = false;
         notifyListeners();
-        print('error 1 :${l.message}');
+        print(failure.message);
+        return failure.message;
       },
-      (r) {
+      (success) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -73,7 +74,7 @@ class UserAuthProvider extends ChangeNotifier {
         _isLoading = false;
         notifyListeners();
         print('verified');
-        return r;
+        return null;
       },
     );
   }
