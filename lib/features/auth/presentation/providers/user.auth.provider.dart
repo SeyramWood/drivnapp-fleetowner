@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:drivn/features/auth/presentation/views/verify.option.view.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/submit.id.dart';
@@ -39,7 +41,8 @@ class UserAuthProvider extends ChangeNotifier {
         notifyListeners();
         return failure.message;
       },
-      (success) {
+      (success) async {
+        await Future.delayed(const Duration(seconds: 2));
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -56,7 +59,7 @@ class UserAuthProvider extends ChangeNotifier {
   Future<String?> verifyUser(String otp, context) async {
     _isLoading = true;
     notifyListeners();
-    final result = await verify.call(Params(otp));
+    final result = await verify(Params(otp));
     return result.fold(
       (failure) {
         _isLoading = false;
@@ -64,11 +67,12 @@ class UserAuthProvider extends ChangeNotifier {
         print(failure.message);
         return failure.message;
       },
-      (success) {
+      (success) async {
+        await Future.delayed(const Duration(seconds: 2));
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const GetVerifiedOption(),
+            builder: (context) => const VerifyOptionView(),
           ),
         );
         _isLoading = false;
@@ -80,32 +84,38 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 //select files to be uploaded
-  Future<List<File>?> selectFiles() async {
+  Future<List<File>?> selectFiles({file}) async {
     final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
     if (fileResult != null) {
-      _filesToDB = fileResult.files
+      file = _filesToDB = fileResult.files
           .map((platformFile) => File(platformFile.path.toString()))
           .toList();
+print(file);
       notifyListeners();
       return _filesToDB;
     }
     return [];
   }
-
-  Future submitUserID(context) async {
+//for the owner usage
+  Future submitUserID(
+    context,
+  ) async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await submitID.call(Params(_filesToDB ?? []));
+    final result = await submitID(Params(
+      _filesToDB ?? [],
+    ));
     result.fold(
-      (l) {
-        log(l.message);
+      (failure) {
+        log(failure.message);
       },
-      (r) {
+      (success) async {
+        await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
         _isLoading = false;
         notifyListeners();
-        return r;
+        return success;
       },
     );
     _filesToDB = [];

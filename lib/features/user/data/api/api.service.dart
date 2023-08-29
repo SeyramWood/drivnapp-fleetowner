@@ -14,13 +14,28 @@ class APIService extends ChangeNotifier {
 
   bool _accTypeIsOwner = true;
   bool get accTypeIsOwner => _accTypeIsOwner;
-  void isOwner(bool isOwner) {
+  isOwner(bool isOwner) {
     _accTypeIsOwner = isOwner;
     notifyListeners();
+    return isOwner;
   }
 
   String _userID = '';
   String get userID => _userID;
+  //for the owner usage
+  String _path = '';
+  String get path => _path;
+  setPath(path) {
+    _path = path;
+    notifyListeners();
+  }
+
+  String _field = '';
+  String get field => _field;
+  setfield(field) {
+    _field = field;
+    notifyListeners();
+  }
 
   Future<void> postUser(SignUpBody requestBody) async {
     try {
@@ -86,6 +101,10 @@ class APIService extends ChangeNotifier {
         headers: headers,
       );
       log(response.body);
+      if (response.statusCode == 201) {
+        _userID = jsonDecode(response.body)['data']['id'].toString();
+        print(_userID);
+      }
       if (response.statusCode != 201) {
         final errorMessage = jsonDecode(response.body)['error'] as String?;
         if (errorMessage != null) {
@@ -95,35 +114,87 @@ class APIService extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print('this $e');
       rethrow;
     }
   }
 
-  Future<List<File>> submitIDs(
+//for the owner
+  Future<List<File>> uploadFiles(
     List<File> files,
   ) async {
-    final url = Uri.parse('$baseUrl/fleet-owners/proof-identity/$userID');
+    final uri = Uri.parse('$baseUrl/fleet-owners/$path/$_userID');
 
     try {
       if (files.isNotEmpty) {
-        var request = http.MultipartRequest('POST', url);
+        var request = http.MultipartRequest('POST', uri);
 
         for (var file in files) {
           request.files.add(
-            await http.MultipartFile.fromPath('idCard', file.path),
+            await http.MultipartFile.fromPath(field, file.path),
           );
         }
 
         var response = await request.send();
-
+        print(response.reasonPhrase);
         if (response.statusCode == 200 || response.statusCode == 201) {
-        } else {}
+          // Handle success response if needed
+        } else {
+          // Handle error response if needed
+        }
       } else {
         print('No files to upload');
       }
 
       return files; // Return the list of files after all files are uploaded
+    } catch (e) {
+      print('Error: $e');
+      rethrow; // Re-throw the caught exception for better error propagation
+    }
+  }
+
+  ///for the driver
+  Future<void> submitData({
+    required List<File> idCardFiles,
+    required List<File> licenseFiles,
+    required String licenseNumber,
+    required String licenseType,
+    required int yearsOfExperience,
+    // String? userID,
+    String? path,
+  }) async {
+    final uri = Uri.parse('$baseUrl/drivers/document/$_userID');
+
+    try {
+      if (idCardFiles.isNotEmpty && licenseFiles.isNotEmpty) {
+        var request = http.MultipartRequest('POST', uri);
+        print(idCardFiles);
+        print(licenseFiles);
+        // Add idCard files to the request
+        for (var file in idCardFiles) {
+          request.files.add(
+            await http.MultipartFile.fromPath('idCard', file.path),
+          );
+        }
+
+        // Add license files to the request
+        for (var file in licenseFiles) {
+          request.files.add(
+            await http.MultipartFile.fromPath('license', file.path),
+          );
+        }
+
+        // Add other fields to the request
+        request.fields['licenseNumber'] = licenseNumber;
+        // request.fields['licenseStatus'] = licenseStatus;
+        request.fields['licenseType'] = licenseType;
+        request.fields['experience'] = '$yearsOfExperience';
+
+        var response = await request.send();
+        print(response.reasonPhrase);
+        // print(response.headers);
+      } else {
+        print('no files selected');
+      }
     } catch (e) {
       print('Error: $e');
       rethrow; // Re-throw the caught exception for better error propagation

@@ -20,7 +20,7 @@ class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
 
   @override
-  _RegisterViewState createState() => _RegisterViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
 class _RegisterViewState extends State<RegisterView> {
@@ -111,18 +111,32 @@ class _RegisterViewState extends State<RegisterView> {
                         controller: _phoneNumberController,
                       ),
                       CustomFormField(
+                        obscureText: _obscurePassword,
                         validator: (p0) => _validator.passwordValidtor(p0),
                         controller: _passwordController,
                         labelText: 'Password',
-                        prefixIcon: const Icon(Icons.password_outlined),
-                        suffixIcon: Icons.visibility,
+                        suffixIcon: GestureDetector(
+                          onTap: () => togglePasswordVisibility(),
+                          child: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                        ),
                       ),
                       CustomFormField(
+                        obscureText: _obscureRepeatPassword,
                         validator: (p0) => _validator.passwordValidtor(p0),
                         controller: _repeatPasswordController,
                         labelText: 'Repeat password',
-                        prefixIcon: const Icon(Icons.password_outlined),
-                        suffixIcon: Icons.visibility,
+                        suffixIcon: GestureDetector(
+                          onTap: () => toggleRepeatPasswordVisibility(),
+                          child: Icon(
+                            _obscureRepeatPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 20),
                       CustomElevatedButton(

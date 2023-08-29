@@ -1,9 +1,16 @@
+import 'dart:io';
+
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
+import 'package:drivn/features/auth/presentation/widget/formfield.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
-import '../../../car/presentations/widget/form.field.dart';
-import '../../../car/presentations/widget/multi.selection.dialog.dart';
+import '../../../owner/presentations/widget/form.field.dart';
+import '../../../owner/presentations/widget/multi.selection.dialog.dart';
 import '../widget/elevated.button.dart';
 
 class VerifyDriverView extends StatefulWidget {
@@ -14,20 +21,44 @@ class VerifyDriverView extends StatefulWidget {
 }
 
 class _VerifyDriverViewState extends State<VerifyDriverView> {
-  final licenseController = TextEditingController();
-  final yearsController = TextEditingController();
+  Future<List<File>> selectFiles(files) async {
+    final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
+    if (fileResult != null) {
+      var fileList = fileResult.files
+          .map((platformFile) => File(platformFile.path.toString()))
+          .toList();
+      setState(() {
+        files = fileList;
+      });
+      return files;
+    }
+    return [];
+  }
+
+  List<File> idCardFiles = [];
+  List<File> licenceFiles = [];
   List<String> selectedOptions = [];
 
   List<String> allOptions = [
-    'Option 1',
-    'Option 2',
-    'Option 4',
-    'Option 4',
-    'Option 3',
+    ' A',
+    ' B',
+    ' C',
+    ' D',
   ];
   var space = const SizedBox(
     height: 10,
   );
+  final licenceType = TextEditingController();
+  final licenceNumber = TextEditingController();
+  final yearsOfExperience = TextEditingController();
+  @override
+  void dispose() {
+    super.dispose();
+    licenceType.dispose();
+    licenceNumber.dispose();
+    yearsOfExperience.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +73,20 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               children: [
                 const Text('National ID'),
                 CustomElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final fileResult = await FilePicker.platform
+                        .pickFiles(allowMultiple: true);
+                    if (fileResult != null) {
+                      idCardFiles = fileResult.files
+                          .map((platformFile) =>
+                              File(platformFile.path.toString()))
+                          .toList();
+                    }
+                    // context
+                    //     .read<UserAuthProvider>()
+                    //     .selectFiles(file: idCardFiles);
+                    // selectFiles(idCardFiles);
+                  },
                   backgroundColor:
                       selectedOptions.isNotEmpty ? Colors.green : black,
                   child: Text(selectedOptions.isNotEmpty
@@ -57,7 +101,20 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               children: [
                 const Text('Driving License'),
                 CustomElevatedButton(
-                  onPressed: openMultiSelectDialog,
+                  onPressed: () async {
+                    final fileResult = await FilePicker.platform
+                        .pickFiles(allowMultiple: true);
+                    if (fileResult != null) {
+                      licenceFiles = fileResult.files
+                          .map((platformFile) =>
+                              File(platformFile.path.toString()))
+                          .toList();
+                    }
+
+                    // context
+                    //     .read<UserAuthProvider>()
+                    //     .selectFiles(file: licenceFiles);
+                  },
                   backgroundColor:
                       selectedOptions.isNotEmpty ? Colors.green : black,
                   child: Text(selectedOptions.isNotEmpty
@@ -71,10 +128,10 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('License Type'),
-                DropDownFormField(
-                  controller: TextEditingController(),
-                  labelText: '',
-                ),
+                MyFormField(
+                  controller: licenceType,
+                  // suffixIcon: DropdownButton(items: [DropdownMenuItem(child: Text('A'),value: 'A',)]),
+                )
               ],
             ),
             space,
@@ -83,7 +140,7 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               children: [
                 const Text('License Number'),
                 MyFormField(
-                  controller: licenseController,
+                  controller: licenceNumber,
                 )
               ],
             ),
@@ -93,7 +150,8 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               children: [
                 const Text('Years of experience'),
                 MyFormField(
-                  controller: yearsController,
+                  controller: yearsOfExperience,
+                  keyboardType: TextInputType.number,
                 )
               ],
             ),
@@ -106,6 +164,13 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               width: 200,
               child: CustomElevatedButton(
                 onPressed: () {
+                  context.read<APIService>().submitData(
+                        idCardFiles: idCardFiles,
+                        licenseFiles: licenceFiles,
+                        licenseNumber: licenceNumber.text,
+                        licenseType: licenceType.text,
+                        yearsOfExperience: 8,
+                      );
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const VerifyingView(),
                   ));
@@ -118,34 +183,20 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
       ),
     );
   }
-
-  void openMultiSelectDialog() async {
-    final result = await showDialog<List<String>>(
-      context: context,
-      builder: (BuildContext context) {
-        return MultiSelectDialog(
-          options: allOptions,
-          selectedOptions: selectedOptions,
-        );
-      },
-    );
-
-    if (result != null) {
-      setState(() {
-        selectedOptions = result;
-      });
-    }
-  }
 }
 
 class MyFormField extends StatelessWidget {
-  const MyFormField({super.key, required this.controller});
+  MyFormField({super.key, required this.controller, this.keyboardType});
   final TextEditingController controller;
+  TextInputType? keyboardType;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      keyboardType: keyboardType,
+      textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        isDense: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: yellow),

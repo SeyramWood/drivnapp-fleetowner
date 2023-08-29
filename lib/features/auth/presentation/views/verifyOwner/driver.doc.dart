@@ -77,7 +77,7 @@ class DriverDocsView extends StatelessWidget {
               ),
               CustomElevatedButton(
                 onPressed: () {
-                  if (provider.files!.isEmpty) return;
+                  // if (provider.files == null) return;
                   provider.submitUserID(context);
                 },
                 backgroundColor: black,

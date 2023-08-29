@@ -1,4 +1,4 @@
-import 'package:drivn/features/car/presentations/widget/car.carousel.dart';
+import 'package:drivn/features/owner/presentations/widget/car.carousel.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';

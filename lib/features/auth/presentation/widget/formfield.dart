@@ -10,14 +10,16 @@ class CustomFormField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.prefix,
+    this.obscureText,
   });
 
   final TextEditingController controller;
   final String labelText;
   final String? Function(String?)? validator;
-  final Icon? prefixIcon;
-  final IconData? suffixIcon;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final Widget? prefix;
+  final bool? obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +34,14 @@ class CustomFormField extends StatelessWidget {
           ),
           TextFormField(
             controller: controller,
-            // autofocus: true,
+            obscureText: obscureText ?? false,
+            obscuringCharacter: '*',
+            textInputAction: TextInputAction.next,
+            cursorColor: white,
             decoration: InputDecoration(
-              // prefixIconColor: white,
               suffixIconColor: white,
               contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-              // prefixIcon: prefixIcon,
-              prefix: prefix,
-              suffixIcon: Icon(suffixIcon),
+              suffixIcon: suffixIcon,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: white),

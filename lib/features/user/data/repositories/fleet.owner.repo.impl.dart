@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../shared/errors/exception.dart';
 import '../../domain/repositories/fleet.owner.repo.dart';
-import '../api/fleet.owner.api.dart';
+import '../api/api.service.dart';
 
 class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
   APIService api;
@@ -44,20 +44,24 @@ class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
   @override
   Future<Either<Failure, String>> verify(String otp) async {
     try {
-      final result = await api.verifyUser(otp);
-      return Right(result ?? '');
+      await api.verifyUser(otp);
+      return const Right('');
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
       log(e.toString());
-      return Left(Failure('Unkown Error'));
+      return Left(Failure('Something went wrong'));
     }
   }
 
   @override
-  Future<Either<Failure, List<File>>> submitID(List<File> file) async {
+  Future<Either<Failure, List<File>>> submitID(
+    List<File> file
+  ) async {
     try {
-      final result = await api.submitIDs(file);
+      final result = await api.uploadFiles(
+        file,
+      );
       return Right(result);
     } catch (e) {
       return Left(Failure(e.toString()));

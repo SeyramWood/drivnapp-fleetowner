@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../../../app/home.dart';
+import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../widget/formfield.dart';
 
@@ -14,7 +14,7 @@ class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
 
   @override
-  _LoginViewState createState() => _LoginViewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
@@ -31,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
       // Navigate to the home screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const OMainPage()),
       );
     }
   }
@@ -89,7 +89,14 @@ class _LoginViewState extends State<LoginView> {
                     controller: _passwordController,
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.password_outlined),
-                    suffixIcon: Icons.visibility,
+                    suffixIcon: GestureDetector(
+                      onTap: () => togglePasswordVisibility(),
+                      child: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                    ),
                   ),
                   TextButton(
                     onPressed: () {
@@ -119,7 +126,7 @@ class _LoginViewState extends State<LoginView> {
                     onPressed: () {
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                            builder: (context) => const HomePage()),
+                            builder: (context) => const OMainPage()),
                         (route) => false,
                       );
                     },

@@ -1,5 +1,5 @@
-import 'package:drivn/features/car/presentations/switch_icon_icons.dart';
-import 'package:drivn/features/car/presentations/widget/ride.sharing.form.dart';
+import 'package:drivn/features/owner/presentations/switch_icon_icons.dart';
+import 'package:drivn/features/owner/presentations/widget/ride.sharing.form.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';

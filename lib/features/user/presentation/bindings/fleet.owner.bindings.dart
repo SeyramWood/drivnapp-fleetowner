@@ -1,4 +1,4 @@
-import 'package:drivn/features/user/data/api/fleet.owner.api.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/features/user/domain/repositories/fleet.owner.repo.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/verify.fleetOwner.dart';
