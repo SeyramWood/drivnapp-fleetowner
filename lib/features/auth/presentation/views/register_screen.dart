@@ -126,6 +126,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                       CustomFormField(
                         obscureText: _obscureRepeatPassword,
+                        textInputAction: TextInputAction.done,
                         validator: (p0) => _validator.passwordValidtor(p0),
                         controller: _repeatPasswordController,
                         labelText: 'Repeat password',

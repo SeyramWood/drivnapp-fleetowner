@@ -1,4 +1,4 @@
-import 'package:drivn/features/owner/presentations/widget/booked.dart';
+import 'package:drivn/features/owner/presentations/views/booked.cars.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';

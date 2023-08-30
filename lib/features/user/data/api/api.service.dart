@@ -118,6 +118,20 @@ class APIService extends ChangeNotifier {
     }
   }
 
+  Future logIn(String userId) async {
+    var uri = Uri.parse('$baseUrl/fleet-owners/$userId');
+    try {
+      final response = await http.get(uri);
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        log(response.body);
+        _userID = jsonDecode(response.body)['data']['id'].toString();
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
 //for the owner
   Future<List<File>> uploadFiles(
     List<File> files,
@@ -167,8 +181,7 @@ class APIService extends ChangeNotifier {
     try {
       if (idCardFiles.isNotEmpty && licenseFiles.isNotEmpty) {
         var request = http.MultipartRequest('POST', uri);
-        print(idCardFiles);
-        print(licenseFiles);
+
         // Add idCard files to the request
         for (var file in idCardFiles) {
           request.files.add(
@@ -185,12 +198,10 @@ class APIService extends ChangeNotifier {
 
         // Add other fields to the request
         request.fields['licenseNumber'] = licenseNumber;
-        // request.fields['licenseStatus'] = licenseStatus;
         request.fields['licenseType'] = licenseType;
         request.fields['experience'] = '$yearsOfExperience';
 
         var response = await request.send();
-        print(response.reasonPhrase);
         // print(response.headers);
       } else {
         print('no files selected');

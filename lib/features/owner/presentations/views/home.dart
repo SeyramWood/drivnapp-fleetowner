@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../user/presentation/view/profile.view.dart';
 import '../../../../shared/utils/constants/colors.dart';
+import '../../data/api/owner.api.dart';
 
 class OMainPage extends StatefulWidget {
   const OMainPage({super.key});
@@ -13,14 +14,23 @@ class OMainPage extends StatefulWidget {
 }
 
 class _OMainPageState extends State<OMainPage> {
+  OwnerApiService apiService = OwnerApiService();
   int _currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    apiService
+      ..fetchBrands()
+      ..fetchFeatures()
+      ..fetchTypes();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: const [MyCars(), Add_A_Car_Form(), ProfileView()],
+        children: const [MyCars(), AddFleetForm(), ProfileView()],
       ),
       bottomNavigationBar: BottomNavigationBar(
         showUnselectedLabels: false,

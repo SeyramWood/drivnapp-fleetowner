@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/car.provider.dart';
+import '../providers/available.or.booked.dart';
 import '../views/car.detail.dart';
 
 class CarTile extends StatefulWidget {

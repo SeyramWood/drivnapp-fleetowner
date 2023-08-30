@@ -1,10 +1,15 @@
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/auth/presentation/widget/google.button.dart';
+import 'package:drivn/features/driver/presentation/views/main.page.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
@@ -41,6 +46,8 @@ class _LoginViewState extends State<LoginView> {
       _obscurePassword = !_obscurePassword;
     });
   }
+
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -123,15 +130,24 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 10),
                   CustomElevatedButton(
                     backgroundColor: black,
-                    onPressed: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => const OMainPage()),
-                        (route) => false,
-                      );
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      context.read<APIService>().logIn('51539607552');
+                      await Future.delayed(const Duration(seconds: 2), () {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  context.read<APIService>().accTypeIsOwner
+                                      ? const OMainPage()
+                                      : const DMainPage()),
+                          (route) => false,
+                        );
+                      });
                     },
                     child: const Text('Login'),
-                  ),
+                  ).loading(isLoading),
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushAndRemoveUntil(

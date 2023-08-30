@@ -1,3 +1,4 @@
+import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,24 @@ class AccountTypeView extends StatefulWidget {
 }
 
 class _AccountTypeViewState extends State<AccountTypeView> {
-  void _setFleetOwner(bool isFleetOwner) {
-    context.read<APIService>().isOwner(isFleetOwner);
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const RegisterView(),
-    ));
+  _setFleetOwner(bool isFleetOwner) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    Future.delayed(const Duration(seconds: 2), () {
+      context.read<APIService>().isOwner(isFleetOwner);
+      Navigator.pop(context);
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const LoginView(),
+      ));
+    });
   }
 
   @override
@@ -38,14 +52,18 @@ class _AccountTypeViewState extends State<AccountTypeView> {
               ),
               const SizedBox(height: 20),
               CustomElevatedButton(
-                onPressed: () => _setFleetOwner(true),
+                onPressed: () {
+                  _setFleetOwner(true);
+                },
                 child: const Text('Fleet Owner'),
-              ), 
+              ),
               const SizedBox(height: 20),
               CustomElevatedButton(
-                onPressed: () => _setFleetOwner(false),
+                onPressed: () {
+                  _setFleetOwner(false);
+                },
                 child: const Text('Driver'),
-              ) 
+              )
             ],
           ),
         ),

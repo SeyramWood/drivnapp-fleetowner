@@ -7,6 +7,7 @@ import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/submit.id.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
+import 'package:drivn/shared/utils/constants/baseUrl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ import '../../../../shared/utils/usecase.dart';
 import '../../../user/domain/usecases/fleet.owner/verify.fleetOwner.dart';
 import '../views/otp.input.view.dart';
 import '../views/verifyOwner/verify.user.view.dart';
-
+import 'package:http/http.dart' as http;
 class UserAuthProvider extends ChangeNotifier {
   final PostUseCase post;
   final VerifyUser verify;
@@ -55,6 +56,7 @@ class UserAuthProvider extends ChangeNotifier {
       },
     );
   }
+  
 
   Future<String?> verifyUser(String otp, context) async {
     _isLoading = true;
@@ -68,13 +70,16 @@ class UserAuthProvider extends ChangeNotifier {
         return failure.message;
       },
       (success) async {
-        await Future.delayed(const Duration(seconds: 2));
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const VerifyOptionView(),
+        await Future.delayed(
+          const Duration(seconds: 2),
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const VerifyOptionView(),
+            ),
           ),
         );
+
         _isLoading = false;
         notifyListeners();
         print('verified');
@@ -90,12 +95,13 @@ class UserAuthProvider extends ChangeNotifier {
       file = _filesToDB = fileResult.files
           .map((platformFile) => File(platformFile.path.toString()))
           .toList();
-print(file);
+      print(file);
       notifyListeners();
       return _filesToDB;
     }
     return [];
   }
+
 //for the owner usage
   Future submitUserID(
     context,
@@ -111,8 +117,10 @@ print(file);
         log(failure.message);
       },
       (success) async {
-        await Future.delayed(const Duration(seconds: 2));
-        Navigator.of(context).pop();
+        await Future.delayed(
+          const Duration(seconds: 2),
+          () => Navigator.of(context).pop(),
+        );
         _isLoading = false;
         notifyListeners();
         return success;

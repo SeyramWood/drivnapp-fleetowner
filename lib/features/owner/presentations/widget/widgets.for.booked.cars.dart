@@ -3,18 +3,7 @@ import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-class BookedCarsBuilder extends StatelessWidget {
-  const BookedCarsBuilder({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return const InfoCard();
-      },
-    );
-  }
-}
 
 class InfoCard extends StatelessWidget {
   const InfoCard({

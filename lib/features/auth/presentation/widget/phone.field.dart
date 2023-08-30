@@ -25,13 +25,10 @@ class PhoneFormField extends StatelessWidget {
             ),
             child: InternationalPhoneNumberInput(
               onInputChanged: (PhoneNumber number) {
-                print(number.phoneNumber);
                 context.read<AuthSharedProvider>().phoneNumber =
                     number.phoneNumber.toString();
               },
-              onInputValidated: (bool value) {
-                print(value);
-              },
+              onInputValidated: (bool value) {},
               selectorConfig: const SelectorConfig(
                 selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
               ),
@@ -41,16 +38,14 @@ class PhoneFormField extends StatelessWidget {
               selectorTextStyle: const TextStyle(color: white),
               // initialValue: number,
               textFieldController: controller,
-              formatInput: true,
+              formatInput: true, keyboardAction: TextInputAction.next,
               keyboardType: const TextInputType.numberWithOptions(
                 signed: true,
                 decimal: false,
               ),
               inputBorder: InputBorder.none,
               textStyle: const TextStyle(color: white),
-              onSaved: (PhoneNumber number) {
-                print('On Saved: $number');
-              },
+              onSaved: (PhoneNumber number) {},
               inputDecoration: const InputDecoration(
                 border: OutlineInputBorder(borderSide: BorderSide.none),
                 errorBorder: OutlineInputBorder(borderSide: BorderSide.none),

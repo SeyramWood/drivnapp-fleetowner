@@ -1,19 +1,25 @@
+import 'dart:io';
+
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn/features/owner/presentations/widget/form.field.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
+import '../../data/api/owner.api.dart';
 import '../widget/multi.selection.dialog.dart';
 
-class Add_A_Car_Form extends StatefulWidget {
-  const Add_A_Car_Form({super.key});
+class AddFleetForm extends StatefulWidget {
+  const AddFleetForm({super.key});
 
   @override
-  State<Add_A_Car_Form> createState() => _Add_A_Car_FormState();
+  State<AddFleetForm> createState() => _AddFleetFormState();
 }
 
-class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
+class _AddFleetFormState extends State<AddFleetForm> {
   final carBrand = TextEditingController();
   final carType = TextEditingController();
   final space = const SizedBox(
@@ -39,8 +45,10 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
     'Option 3',
   ];
 
-  PlatformFile? imageFile;
-  PlatformFile? proofFile;
+  List<File> imageFile = [];
+  List<File> proofFile = [];
+  OwnerApiService apiService = OwnerApiService();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,39 +60,49 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                DropDownFormField(
-                  controller: carBrand,
+                // DropDownFormField(
+                //   controller: carBrand,
+                //   labelText: 'Car Brand',
+                // ),
+
+                // DropDownFormField(
+                //   controller: carType,
+                //   labelText: 'Car Type',
+                // ),
+                FormWithOption(
                   labelText: 'Car Brand',
+                  controller: carBrand,
                 ),
                 space,
-                DropDownFormField(
-                  controller: carType,
+                FormWithOption(
                   labelText: 'Car Type',
+                  controller: carType,
                 ),
                 space,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Add image'),
-                    Visibility(
-                      visible: imageFile != null ? true : false,
-                      child: Center(
-                        child: Text(imageFile?.name ?? ''),
-                      ),
-                    ),
                     CustomElevatedButton(
                       onPressed: () async {
-                        final result = await FilePicker.platform.pickFiles();
-                        if (result == null) return;
-                        setState(() {
-                          imageFile = result.files.first;
-                        });
-                        print(imageFile!.name);
+                        final result = await FilePicker.platform
+                            .pickFiles(allowMultiple: true);
+                        if (result != null) {
+                          imageFile = result.files
+                              .map(
+                                (file) => File(file.path.toString()),
+                              )
+                              .toList();
+                          setState(() {});
+                        }
+
+                        print(imageFile);
                       },
-                      backgroundColor: imageFile != null ? Colors.green : blue,
-                      child: Text(imageFile != null
-                          ? 'File selected (Double tap to remove)'
-                          : 'Add a file'),
+                      backgroundColor:
+                          imageFile.isNotEmpty ? Colors.green : blue,
+                      child: Text(imageFile.isNotEmpty
+                          ? '${imageFile.length} File selected'
+                          : 'Add image'),
                     )
                   ],
                 ),
@@ -93,24 +111,24 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Proof of ownership'),
-                    Visibility(
-                      visible: proofFile != null ? true : false,
-                      child: Center(
-                        child: Text(proofFile?.name ?? ''),
-                      ),
-                    ),
                     CustomElevatedButton(
                       onPressed: () async {
-                        final result = await FilePicker.platform.pickFiles();
-                        if (result == null) return;
-                        setState(() {
-                          proofFile = result.files.first;
-                        });
-                        print(proofFile!.name);
+                        final result = await FilePicker.platform
+                            .pickFiles(allowMultiple: true);
+                        if (result != null) {
+                          proofFile = result.files
+                              .map(
+                                (file) => File(file.path.toString()),
+                              )
+                              .toList();
+                          setState(() {});
+                        }
+                        print(proofFile);
                       },
-                      backgroundColor: proofFile != null ? Colors.green : blue,
-                      child: Text(proofFile != null
-                          ? 'File selected (Double tap to remove)'
+                      backgroundColor:
+                          proofFile.isNotEmpty ? Colors.green : blue,
+                      child: Text(proofFile.isNotEmpty
+                          ? '${proofFile.length} File selected'
                           : 'Add a file'),
                     )
                   ],
@@ -119,15 +137,28 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('More features'),
+                    const Text('Add features'),
                     CustomElevatedButton(
                       onPressed: openMultiSelectDialog,
                       backgroundColor:
                           selectedOptions.isNotEmpty ? Colors.green : blue,
-                      child: Text(selectedOptions.isNotEmpty
-                          ? '${selectedOptions.length} features selected'
-                          : 'Add features'),
+                      child: Text(
+                        selectedOptions.isNotEmpty
+                            ? '${selectedOptions.length} features selected'
+                            : 'Add features',
+                      ),
                     )
+                  ],
+                ),
+                space,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Optional'),
+                    CustomElevatedButton(
+                      onPressed: () {},
+                      child: const Text('More features'),
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -136,7 +167,24 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width / 1.5,
                   child: CustomElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      apiService
+                          .submitData(
+                              userID: context.read<APIService>().userID,
+                              carBrand: carBrand.text,
+                              carType: carType.text,
+                              feature: selectedOptions,
+                              imageFiles: imageFile,
+                              proofFiles: proofFile)
+                          .then((failure) {
+                        if (failure != null) {
+                          showErrorDialogue(
+                            context,
+                            failure,
+                          );
+                        }
+                      });
+                    },
                     backgroundColor: blue,
                     child: const Text('Done'),
                   ),
@@ -166,5 +214,87 @@ class _Add_A_Car_FormState extends State<Add_A_Car_Form> {
         selectedOptions = result;
       });
     }
+  }
+}
+
+List<String> allOptions = [
+  'Option 1',
+  'Option 2',
+  'Option 4',
+  'Option 4',
+  'Option 3',
+  'Option 3',
+  'Option 3',
+  'Option 6',
+  'Option 3',
+  'Option 3',
+  'Option 3',
+  'Option 8',
+  'Option 3',
+  'Option 3',
+  'Option 3',
+];
+
+// ignore: must_be_immutable
+class FormWithOption extends StatefulWidget {
+  FormWithOption({
+    super.key,
+    required this.controller,
+    required this.labelText,
+  });
+  TextEditingController controller;
+  String labelText;
+
+  @override
+  State<FormWithOption> createState() => _FormWithOptionState();
+}
+
+class _FormWithOptionState extends State<FormWithOption> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.labelText),
+        // Autocomplete<String>(
+        //   optionsBuilder: (textEditingValue) {
+        //     if (textEditingValue.text.isEmpty) {
+        //       return const Iterable.empty();
+        //     }
+        //     return allOptions.where(
+        //       (element) {
+        //         return element.contains(textEditingValue.text);
+        //       },
+        //     );
+        //   },
+        //   fieldViewBuilder:
+        //       (context, textEditingController, focusNode, onFieldSubmitted) {
+        //     widget.controller = textEditingController;
+        //     return
+        TextFormField(
+          controller: widget.controller,
+          onEditingComplete: () {},
+          decoration: InputDecoration(
+            isDense: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: yellow),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: yellow),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: yellow),
+            ),
+            // hintText: "Search Something",
+          ),
+          onChanged: (value) {},
+        )
+        //   },
+        // ),
+      ],
+    );
   }
 }
