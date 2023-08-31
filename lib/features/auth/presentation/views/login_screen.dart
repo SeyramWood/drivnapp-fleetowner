@@ -1,8 +1,6 @@
-import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn/features/auth/presentation/widget/google.button.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
@@ -111,7 +109,7 @@ class _LoginViewState extends State<LoginView> {
                         context,
                         PageTransition(
                           type: PageTransitionType.rightToLeft,
-                          duration: const Duration(milliseconds: 600),
+                          duration: const Duration(milliseconds: 400),
                           child: const RequestPinView(),
                         ),
                       );
@@ -119,7 +117,7 @@ class _LoginViewState extends State<LoginView> {
                     child: const Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        'Forgot Password?',
+                        'Forgot password?',
                         style: TextStyle(
                           color: yellow,
                           // fontSize: 16,
@@ -134,17 +132,20 @@ class _LoginViewState extends State<LoginView> {
                       setState(() {
                         isLoading = true;
                       });
-                      context.read<APIService>().logIn('51539607552');
-                      await Future.delayed(const Duration(seconds: 2), () {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  context.read<APIService>().accTypeIsOwner
-                                      ? const OMainPage()
-                                      : const DMainPage()),
-                          (route) => false,
-                        );
-                      });
+                      APIService().logIn('51539607558').then(
+                        (value) async {
+                          await Future.delayed(const Duration(seconds: 2), () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      context.read<APIService>().accTypeIsOwner
+                                          ? const OMainPage()
+                                          : const DMainPage()),
+                              (route) => false,
+                            );
+                          });
+                        },
+                      );
                     },
                     child: const Text('Login'),
                   ).loading(isLoading),
@@ -157,14 +158,14 @@ class _LoginViewState extends State<LoginView> {
                         (route) => false),
                     child: RichText(
                       text: TextSpan(
-                        text: "Don't have an account? ",
+                        text: "Don't have an account?",
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w500,
                               color: white,
                             ),
                         children: const [
                           TextSpan(
-                            text: 'Register.',
+                            text: ' Register.',
                             style: TextStyle(
                               color: yellow,
                               fontWeight: FontWeight.w700,

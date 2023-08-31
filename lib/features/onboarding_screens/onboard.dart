@@ -1,5 +1,4 @@
 import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
-import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +10,7 @@ class OnbordingPage extends StatefulWidget {
 }
 
 class _OnbordingPageState extends State<OnbordingPage> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   List pages = [
     {

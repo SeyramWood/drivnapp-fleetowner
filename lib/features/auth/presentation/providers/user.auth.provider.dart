@@ -2,20 +2,16 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/views/verify.option.view.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/submit.id.dart';
-import 'package:drivn/shared/errors/error.alert.dart';
-import 'package:drivn/shared/utils/constants/baseUrl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/usecase.dart';
 import '../../../user/domain/usecases/fleet.owner/verify.fleetOwner.dart';
 import '../views/otp.input.view.dart';
-import '../views/verifyOwner/verify.user.view.dart';
-import 'package:http/http.dart' as http;
+
 class UserAuthProvider extends ChangeNotifier {
   final PostUseCase post;
   final VerifyUser verify;
@@ -37,33 +33,36 @@ class UserAuthProvider extends ChangeNotifier {
 
     final result = await post(Params(fleetOwner));
     return result.fold(
-      (failure) {
+      (failure) async {
+        await Future.delayed(const Duration(seconds: 2));
         _isLoading = false;
         notifyListeners();
         return failure.message;
       },
       (success) async {
-        await Future.delayed(const Duration(seconds: 2));
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const OTPInputView(),
-          ),
-        );
+        await Future.delayed(const Duration(seconds: 2), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const OTPInputView(),
+            ),
+          );
+        });
+
         _isLoading = false;
         notifyListeners();
         return null;
       },
     );
   }
-  
 
   Future<String?> verifyUser(String otp, context) async {
     _isLoading = true;
     notifyListeners();
     final result = await verify(Params(otp));
     return result.fold(
-      (failure) {
+      (failure) async {
+        await Future.delayed(const Duration(seconds: 2));
         _isLoading = false;
         notifyListeners();
         print(failure.message);

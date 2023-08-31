@@ -1,11 +1,8 @@
-import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

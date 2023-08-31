@@ -11,7 +11,8 @@ class CustomFormField extends StatelessWidget {
     this.suffixIcon,
     this.prefix,
     this.obscureText,
-    this.textInputAction =TextInputAction.next,
+    this.textInputAction = TextInputAction.next,
+    this.keyboardType,
   });
 
   final TextEditingController controller;
@@ -21,7 +22,8 @@ class CustomFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefix;
   final bool? obscureText;
-  final TextInputAction? textInputAction ;
+  final TextInputAction? textInputAction;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +37,12 @@ class CustomFormField extends StatelessWidget {
             style: const TextStyle(color: yellow),
           ),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             controller: controller,
             obscureText: obscureText ?? false,
             obscuringCharacter: '*',
             textInputAction: textInputAction,
+            keyboardType: keyboardType,
             cursorColor: white,
             decoration: InputDecoration(
               suffixIconColor: white,

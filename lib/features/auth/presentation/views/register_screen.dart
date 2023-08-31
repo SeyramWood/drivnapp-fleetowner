@@ -4,7 +4,6 @@ import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
-import 'package:drivn/features/auth/presentation/widget/google.button.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
@@ -98,13 +97,13 @@ class _RegisterViewState extends State<RegisterView> {
                       CustomFormField(
                         validator: (p0) => _validator.nameValidate(p0),
                         controller: _firstNameController,
-                        labelText: 'First Name',
+                        labelText: 'First name',
                         prefixIcon: const Icon(Icons.person_2_outlined),
                       ),
                       CustomFormField(
                         validator: (p0) => _validator.nameValidate(p0),
                         controller: _lastNameController,
-                        labelText: 'Last Name',
+                        labelText: 'Last name',
                         prefixIcon: const Icon(Icons.person_2_outlined),
                       ),
                       PhoneFormField(
@@ -146,12 +145,12 @@ class _RegisterViewState extends State<RegisterView> {
                           if (_formKey.currentState!.validate()) {
                             //fleetOwner object
                             final fleetOwner = SignUpBody(
-                              lastName: _lastNameController.text,
-                              firstName: _firstNameController.text,
+                              lastName: _lastNameController.text.trim(),
+                              firstName: _firstNameController.text.trim(),
                               username:
-                                  context.read<AuthSharedProvider>().phone,
-                              password: _passwordController.text,
-                              confirmPassword: _repeatPasswordController.text,
+                                  context.read<AuthSharedProvider>().phone.trim(),
+                              password: _passwordController.text.trim(),
+                              confirmPassword: _repeatPasswordController.text.trim(),
                             );
                             //method to create a fleetowner account
                             context

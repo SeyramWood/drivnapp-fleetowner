@@ -1,16 +1,20 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/vehicle/data/api/vehicle.api.service.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/api/owner.api.dart';
+import '../widget/form.field.with.option.dart';
 import '../widget/multi.selection.dialog.dart';
+
+VehicleApiService vehicleApiService = VehicleApiService();
 
 class AddFleetForm extends StatefulWidget {
   const AddFleetForm({super.key});
@@ -27,28 +31,33 @@ class _AddFleetFormState extends State<AddFleetForm> {
   );
   List<String> selectedOptions = [];
 
-  List<String> allOptions = [
-    'Option 1',
-    'Option 2',
-    'Option 4',
-    'Option 4',
-    'Option 3',
-    'Option 3',
-    'Option 3',
-    'Option 6',
-    'Option 3',
-    'Option 3',
-    'Option 3',
-    'Option 8',
-    'Option 3',
-    'Option 3',
-    'Option 3',
-  ];
-
+  List<String> options = [];
   List<File> imageFile = [];
   List<File> proofFile = [];
   OwnerApiService apiService = OwnerApiService();
+  //a method to pass the features to the list of options
+  Future getFeatures() async {
+    var result = await vehicleApiService.fetchFeatures();
+    for (var feature in result) {
+      options.add(feature.split('.')[1]);
+    }
+  }
 
+  void clearFields() {
+    imageFile.clear();
+    proofFile.clear();
+    selectedOptions.clear();
+    carBrand.clear();
+    carType.clear();
+  }
+
+  @override
+  void initState() {
+    getFeatures();
+    super.initState();
+  }
+
+// class's main build
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -60,23 +69,46 @@ class _AddFleetFormState extends State<AddFleetForm> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // DropDownFormField(
-                //   controller: carBrand,
-                //   labelText: 'Car Brand',
-                // ),
-
-                // DropDownFormField(
-                //   controller: carType,
-                //   labelText: 'Car Type',
-                // ),
                 FormWithOption(
                   labelText: 'Car Brand',
                   controller: carBrand,
+                  onSelected: (value) {
+                    var text = value.split('.');
+                    carBrand.text = text[1];
+                  },
+                  customOptionsBuilder: (String text) async {
+                    final List<String> brands =
+                        await vehicleApiService.fetchBrands();
+                    List<String> carBrands = [];
+                    for (var brand in brands) {
+                      carBrands.add(brand.split('.')[0]);
+                    }
+                    return brands
+                        .where((brand) => brand.contains(text))
+                        .toList();
+                  },
                 ),
                 space,
                 FormWithOption(
                   labelText: 'Car Type',
                   controller: carType,
+                  onSelected: (value) {
+                    var text = value.split('.');
+                    carType.text = text[1];
+                  },
+                  customOptionsBuilder: (String text) async {
+                    final List<String> types =
+                        await vehicleApiService.fetchTypes();
+                    List<String> carTypes = [];
+                    for (var type in types) {
+                      carTypes.add(type.split('.')[1]);
+                    }
+                    return types
+                        .where(
+                          (type) => type.contains(text),
+                        )
+                        .toList();
+                  },
                 ),
                 space,
                 Column(
@@ -170,18 +202,27 @@ class _AddFleetFormState extends State<AddFleetForm> {
                     onPressed: () {
                       apiService
                           .submitData(
-                              userID: context.read<APIService>().userID,
-                              carBrand: carBrand.text,
-                              carType: carType.text,
-                              feature: selectedOptions,
-                              imageFiles: imageFile,
-                              proofFiles: proofFile)
+                        userID: context.read<APIService>().userID,
+                        carBrand: carBrand.text,
+                        carType: carType.text,
+                        features: selectedOptions,
+                        imageFiles: imageFile,
+                        proofFiles: proofFile,
+                      )
                           .then((failure) {
                         if (failure != null) {
                           showErrorDialogue(
                             context,
                             failure,
                           );
+                        } else {
+                          clearFields();
+                          setState(() {});
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            duration: Duration(seconds: 3),
+                            content: Text('Vehicle added successfully'),
+                          ));
                         }
                       });
                     },
@@ -203,7 +244,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
       context: context,
       builder: (BuildContext context) {
         return MultiSelectDialog(
-          options: allOptions,
+          options: options,
           selectedOptions: selectedOptions,
         );
       },
@@ -214,87 +255,5 @@ class _AddFleetFormState extends State<AddFleetForm> {
         selectedOptions = result;
       });
     }
-  }
-}
-
-List<String> allOptions = [
-  'Option 1',
-  'Option 2',
-  'Option 4',
-  'Option 4',
-  'Option 3',
-  'Option 3',
-  'Option 3',
-  'Option 6',
-  'Option 3',
-  'Option 3',
-  'Option 3',
-  'Option 8',
-  'Option 3',
-  'Option 3',
-  'Option 3',
-];
-
-// ignore: must_be_immutable
-class FormWithOption extends StatefulWidget {
-  FormWithOption({
-    super.key,
-    required this.controller,
-    required this.labelText,
-  });
-  TextEditingController controller;
-  String labelText;
-
-  @override
-  State<FormWithOption> createState() => _FormWithOptionState();
-}
-
-class _FormWithOptionState extends State<FormWithOption> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(widget.labelText),
-        // Autocomplete<String>(
-        //   optionsBuilder: (textEditingValue) {
-        //     if (textEditingValue.text.isEmpty) {
-        //       return const Iterable.empty();
-        //     }
-        //     return allOptions.where(
-        //       (element) {
-        //         return element.contains(textEditingValue.text);
-        //       },
-        //     );
-        //   },
-        //   fieldViewBuilder:
-        //       (context, textEditingController, focusNode, onFieldSubmitted) {
-        //     widget.controller = textEditingController;
-        //     return
-        TextFormField(
-          controller: widget.controller,
-          onEditingComplete: () {},
-          decoration: InputDecoration(
-            isDense: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: yellow),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: yellow),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: yellow),
-            ),
-            // hintText: "Search Something",
-          ),
-          onChanged: (value) {},
-        )
-        //   },
-        // ),
-      ],
-    );
   }
 }

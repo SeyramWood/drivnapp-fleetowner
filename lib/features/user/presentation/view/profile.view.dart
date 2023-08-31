@@ -125,9 +125,12 @@ class _ProfileViewState extends State<ProfileView> {
 
                   Future.delayed(const Duration(seconds: 2), () {
                     Navigator.pop(context);
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const LoginView(),
-                    ));
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginView(),
+                      ),
+                      (route) => false,
+                    );
                   });
                 },
                 leading: const ImageIcon(AssetImage('assets/icons/logout.png')),

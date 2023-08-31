@@ -54,11 +54,7 @@ class APIService extends ChangeNotifier {
         body: requestBody.toJson(),
       );
 
-      print(response.body);
-
       if (response.statusCode != 200 && response.statusCode != 201) {
-        print(response.statusCode);
-
         final errorsMap =
             jsonDecode(response.body)['errors'] as Map<String, dynamic>?;
 
@@ -126,13 +122,13 @@ class APIService extends ChangeNotifier {
       if (response.statusCode == 200) {
         log(response.body);
         _userID = jsonDecode(response.body)['data']['id'].toString();
+        log(_userID);
       }
     } on Exception catch (e) {
       print(e);
     }
   }
 
-//for the owner
   Future<List<File>> uploadFiles(
     List<File> files,
   ) async {
@@ -149,6 +145,7 @@ class APIService extends ChangeNotifier {
         }
 
         var response = await request.send();
+
         print(response.reasonPhrase);
         if (response.statusCode == 200 || response.statusCode == 201) {
           // Handle success response if needed

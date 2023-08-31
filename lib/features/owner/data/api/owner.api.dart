@@ -1,19 +1,23 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:drivn/features/owner/domain/entities/available.vehicles.dart';
 import 'package:drivn/shared/errors/exception.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../shared/utils/constants/baseUrl.dart';
 
 class OwnerApiService {
+  //create a vehicle
   Future<String?> submitData({
     required String userID,
     required String carBrand,
     required String carType,
     required List<File> imageFiles,
     required List<File> proofFiles,
-    required List<String> feature,
+    required List<String> features,
     String? moreFeatures,
     String? path,
   }) async {
@@ -22,13 +26,12 @@ class OwnerApiService {
     try {
       if (imageFiles.isNotEmpty && proofFiles.isNotEmpty) {
         var request = http.MultipartRequest('POST', uri);
-
         // Add fields to the request
         request.fields['owner'] = userID;
         request.fields['brand'] = carBrand;
         request.fields['type'] = carType;
-        request.fields['feature'] = '$feature';
-        request.fields['moreFeature'] = moreFeatures ?? '4x4';
+        request.fields['feature[]'] = '$features';
+        request.fields['moreFeature'] = moreFeatures ?? '';
 
         for (var file in imageFiles) {
           request.files.add(
@@ -43,7 +46,8 @@ class OwnerApiService {
         }
 
         var response = await request.send();
-        if (response.statusCode == 200) {
+
+        if (response.statusCode == 201) {
           print('Request successful');
           print(await response.stream.bytesToString());
         } else {
@@ -55,7 +59,7 @@ class OwnerApiService {
       }
     } on CustomException catch (failure) {
       print('CustomException: ${failure.message}');
-      throw CustomException(failure.message);
+      // throw CustomException(failure.message);
     } catch (e) {
       print('Error: $e');
       rethrow; // Re-throw the caught exception for better error propagation
@@ -63,56 +67,23 @@ class OwnerApiService {
     return null;
   }
 
-  Future fetchTypes() async {
-    final uri = Uri.parse('$baseUrl/vehicle/types');
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        log(response.body);
-      } else {
-        print(response.statusCode);
-      }
-    } catch (e) {
-      print(e);
-    }
+  List<AvailableVehicles> parseVehicle(String responseBody) {
+    final list = json.decode(responseBody) as List<dynamic>;
+    List<AvailableVehicles> availableVehicles =
+        list.map((e) => AvailableVehicles.fromJson(e)).toList();
+    return availableVehicles;
   }
 
-  Future fetchFeatures() async {
-    final uri = Uri.parse('$baseUrl/vehicle/features');
+  Future fetchVehicles(String userID) async {
+    final uri = Uri.parse('$baseUrl/vehicles');
     try {
       final response = await http.get(uri);
       if (response.statusCode == 200) {
-        log(response.body);
+        print(response.body);
+        return compute(parseVehicle, response.body);
       } else {
-        print(response.statusCode);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future fetchBrands() async {
-    final uri = Uri.parse('$baseUrl/vehicle/brands');
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        log(response.body);
-      } else {
-        print(response.statusCode);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future fetchCars(String userID) async {
-    final uri = Uri.parse('$baseUrl/vehicles/$userID');
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        log(response.body);
-      } else {
-        print(response.statusCode);
+        print(
+            ' vehicle status: ${response.statusCode} ${response.reasonPhrase}');
       }
     } catch (e) {
       print(e);

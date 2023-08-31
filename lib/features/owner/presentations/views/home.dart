@@ -1,9 +1,12 @@
 import 'package:drivn/features/owner/presentations/views/add.car.form.dart';
 import 'package:drivn/features/owner/presentations/views/my.cars.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../user/data/api/api.service.dart';
 import '../../../user/presentation/view/profile.view.dart';
 import '../../../../shared/utils/constants/colors.dart';
+import '../../../vehicle/data/api/vehicle.api.service.dart';
 import '../../data/api/owner.api.dart';
 
 class OMainPage extends StatefulWidget {
@@ -14,11 +17,12 @@ class OMainPage extends StatefulWidget {
 }
 
 class _OMainPageState extends State<OMainPage> {
-  OwnerApiService apiService = OwnerApiService();
+  VehicleApiService apiService = VehicleApiService();
   int _currentIndex = 0;
   @override
   void initState() {
     super.initState();
+    OwnerApiService().fetchVehicles(context.read<APIService>().userID);
     apiService
       ..fetchBrands()
       ..fetchFeatures()

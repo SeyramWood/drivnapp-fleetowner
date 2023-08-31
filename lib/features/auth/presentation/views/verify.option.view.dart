@@ -1,4 +1,3 @@
-import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:drivn/features/auth/presentation/views/verifyDriver.view.dart';
 import 'package:drivn/features/auth/presentation/views/verifyOwner/verify.user.view.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';

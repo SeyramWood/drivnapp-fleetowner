@@ -1,6 +1,4 @@
 import 'package:drivn/features/auth/presentation/views/login_screen.dart';
-import 'package:drivn/features/auth/presentation/views/register_screen.dart';
-import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

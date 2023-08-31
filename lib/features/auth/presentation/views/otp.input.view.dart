@@ -40,14 +40,14 @@ class _OTPInputViewState extends State<OTPInputView> {
                   style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                       fontFamily: 'Inter', fontWeight: FontWeight.w600),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Image.asset(
-                    "assets/otp.png",
-                    fit: BoxFit.cover,
-                    color: white,
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 10.0),
+                //   child: Image.asset(
+                //     "assets/otp.png",
+                //     fit: BoxFit.cover,
+                //     color: white,
+                //   ),
+                // ),
                 const Text(
                   "Enter the 4 digits code via your sms",
                   style: TextStyle(

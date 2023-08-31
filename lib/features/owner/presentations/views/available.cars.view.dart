@@ -20,7 +20,10 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   @override
   void initState() {
     super.initState();
-    cars = apiService.fetchCars(context.read<APIService>().userID);
+
+    print('userIdfromhome: ${context.read<APIService>().userID}');
+
+    cars = apiService.fetchVehicles(context.read<APIService>().userID);
   }
 
   @override

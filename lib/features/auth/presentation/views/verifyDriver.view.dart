@@ -1,16 +1,12 @@
 import 'dart:io';
 
-import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
-import 'package:drivn/features/auth/presentation/widget/formfield.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
-import '../../../owner/presentations/widget/form.field.dart';
-import '../../../owner/presentations/widget/multi.selection.dialog.dart';
 import '../widget/elevated.button.dart';
 
 class VerifyDriverView extends StatefulWidget {
