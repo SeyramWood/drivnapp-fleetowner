@@ -1,19 +1,16 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:drivn/features/auth/presentation/views/verify.option.view.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
-import 'package:drivn/features/user/domain/usecases/fleet.owner/submitID.dart';
+import 'package:drivn/features/user/domain/usecases/fleet.owner/submit.id.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 import '../../../../shared/utils/usecase.dart';
 import '../../../user/domain/usecases/fleet.owner/verify.fleetOwner.dart';
 import '../views/otp.input.view.dart';
-import '../views/verifyOwner/verify.user.view.dart';
-import 'package:http/http.dart' as http;
 
 class UserAuthProvider extends ChangeNotifier {
   final PostUseCase post;
@@ -30,84 +27,102 @@ class UserAuthProvider extends ChangeNotifier {
   List<File>? _filesToDB;
   List<File>? get files => _filesToDB;
 
-  Future<void> postUser(SignUpBody fleetOwner, context) async {
+  Future<String?> postUser(SignUpBody fleetOwner, context) async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await post.call(Params(fleetOwner));
-    result.fold(
-      (l) {
+    final result = await post(Params(fleetOwner));
+    return result.fold(
+      (failure) async {
+        await Future.delayed(const Duration(seconds: 2));
         _isLoading = false;
         notifyListeners();
-
-        print(l.message);
+        return failure.message;
       },
-      (r) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const OTPInputView(),
-          ),
-        );
+      (success) async {
+        await Future.delayed(const Duration(seconds: 2), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const OTPInputView(),
+            ),
+          );
+        });
+
         _isLoading = false;
         notifyListeners();
-        return r;
+        return null;
       },
     );
   }
 
-  Future<void> verifyUser(String otp, context) async {
+  Future<String?> verifyUser(String otp, context) async {
     _isLoading = true;
     notifyListeners();
-    final result = await verify.call(Params(otp));
-    result.fold(
-      (l) {
+    final result = await verify(Params(otp));
+    return result.fold(
+      (failure) async {
+        await Future.delayed(const Duration(seconds: 2));
         _isLoading = false;
         notifyListeners();
-        print('error 1 :${l.message}');
+        print(failure.message);
+        return failure.message;
       },
-      (r) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const GetVerifiedOption(),
+      (success) async {
+        await Future.delayed(
+          const Duration(seconds: 2),
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const VerifyOptionView(),
+            ),
           ),
         );
+
         _isLoading = false;
         notifyListeners();
         print('verified');
-        return r;
+        return null;
       },
     );
   }
 
 //select files to be uploaded
-  Future<List<File>?> selectFiles() async {
+  Future<List<File>?> selectFiles({file}) async {
     final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
     if (fileResult != null) {
-      _filesToDB = fileResult.files
+      file = _filesToDB = fileResult.files
           .map((platformFile) => File(platformFile.path.toString()))
           .toList();
+      print(file);
       notifyListeners();
       return _filesToDB;
     }
     return [];
   }
 
-  Future submitUserID(context) async {
+//for the owner usage
+  Future submitUserID(
+    context,
+  ) async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await submitID.call(Params(_filesToDB ?? []));
+    final result = await submitID(Params(
+      _filesToDB ?? [],
+    ));
     result.fold(
-      (l) {
-        log(l.message);
+      (failure) {
+        log(failure.message);
       },
-      (r) {
-        Navigator.of(context).pop();
+      (success) async {
+        await Future.delayed(
+          const Duration(seconds: 2),
+          () => Navigator.of(context).pop(),
+        );
         _isLoading = false;
         notifyListeners();
-        return r;
+        return success;
       },
     );
     _filesToDB = [];

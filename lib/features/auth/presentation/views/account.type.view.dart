@@ -1,18 +1,36 @@
-import 'package:drivn/features/auth/presentation/views/register_screen.dart';
+import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../user/data/api/fleet.owner.api.dart';
+import '../../../user/data/api/api.service.dart';
 import '../widget/elevated.button.dart';
 
-class AccountTypeView extends StatelessWidget {
+class AccountTypeView extends StatefulWidget {
   const AccountTypeView({super.key});
 
-  void _setFleetOwner(bool isFleetOwner, BuildContext context) {
-    context.read<APIService>().fleetOwner(isFleetOwner);
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const RegisterView(),
-    ));
+  @override
+  State<AccountTypeView> createState() => _AccountTypeViewState();
+}
+
+class _AccountTypeViewState extends State<AccountTypeView> {
+  _setFleetOwner(bool isFleetOwner) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    Future.delayed(const Duration(seconds: 2), () {
+      context.read<APIService>().isOwner(isFleetOwner);
+      Navigator.pop(context);
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const LoginView(),
+      ));
+    });
   }
 
   @override
@@ -26,18 +44,24 @@ class AccountTypeView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Continue as a',
-                  style: Theme.of(context).textTheme.headlineMedium),
+              Text(
+                'Continue as a',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
               const SizedBox(height: 20),
               CustomElevatedButton(
-                onPressed: () => _setFleetOwner(true, context),
+                onPressed: () {
+                  _setFleetOwner(true);
+                },
                 child: const Text('Fleet Owner'),
               ),
               const SizedBox(height: 20),
               CustomElevatedButton(
-                onPressed: () => _setFleetOwner(false, context),
+                onPressed: () {
+                  _setFleetOwner(false);
+                },
                 child: const Text('Driver'),
-              ),
+              )
             ],
           ),
         ),

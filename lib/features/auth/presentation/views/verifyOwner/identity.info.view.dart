@@ -75,7 +75,16 @@ class ProofIDView extends StatelessWidget {
                 ),
                 CustomElevatedButton(
                   onPressed: () {
-                    provider.submitUserID(context);
+                    provider
+                        .submitUserID(
+                          context,
+                        )
+                        .then(
+                          (value) => ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text('Added successfully'),
+                          )),
+                        );
                   },
                   backgroundColor: black,
                   child: const Text('Submit for review'),

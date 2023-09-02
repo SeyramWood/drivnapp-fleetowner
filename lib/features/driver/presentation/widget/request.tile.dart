@@ -31,7 +31,7 @@ class RequestTile extends StatelessWidget {
             ),
             decoration: BoxDecoration(
                 border: Border.all(
-                  color: yellow,
+                  color: yellow.withOpacity(.4),
                 ),
                 borderRadius: BorderRadius.circular(5)),
             child: Row(
@@ -50,7 +50,7 @@ class RequestTile extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
-                          .copyWith(fontWeight: FontWeight.w500),
+                          .copyWith(fontWeight: FontWeight.w500, fontSize: 18),
                     ),
                     const Row(
                       children: [
@@ -74,7 +74,7 @@ class RequestTile extends StatelessWidget {
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                           border: Border.all(
-                            color: yellow,
+                            color: yellow.withOpacity(.5),
                           ),
                           borderRadius: BorderRadius.circular(5)),
                       child: const Text('10:57 AM'),

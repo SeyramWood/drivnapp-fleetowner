@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../../shared/utils/constants/dimensions.dart';
+import '../../../auth/presentation/views/login_screen.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -111,7 +112,27 @@ class _ProfileViewState extends State<ProfileView> {
               ),
               const Spacer(),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  );
+
+                  Future.delayed(const Duration(seconds: 2), () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginView(),
+                      ),
+                      (route) => false,
+                    );
+                  });
+                },
                 leading: const ImageIcon(AssetImage('assets/icons/logout.png')),
                 title: const Text('Logout'),
               ),

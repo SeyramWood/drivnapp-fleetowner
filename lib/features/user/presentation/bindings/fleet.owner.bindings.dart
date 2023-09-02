@@ -1,23 +1,19 @@
-import 'package:drivn/features/user/data/api/fleet.owner.api.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/features/user/domain/repositories/fleet.owner.repo.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
 import 'package:drivn/features/user/domain/usecases/fleet.owner/verify.fleetOwner.dart';
 import 'package:provider/provider.dart';
 import '../../../auth/presentation/providers/user.auth.provider.dart';
-import '../../data/remote/fleet.owner.db.dart';
 import '../../data/repositories/fleet.owner.repo.impl.dart';
-import '../../domain/usecases/fleet.owner/submitID.dart';
+import '../../domain/usecases/fleet.owner/submit.id.dart';
 
 class UserBindings {
   final apiService = ChangeNotifierProvider<APIService>(
     create: (context) => APIService(),
   );
-  final userDB = ChangeNotifierProxyProvider<APIService, UserDB>(
-    create: (context) => UserDBImpl.empty(),
-    update: (context, api, previous) => UserDBImpl(api),
-  );
+ 
 
-  final userRepo = ChangeNotifierProxyProvider<UserDB, UserRepo>(
+  final userRepo = ChangeNotifierProxyProvider<APIService, UserRepo>(
     create: (context) => FleetOwnerRepoImpl.empty(),
     update: (context, db, previous) => FleetOwnerRepoImpl(db),
   );

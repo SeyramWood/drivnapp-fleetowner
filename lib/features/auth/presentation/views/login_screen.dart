@@ -1,12 +1,18 @@
+import 'dart:developer';
+
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn/features/auth/presentation/widget/google.button.dart';
+import 'package:drivn/features/driver/presentation/views/main.page.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../app/home.dart';
+import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../widget/formfield.dart';
 
@@ -14,7 +20,7 @@ class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
 
   @override
-  _LoginViewState createState() => _LoginViewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
@@ -31,7 +37,7 @@ class _LoginViewState extends State<LoginView> {
       // Navigate to the home screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const OMainPage()),
       );
     }
   }
@@ -40,6 +46,13 @@ class _LoginViewState extends State<LoginView> {
     setState(() {
       _obscurePassword = !_obscurePassword;
     });
+  }
+
+  bool isLoading = false;
+  @override
+  void initState() {
+    print(Provider.of<APIService>(context, listen: false).userID);
+    super.initState();
   }
 
   @override
@@ -89,7 +102,14 @@ class _LoginViewState extends State<LoginView> {
                     controller: _passwordController,
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.password_outlined),
-                    suffixIcon: Icons.visibility,
+                    suffixIcon: GestureDetector(
+                      onTap: () => togglePasswordVisibility(),
+                      child: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                    ),
                   ),
                   TextButton(
                     onPressed: () {
@@ -97,7 +117,7 @@ class _LoginViewState extends State<LoginView> {
                         context,
                         PageTransition(
                           type: PageTransitionType.rightToLeft,
-                          duration: const Duration(milliseconds: 600),
+                          duration: const Duration(milliseconds: 400),
                           child: const RequestPinView(),
                         ),
                       );
@@ -105,7 +125,7 @@ class _LoginViewState extends State<LoginView> {
                     child: const Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        'Forgot Password?',
+                        'Forgot password?',
                         style: TextStyle(
                           color: yellow,
                           // fontSize: 16,
@@ -113,17 +133,33 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                   ),
-                  // const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   CustomElevatedButton(
                     backgroundColor: black,
-                    onPressed: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => const HomePage()),
-                        (route) => false,
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      APIService().logIn('51539607561').then(
+                        (value) async {
+                          await Future.delayed(const Duration(seconds: 2), () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      context.read<APIService>().accTypeIsOwner
+                                          ? const OMainPage()
+                                          : const DMainPage()),
+                              (route) => false,
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                        },
                       );
                     },
                     child: const Text('Login'),
-                  ),
+                  ).loading(isLoading),
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushAndRemoveUntil(
@@ -133,13 +169,14 @@ class _LoginViewState extends State<LoginView> {
                         (route) => false),
                     child: RichText(
                       text: TextSpan(
-                        text: "Don't have an account? ",
+                        text: "Don't have an account?",
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontWeight: FontWeight.w500,
+                              color: white,
                             ),
                         children: const [
                           TextSpan(
-                            text: 'Register.',
+                            text: ' Register.',
                             style: TextStyle(
                               color: yellow,
                               fontWeight: FontWeight.w700,
@@ -152,10 +189,6 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(
                     height: 20,
                   ),
-                  GoogleButton(
-                    onTap: () {},
-                    title: 'Login',
-                  )
                 ],
               ),
             ),

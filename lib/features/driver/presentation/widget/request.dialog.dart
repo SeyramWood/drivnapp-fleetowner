@@ -87,7 +87,9 @@ class RequestInfo extends StatelessWidget {
                   height: 40,
                   child: CustomElevatedButton(
                     backgroundColor: red,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                     child: const Text('reject'),
                   ),
                 ),
@@ -96,6 +98,8 @@ class RequestInfo extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    Navigator.of(context).pop();
+
                     showDialog(
                         context: context,
                         builder: (context) => BottomSheet(
