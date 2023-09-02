@@ -1,16 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:drivn/features/owner/presentations/switch_icon_icons.dart';
 import 'package:drivn/features/owner/presentations/widget/ride.sharing.form.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
-import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
+import '../../domain/entities/available.vehicles.dart' as data;
 import '../providers/available.or.booked.dart';
 import '../views/car.detail.dart';
 
 class CarTile extends StatefulWidget {
-  const CarTile({super.key});
-
+  const CarTile({super.key, required this.vehicle});
+  final data.Vehicle vehicle;
   @override
   State<CarTile> createState() => _CarTileState();
 }
@@ -45,13 +46,15 @@ class _CarTileState extends State<CarTile> {
 
   @override
   Widget build(BuildContext context) {
+    var vehicle = widget.vehicle;
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           PageTransition(
             type: PageTransitionType.rightToLeft,
             duration: const Duration(milliseconds: 600),
-            child: const CarDetails(),
+            child:  CarDetails(vehicle:vehicle),
           ),
         );
       },
@@ -73,9 +76,9 @@ class _CarTileState extends State<CarTile> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Text('Mercedes Benz'),
+                        Text(vehicle.brand),
                         Spacer(),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.0),
@@ -120,7 +123,8 @@ class _CarTileState extends State<CarTile> {
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 3.2,
                           child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
                               decoration: BoxDecoration(
                                 color: white,
                                 borderRadius: BorderRadius.circular(5),

@@ -1,3 +1,4 @@
+import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/owner/presentations/views/home.dart';
 import 'package:drivn/features/auth/presentation/views/verifyOwner/identity.info.view.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
@@ -102,26 +103,27 @@ class GetVerifiedOption extends StatelessWidget {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (context) => const OMainPage(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    child: Text(
-                      'Later',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(color: white),
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.bottomRight,
+                //   child: TextButton(
+                //     onPressed: () {
+                //       Navigator.of(context).pushAndRemoveUntil(
+                //         MaterialPageRoute(
+                //           builder: (context) => const OMainPage(),
+                //         ),
+                //         (route) => false,
+                //       );
+                //     },
+                //     child: Text(
+                //       'Later',
+                //       style: Theme.of(context)
+                //           .textTheme
+                //           .bodyLarge!
+                //           .copyWith(color: white),
+                //     ),
+                //   ),
+                // ),
+
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height / 6,
                 ),
@@ -129,7 +131,7 @@ class GetVerifiedOption extends StatelessWidget {
                   backgroundColor: black,
                   onPressed: () => Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                          builder: (context) => const LoginView()),
+                          builder: (context) => const OMainPage()),
                       (route) => false),
                   child: const Text('Done'),
                 )

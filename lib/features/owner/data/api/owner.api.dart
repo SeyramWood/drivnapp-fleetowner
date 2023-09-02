@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:drivn/features/owner/domain/entities/available.vehicles.dart';
+import 'package:drivn/features/vehicle/domain/entities/vehicle.features.dart';
 import 'package:drivn/shared/errors/exception.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -10,8 +12,8 @@ import 'package:http/http.dart' as http;
 import '../../../../shared/utils/constants/baseUrl.dart';
 
 class OwnerApiService {
-  //create a vehicle
-  Future<String?> submitData({
+  //add a vehicle
+  Future<String?> addVehivle({
     required String userID,
     required String carBrand,
     required String carType,
@@ -19,7 +21,6 @@ class OwnerApiService {
     required List<File> proofFiles,
     required List<String> features,
     String? moreFeatures,
-    String? path,
   }) async {
     final uri = Uri.parse('$baseUrl/vehicles');
 
@@ -27,7 +28,7 @@ class OwnerApiService {
       if (imageFiles.isNotEmpty && proofFiles.isNotEmpty) {
         var request = http.MultipartRequest('POST', uri);
         // Add fields to the request
-        request.fields['owner'] = userID;
+        request.fields['owner'] = '51539607561';
         request.fields['brand'] = carBrand;
         request.fields['type'] = carType;
         request.fields['feature[]'] = '$features';
@@ -67,26 +68,15 @@ class OwnerApiService {
     return null;
   }
 
-  List<AvailableVehicles> parseVehicle(String responseBody) {
-    final list = json.decode(responseBody) as List<dynamic>;
-    List<AvailableVehicles> availableVehicles =
-        list.map((e) => AvailableVehicles.fromJson(e)).toList();
-    return availableVehicles;
-  }
-
-  Future fetchVehicles(String userID) async {
-    final uri = Uri.parse('$baseUrl/vehicles');
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        print(response.body);
-        return compute(parseVehicle, response.body);
-      } else {
-        print(
-            ' vehicle status: ${response.statusCode} ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      print(e);
+  List<Vehicle> vehicles = [];
+  Future<List<Vehicle>> fetchVehicles(String userID) async {
+    final uri = Uri.parse('$baseUrl/vehicles/owner/$userID');
+    final response = await http.get(uri);
+    if (response.statusCode != 200) {
+      print(
+        '${response.statusCode}\n${response.reasonPhrase}\n${response.body}',
+      );
     }
+    return vehiclesFromJson(response.body).data.data;
   }
 }

@@ -9,11 +9,7 @@ import '../../../../shared/utils/constants/baseUrl.dart';
 import 'package:http/http.dart' as http;
 
 class VehicleApiService {
-//   List<Store> parseShop(String responseBody) {
-//   final list = json.decode(responseBody) as List<dynamic>;
-//   List<Store> shop = list.map((e) => Store.fromJson(e)).toList();
-//   return shop;
-// }
+
   Future fetchTypes() async {
     final uri = Uri.parse('$baseUrl/vehicle/types');
     try {

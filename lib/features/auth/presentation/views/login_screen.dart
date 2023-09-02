@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
@@ -46,6 +49,11 @@ class _LoginViewState extends State<LoginView> {
   }
 
   bool isLoading = false;
+  @override
+  void initState() {
+    print(Provider.of<APIService>(context, listen: false).userID);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -132,7 +140,7 @@ class _LoginViewState extends State<LoginView> {
                       setState(() {
                         isLoading = true;
                       });
-                      APIService().logIn('51539607558').then(
+                      APIService().logIn('51539607561').then(
                         (value) async {
                           await Future.delayed(const Duration(seconds: 2), () {
                             Navigator.of(context).pushAndRemoveUntil(
@@ -143,6 +151,9 @@ class _LoginViewState extends State<LoginView> {
                                           : const DMainPage()),
                               (route) => false,
                             );
+                            setState(() {
+                              isLoading = false;
+                            });
                           });
                         },
                       );

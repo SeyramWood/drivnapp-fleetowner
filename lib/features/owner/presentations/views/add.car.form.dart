@@ -201,7 +201,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   child: CustomElevatedButton(
                     onPressed: () {
                       apiService
-                          .submitData(
+                          .addVehivle(
                         userID: context.read<APIService>().userID,
                         carBrand: carBrand.text,
                         carType: carType.text,
@@ -216,7 +216,8 @@ class _AddFleetFormState extends State<AddFleetForm> {
                             failure,
                           );
                         } else {
-                          clearFields();
+                          // clearFields();
+                          print(context.read<APIService>().userID);
                           setState(() {});
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(

@@ -37,8 +37,7 @@ class PhoneFormField extends StatelessWidget {
               autoValidateMode: AutovalidateMode.disabled,
               selectorTextStyle: const TextStyle(color: white),
               textFieldController: controller,
-              formatInput: true,
-              keyboardAction: TextInputAction.next,
+              formatInput: true, keyboardAction: TextInputAction.next,
               keyboardType: const TextInputType.numberWithOptions(
                 signed: true,
                 decimal: false,
@@ -46,8 +45,7 @@ class PhoneFormField extends StatelessWidget {
               inputBorder: InputBorder.none,
               textStyle: const TextStyle(color: white),
               onSaved: (PhoneNumber number) {},
-              inputDecoration: const InputDecoration(
-                isDense: true,
+              inputDecoration: const InputDecoration(isDense: true,
                 border: OutlineInputBorder(borderSide: BorderSide.none),
                 errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
               ),

@@ -1,4 +1,3 @@
-
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
@@ -76,7 +75,16 @@ class ProofIDView extends StatelessWidget {
                 ),
                 CustomElevatedButton(
                   onPressed: () {
-                    provider.submitUserID(context,);
+                    provider
+                        .submitUserID(
+                          context,
+                        )
+                        .then(
+                          (value) => ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text('Added successfully'),
+                          )),
+                        );
                   },
                   backgroundColor: black,
                   child: const Text('Submit for review'),

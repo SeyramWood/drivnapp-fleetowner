@@ -1,10 +1,12 @@
+import 'package:drivn/features/owner/domain/entities/available.vehicles.dart';
 import 'package:drivn/features/owner/presentations/widget/car.carousel.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 
 class CarDetails extends StatelessWidget {
-  const CarDetails({super.key});
+  const CarDetails({super.key, required this.vehicle});
+  final Vehicle vehicle;
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +38,11 @@ class CarDetails extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      'Car model',
+                      vehicle.type,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     Text(
-                      'Car name',
+                      vehicle.brand,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     Row(
@@ -90,20 +92,23 @@ class CarDetails extends StatelessWidget {
                 mainAxisExtent: 150,
               ),
               delegate: SliverChildBuilderDelegate(
-                (context, index) => const Card(
+                (context, index) => Card(
                   surfaceTintColor: white,
                   color: white,
                   shadowColor: white,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Icon(Icons.auto_awesome),
-                      Text('Hello DRiVN'),
-                      Text('Hello DRiVN'),
-                    ],
-                  ),
+                  child: vehicle.features!.isEmpty
+                      ? const Text(
+                          'No features available to show for this vehicle')
+                      : const Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(Icons.auto_awesome),
+                            Text('Hello DRiVN'),
+                            Text('Hello DRiVN'),
+                          ],
+                        ),
                 ),
-                childCount: 20, // Replace with your actual number of items
+                childCount: vehicle.features?.length ?? 0,
               ),
             ),
           ),

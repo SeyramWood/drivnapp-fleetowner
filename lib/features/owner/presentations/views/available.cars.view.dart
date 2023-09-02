@@ -1,53 +1,58 @@
-import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/api/owner.api.dart';
+import '../../domain/entities/available.vehicles.dart';
 import '../widget/available.car.tile.dart';
 
-OwnerApiService apiService = OwnerApiService();
-
 class CarsAvailableBuilder extends StatefulWidget {
-  const CarsAvailableBuilder({super.key});
+  const CarsAvailableBuilder({Key? key}) : super(key: key);
 
   @override
   State<CarsAvailableBuilder> createState() => _CarsAvailableBuilderState();
 }
 
 class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
-  Future? cars;
+  late Future<List<Vehicle>> vehicles;
+  // String id = '';
+  // getID() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   id = (prefs.getString('userID'));
+  //   print(id);
+  // }
 
   @override
   void initState() {
     super.initState();
-
-    print('userIdfromhome: ${context.read<APIService>().userID}');
-
-    cars = apiService.fetchVehicles(context.read<APIService>().userID);
+    vehicles = OwnerApiService().fetchVehicles('51539607561');
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: cars,
+    return FutureBuilder<List<Vehicle>>(
+      future: vehicles,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData) {
           return ListView.builder(
-            itemCount: 1,
+            itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              return const CarTile();
+              final vehicle = snapshot.data![index];
+              return CarTile(
+                vehicle: vehicle,
+              );
             },
           );
-        }
-        if (!snapshot.hasData) {
-          return const Center(child: Text('No available vehicle.'));
         } else if (snapshot.hasError) {
           return Center(
             child: Text('Error: ${snapshot.error}'),
           );
+        } else {
+          return const Center(child: Text('No available vehicle.'));
         }
-
-        return const Center(child: CircularProgressIndicator());
       },
     );
   }

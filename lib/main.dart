@@ -1,6 +1,7 @@
 import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/features/user/presentation/bindings/fleet.owner.bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

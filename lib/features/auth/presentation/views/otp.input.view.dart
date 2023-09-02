@@ -48,6 +48,9 @@ class _OTPInputViewState extends State<OTPInputView> {
                 //     color: white,
                 //   ),
                 // ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                ),
                 const Text(
                   "Enter the 4 digits code via your sms",
                   style: TextStyle(
@@ -142,7 +145,7 @@ class _OTPInputViewState extends State<OTPInputView> {
               fontSize: 25,
             ),
             decoration: BoxDecoration(
-              color: white,
+              border: Border.all(color: white),
               borderRadius: BorderRadius.circular(8),
             ),
           ),

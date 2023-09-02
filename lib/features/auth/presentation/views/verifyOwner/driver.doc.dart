@@ -78,7 +78,12 @@ class DriverDocsView extends StatelessWidget {
               CustomElevatedButton(
                 onPressed: () {
                   // if (provider.files == null) return;
-                  provider.submitUserID(context);
+                  provider.submitUserID(context).then(
+                        (value) => ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text('Added successfully'),
+                        )),
+                      );
                 },
                 backgroundColor: black,
                 child: const Text('Submit for review'),

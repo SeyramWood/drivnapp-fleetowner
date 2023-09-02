@@ -22,7 +22,6 @@ class _OMainPageState extends State<OMainPage> {
   @override
   void initState() {
     super.initState();
-    OwnerApiService().fetchVehicles(context.read<APIService>().userID);
     apiService
       ..fetchBrands()
       ..fetchFeatures()

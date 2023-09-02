@@ -5,13 +5,12 @@ import 'dart:io';
 import 'package:drivn/shared/errors/exception.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../shared/utils/constants/baseUrl.dart';
 import '../../domain/entities/user.signup.model.dart';
 
 class APIService extends ChangeNotifier {
-  APIService();
-
   bool _accTypeIsOwner = true;
   bool get accTypeIsOwner => _accTypeIsOwner;
   isOwner(bool isOwner) {
@@ -20,8 +19,24 @@ class APIService extends ChangeNotifier {
     return isOwner;
   }
 
-  String _userID = '';
+  String _userID = 'fg';
   String get userID => _userID;
+
+  Future<void> setUserId(String id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        'userID', id); // Store the user ID in SharedPreferences
+
+    // Retrieve the user ID from SharedPreferences
+    String? storedUserID = prefs.getString('userID');
+    if (storedUserID != null) {
+      _userID = storedUserID; // Update the _userID variable
+      print('id: $_userID');
+      notifyListeners(); // Notify any listeners that _userID has changed
+    }
+    print('id: $_userID');
+  }
+
   //for the owner usage
   String _path = '';
   String get path => _path;
@@ -98,8 +113,10 @@ class APIService extends ChangeNotifier {
       );
       log(response.body);
       if (response.statusCode == 201) {
-        _userID = jsonDecode(response.body)['data']['id'].toString();
-        print(_userID);
+        String id = jsonDecode(response.body)['data']['id'].toString();
+        //store user's id locally
+        setUserId(id);
+        notifyListeners();
       }
       if (response.statusCode != 201) {
         final errorMessage = jsonDecode(response.body)['error'] as String?;
@@ -115,15 +132,20 @@ class APIService extends ChangeNotifier {
   }
 
   Future logIn(String userId) async {
-    var uri = Uri.parse('$baseUrl/fleet-owners/$userId');
+    var uri = Uri.parse(
+        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/$userId');
     try {
       final response = await http.get(uri);
       print(response.statusCode);
-      if (response.statusCode == 200) {
-        log(response.body);
-        _userID = jsonDecode(response.body)['data']['id'].toString();
-        log(_userID);
+      if (response.statusCode != 200) {
+        print('logging in: ${response.statusCode}');
       }
+      String id = jsonDecode(response.body)['data']['id'].toString();
+      //store user's id locally
+      await setUserId(id);
+      print('iD: $_userID');
+
+      notifyListeners();
     } on Exception catch (e) {
       print(e);
     }
