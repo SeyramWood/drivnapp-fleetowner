@@ -8,10 +8,10 @@ import '../../data/repositories/fleet.owner.repo.impl.dart';
 import '../../domain/usecases/fleet.owner/submit.id.dart';
 
 class UserBindings {
-  final apiService = ChangeNotifierProvider<APIService>(
+  ChangeNotifierProvider<APIService> apiService =
+      ChangeNotifierProvider<APIService>(
     create: (context) => APIService(),
   );
- 
 
   final userRepo = ChangeNotifierProxyProvider<APIService, UserRepo>(
     create: (context) => FleetOwnerRepoImpl.empty(),

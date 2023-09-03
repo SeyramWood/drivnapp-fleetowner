@@ -13,7 +13,7 @@ import '../../../../shared/utils/constants/baseUrl.dart';
 
 class OwnerApiService {
   //add a vehicle
-  Future<String?> addVehivle({
+  Future<String?> addVehicle({
     required String userID,
     required String carBrand,
     required String carType,
@@ -28,7 +28,7 @@ class OwnerApiService {
       if (imageFiles.isNotEmpty && proofFiles.isNotEmpty) {
         var request = http.MultipartRequest('POST', uri);
         // Add fields to the request
-        request.fields['owner'] = '51539607561';
+        request.fields['owner'] = userID;
         request.fields['brand'] = carBrand;
         request.fields['type'] = carType;
         request.fields['feature[]'] = '$features';
@@ -78,5 +78,18 @@ class OwnerApiService {
       );
     }
     return vehiclesFromJson(response.body).data.data;
+  }
+
+  Future fetchBookedVehicles(String userID) async {
+    final uri = Uri.parse('$baseUrl/bookings/owner/$userID');
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+      }
+      log(response.body);
+    } catch (e) {
+      print(e);
+    }
   }
 }

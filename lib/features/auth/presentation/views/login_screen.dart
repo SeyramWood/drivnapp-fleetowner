@@ -51,7 +51,6 @@ class _LoginViewState extends State<LoginView> {
   bool isLoading = false;
   @override
   void initState() {
-    print(Provider.of<APIService>(context, listen: false).userID);
     super.initState();
   }
 
@@ -113,6 +112,9 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   TextButton(
                     onPressed: () {
+                      print(Provider.of<APIService>(context, listen: false)
+                          .accTypeIsOwner);
+
                       Navigator.push(
                         context,
                         PageTransition(
@@ -140,7 +142,9 @@ class _LoginViewState extends State<LoginView> {
                       setState(() {
                         isLoading = true;
                       });
-                      APIService().logIn('51539607561').then(
+                      Provider.of<APIService>(context, listen: false)
+                          .logIn('51539607561')
+                          .then(
                         (value) async {
                           await Future.delayed(const Duration(seconds: 2), () {
                             Navigator.of(context).pushAndRemoveUntil(

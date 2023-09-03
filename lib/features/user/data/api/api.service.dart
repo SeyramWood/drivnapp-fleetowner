@@ -11,6 +11,9 @@ import '../../../../shared/utils/constants/baseUrl.dart';
 import '../../domain/entities/user.signup.model.dart';
 
 class APIService extends ChangeNotifier {
+  String _user = '';
+  get userId => _user;
+
   bool _accTypeIsOwner = true;
   bool get accTypeIsOwner => _accTypeIsOwner;
   isOwner(bool isOwner) {
@@ -19,22 +22,25 @@ class APIService extends ChangeNotifier {
     return isOwner;
   }
 
-  String _userID = 'fg';
-  String get userID => _userID;
-
   Future<void> setUserId(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'userID', id); // Store the user ID in SharedPreferences
-
-    // Retrieve the user ID from SharedPreferences
-    String? storedUserID = prefs.getString('userID');
-    if (storedUserID != null) {
-      _userID = storedUserID; // Update the _userID variable
-      print('id: $_userID');
-      notifyListeners(); // Notify any listeners that _userID has changed
-    }
-    print('id: $_userID');
+    await prefs
+        .setString(
+      'userID',
+      id,
+    )
+        .whenComplete(
+      () {
+        String? storedUserID = prefs.getString('userID');
+        if (storedUserID != null) {
+          _user = storedUserID;
+          print('ID: $_user');
+          notifyListeners();
+        }
+        print('id: $_user');
+      },
+    ); // Store the user ID in SharedPreferences
+    notifyListeners();
   }
 
   //for the owner usage
@@ -50,6 +56,10 @@ class APIService extends ChangeNotifier {
   setfield(field) {
     _field = field;
     notifyListeners();
+  }
+
+  printUser() {
+    print('user: $_user');
   }
 
   Future<void> postUser(SignUpBody requestBody) async {
@@ -143,9 +153,7 @@ class APIService extends ChangeNotifier {
       String id = jsonDecode(response.body)['data']['id'].toString();
       //store user's id locally
       await setUserId(id);
-      print('iD: $_userID');
-
-      notifyListeners();
+      print('user1: $_user');
     } on Exception catch (e) {
       print(e);
     }
@@ -154,7 +162,7 @@ class APIService extends ChangeNotifier {
   Future<List<File>> uploadFiles(
     List<File> files,
   ) async {
-    final uri = Uri.parse('$baseUrl/fleet-owners/$path/$_userID');
+    final uri = Uri.parse('$baseUrl/fleet-owners/$path/$_user');
 
     try {
       if (files.isNotEmpty) {
@@ -195,7 +203,7 @@ class APIService extends ChangeNotifier {
     // String? userID,
     String? path,
   }) async {
-    final uri = Uri.parse('$baseUrl/drivers/document/$_userID');
+    final uri = Uri.parse('$baseUrl/drivers/document/$_user');
 
     try {
       if (idCardFiles.isNotEmpty && licenseFiles.isNotEmpty) {

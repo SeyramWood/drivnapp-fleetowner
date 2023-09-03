@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
 import 'package:drivn/features/owner/presentations/views/add.car.form.dart';
 import 'package:drivn/features/owner/presentations/views/my.cars.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +25,25 @@ class _OMainPageState extends State<OMainPage> {
   @override
   void initState() {
     super.initState();
+    initializeData();
+  }
+
+  Future<void> initializeData() async {
     apiService
       ..fetchBrands()
       ..fetchFeatures()
       ..fetchTypes();
+
+    // Call getID and await its completion
+    // await APIService().getID();
+    if (!mounted) return;
+    // Once getID completes, you can access the updated user ID
   }
 
   @override
   Widget build(BuildContext context) {
+    print('123: ${Provider.of<APIService>(context, listen: true).userId}');
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
