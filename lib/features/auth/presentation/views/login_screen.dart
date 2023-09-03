@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';

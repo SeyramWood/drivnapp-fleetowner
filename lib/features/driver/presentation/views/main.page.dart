@@ -2,9 +2,7 @@ import 'package:drivn/features/driver/data/api/driver.api.service.dart';
 import 'package:drivn/features/driver/presentation/views/my.trips.dart';
 import 'package:drivn/features/driver/presentation/views/request.view.dart';
 import 'package:drivn/features/driver/presentation/views/summary.view.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/baseUrl.dart';
 import '../../../../shared/utils/constants/colors.dart';

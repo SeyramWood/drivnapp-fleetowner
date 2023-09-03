@@ -1,7 +1,4 @@
-import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/api/owner.api.dart';
 import '../../domain/entities/available.vehicles.dart';

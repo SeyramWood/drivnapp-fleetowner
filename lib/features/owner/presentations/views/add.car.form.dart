@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
@@ -10,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../vehicle/domain/entities/vehicle.features.dart';
 import '../../data/api/owner.api.dart';
 import '../widget/form.field.with.option.dart';
 import '../widget/multi.selection.dialog.dart';
@@ -31,15 +31,17 @@ class _AddFleetFormState extends State<AddFleetForm> {
   );
   List<String> selectedOptions = [];
 
-  List<String> options = [];
+  List<Feature> options = [];
   List<File> imageFile = [];
   List<File> proofFile = [];
+
   OwnerApiService apiService = OwnerApiService();
   //a method to pass the features to the list of options
   Future getFeatures() async {
     var result = await vehicleApiService.fetchFeatures();
-    for (var feature in result) {
-      options.add(feature.split('.')[1]);
+    var features = result.data.data;
+    for (var feature in features) {
+      options.add(feature);
     }
   }
 
@@ -245,7 +247,8 @@ class _AddFleetFormState extends State<AddFleetForm> {
       context: context,
       builder: (BuildContext context) {
         return MultiSelectDialog(
-          options: options,
+          options:
+              List.generate(options.length, (index) => options[index].name),
           selectedOptions: selectedOptions,
         );
       },
@@ -253,7 +256,8 @@ class _AddFleetFormState extends State<AddFleetForm> {
 
     if (result != null) {
       setState(() {
-        selectedOptions = result;
+        selectedOptions = List.generate(
+            result.length, (index) => options[index].id.toString());
       });
     }
   }

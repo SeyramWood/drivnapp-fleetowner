@@ -1,12 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:dartz/dartz.dart';
 import 'package:drivn/features/owner/domain/entities/available.vehicles.dart';
-import 'package:drivn/features/vehicle/domain/entities/vehicle.features.dart';
 import 'package:drivn/shared/errors/exception.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../shared/utils/constants/baseUrl.dart';

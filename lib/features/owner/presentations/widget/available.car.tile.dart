@@ -79,8 +79,8 @@ class _CarTileState extends State<CarTile> {
                     Row(
                       children: [
                         Text(vehicle.brand),
-                        Spacer(),
-                        Padding(
+                        const Spacer(),
+                        const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.0),
                           child: Row(
                             children: [

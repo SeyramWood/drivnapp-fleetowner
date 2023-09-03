@@ -4,23 +4,21 @@
 
 import 'dart:convert';
 
-VehicleFeatures vehicleFeaturesFromJson(String str) =>
-    VehicleFeatures.fromJson(json.decode(str));
+VehicleFeature vehicleFeatureFromJson(String str) =>
+    VehicleFeature.fromJson(json.decode(str));
 
-String vehicleFeaturesToJson(VehicleFeatures data) =>
-    json.encode(data.toJson());
+String vehicleFeaturesToJson(VehicleFeature data) => json.encode(data.toJson());
 
-class VehicleFeatures {
+class VehicleFeature {
   Data data;
   bool status;
 
-  VehicleFeatures({
+  VehicleFeature({
     required this.data,
     required this.status,
   });
 
-  factory VehicleFeatures.fromJson(Map<String, dynamic> json) =>
-      VehicleFeatures(
+  factory VehicleFeature.fromJson(Map<String, dynamic> json) => VehicleFeature(
         data: Data.fromJson(json["data"]),
         status: json["status"],
       );
@@ -33,7 +31,7 @@ class VehicleFeatures {
 
 class Data {
   int count;
-  List<Datum> data;
+  List<Feature> data;
 
   Data({
     required this.count,
@@ -42,7 +40,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         count: json["count"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: List<Feature>.from(json["data"].map((x) => Feature.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -51,14 +49,14 @@ class Data {
       };
 }
 
-class Datum {
+class Feature {
   DateTime createdAt;
   int id;
   String info;
   String name;
   DateTime updatedAt;
 
-  Datum({
+  Feature({
     required this.createdAt,
     required this.id,
     required this.info,
@@ -66,7 +64,7 @@ class Datum {
     required this.updatedAt,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory Feature.fromJson(Map<String, dynamic> json) => Feature(
         createdAt: DateTime.parse(json["createdAt"]),
         id: json["id"],
         info: json["info"] ?? '',

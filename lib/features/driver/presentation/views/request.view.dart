@@ -64,7 +64,7 @@ class _RequestViewState extends State<RequestView> {
                     ),
                   ),
                   const Spacer(),
-                  Text('Offline'),
+                  const Text('Offline'),
                   Transform.scale(
                     scale: 0.6, // Adjust the scale value as needed
                     child: Switch(
