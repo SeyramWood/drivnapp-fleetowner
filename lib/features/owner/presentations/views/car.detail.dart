@@ -17,7 +17,7 @@ class CarDetails extends StatelessWidget {
           SliverToBoxAdapter(
             child: SizedBox(
               height: MediaQuery.of(context).size.height / 3.5,
-              child: const CarCarousel(),
+              child: CarCarousel(images: vehicle.images),
             ),
           ),
           SliverPadding(
@@ -92,22 +92,29 @@ class CarDetails extends StatelessWidget {
                 mainAxisExtent: 150,
               ),
               delegate: SliverChildBuilderDelegate(
-                (context, index) => Card(
-                  surfaceTintColor: white,
-                  color: white,
-                  shadowColor: white,
-                  child: vehicle.features!.isEmpty
-                      ? const Text(
-                          'No features available to show for this vehicle')
-                      : const Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(Icons.auto_awesome),
-                            Text('Hello DRiVN'),
-                            Text('Hello DRiVN'),
-                          ],
-                        ),
-                ),
+                (context, index) {
+                  print(vehicle.features);
+                  if (vehicle.features == null || vehicle.features!.isEmpty) {
+                    return const Center(
+                      child: Text(
+                          'No features available to show for this vehicle'),
+                    );
+                  }
+                  var feature = vehicle.features![index];
+                  return Card(
+                    surfaceTintColor: white,
+                    color: white,
+                    shadowColor: white,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Icon(Icons.auto_awesome),
+                        Text(feature.info),
+                        Text(feature.name),
+                      ],
+                    ),
+                  );
+                },
                 childCount: vehicle.features?.length ?? 0,
               ),
             ),

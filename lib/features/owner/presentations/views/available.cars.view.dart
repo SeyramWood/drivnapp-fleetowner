@@ -1,4 +1,6 @@
+import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../data/api/owner.api.dart';
 import '../../domain/entities/available.vehicles.dart';
@@ -23,7 +25,7 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   @override
   void initState() {
     super.initState();
-    vehicles = OwnerApiService().fetchVehicles('51539607561');
+    vehicles = OwnerApiService().fetchVehicles(context.read<APIService>().userId);
   }
 
   @override

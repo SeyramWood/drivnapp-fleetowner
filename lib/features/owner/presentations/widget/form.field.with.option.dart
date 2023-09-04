@@ -42,12 +42,14 @@ class _FormWithOptionState extends State<FormWithOption> {
           },
           fieldViewBuilder:
               (context, textEditingController, focusNode, onFieldSubmitted) {
-            // widget.controller = textEditingController;
             return TextFormField(
               textCapitalization: TextCapitalization.sentences,
               controller: widget.controller = textEditingController,
               focusNode: focusNode,
               onEditingComplete: onFieldSubmitted,
+              onTapOutside: (event) {
+                const PointerDownEvent(obscured: true);
+              },
               onFieldSubmitted: (value) {
                 // widget.controller.clear();
               },

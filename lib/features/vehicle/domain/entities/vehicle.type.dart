@@ -30,7 +30,7 @@ class VehicleType {
 
 class Data {
     int count;
-    List<Datum> data;
+    List<VType> data;
 
     Data({
         required this.count,
@@ -39,7 +39,7 @@ class Data {
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         count: json["count"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: List<VType>.from(json["data"].map((x) => VType.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -48,20 +48,20 @@ class Data {
     };
 }
 
-class Datum {
+class VType {
     DateTime createdAt;
     int id;
     String name;
     DateTime updatedAt;
 
-    Datum({
+    VType({
         required this.createdAt,
         required this.id,
         required this.name,
         required this.updatedAt,
     });
 
-    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    factory VType.fromJson(Map<String, dynamic> json) => VType(
         createdAt: DateTime.parse(json["createdAt"]),
         id: json["id"],
         name: json["name"],

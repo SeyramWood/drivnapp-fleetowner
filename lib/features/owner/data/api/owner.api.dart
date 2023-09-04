@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -27,7 +28,7 @@ class OwnerApiService {
         request.fields['owner'] = userID;
         request.fields['brand'] = carBrand;
         request.fields['type'] = carType;
-        request.fields['feature[]'] = '$features';
+        request.fields['feature[]'] = jsonEncode(features);
         request.fields['moreFeature'] = moreFeatures ?? '';
 
         for (var file in imageFiles) {
@@ -44,10 +45,8 @@ class OwnerApiService {
 
         var response = await request.send();
 
-        if (response.statusCode == 201) {
-          print('Request successful');
-          print(await response.stream.bytesToString());
-        } else {
+        if (response.statusCode != 201) {
+          print(response.stream.bytesToString);
           throw CustomException(
               'Request failed with status code: ${response.statusCode}');
         }
@@ -64,7 +63,7 @@ class OwnerApiService {
     return null;
   }
 
-  List<Vehicle> vehicles = [];
+//http get request for vehicles belonging to a user
   Future<List<Vehicle>> fetchVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/vehicles/owner/$userID');
     final response = await http.get(uri);
@@ -88,4 +87,53 @@ class OwnerApiService {
       print(e);
     }
   }
+
+  Future updateRental(
+    String vehicleID,
+    int driver,
+    String location,
+    String price,
+  ) async {
+    final url = Uri.parse('$baseUrl/vehicles/rental/$vehicleID');
+    final body = {
+      "driver": '51539607563',
+      "location": location,
+      "price": price,
+    };
+    try {
+      final response = await http.put(url, body: body);
+
+      if (response.statusCode != 200 || response.statusCode != 202) {
+        log(response.statusCode.toString());
+      }
+      log(response.body);
+    } catch (e) {
+      log('$e');
+    }
+  }
+
+ Future updateAvailability(
+    String vehicleID,
+    int driver,
+    String location,
+    String price,
+  ) async {
+    final url = Uri.parse('$baseUrl/vehicles/rental/$vehicleID');
+    final body = {
+      "driver": '51539607563',
+      "location": location,
+      "price": price,
+    };
+    try {
+      final response = await http.put(url, body: body);
+
+      if (response.statusCode != 200 || response.statusCode != 202) {
+        log(response.statusCode.toString());
+      }
+      log(response.body);
+    } catch (e) {
+      log('$e');
+    }
+  }
+
 }

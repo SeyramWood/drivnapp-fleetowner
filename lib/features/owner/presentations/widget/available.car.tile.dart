@@ -1,3 +1,4 @@
+import 'package:drivn/features/owner/presentations/widget/rental.form.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn/features/owner/presentations/switch_icon_icons.dart';
 import 'package:drivn/features/owner/presentations/widget/ride.sharing.form.dart';
@@ -17,7 +18,7 @@ class CarTile extends StatefulWidget {
 }
 
 class _CarTileState extends State<CarTile> {
-  int newValue = 1;
+  String newValue = '';
 
   //date picker
   void _datePicker() async {
@@ -45,6 +46,12 @@ class _CarTileState extends State<CarTile> {
   }
 
   @override
+  initState() {
+    newValue = widget.vehicle.availability;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var vehicle = widget.vehicle;
 
@@ -54,7 +61,7 @@ class _CarTileState extends State<CarTile> {
           PageTransition(
             type: PageTransitionType.rightToLeft,
             duration: const Duration(milliseconds: 600),
-            child:  CarDetails(vehicle:vehicle),
+            child: CarDetails(vehicle: vehicle),
           ),
         );
       },
@@ -69,7 +76,7 @@ class _CarTileState extends State<CarTile> {
                 width: MediaQuery.sizeOf(context).width / 3.5,
                 child: Container(
                   padding: const EdgeInsets.only(right: 5),
-                  child: Image.asset('assets/car1.png'),
+                  child: Image.network(vehicle.images[0].image),
                 ),
               ),
               Expanded(
@@ -80,17 +87,19 @@ class _CarTileState extends State<CarTile> {
                       children: [
                         Text(vehicle.brand),
                         const Spacer(),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: Row(
                             children: [
-                              Text(
+                              const Text(
                                 'With driver',
                                 style: TextStyle(fontSize: 12),
                               ),
-                              SizedBox(width: 5),
+                              const SizedBox(width: 5),
                               Icon(
-                                SwitchIcon.toggle_on,
+                                vehicle.rental?.driver != null
+                                    ? SwitchIcon.toggle_on
+                                    : SwitchIcon.toggle_off,
                                 color: red,
                                 size: 10,
                               ),
@@ -115,11 +124,12 @@ class _CarTileState extends State<CarTile> {
                     const SizedBox(height: 5),
                     Row(
                       children: [
-                        const Text(
-                          'GHS 900000',
-                          style: TextStyle(fontSize: 15),
+                        Text(
+                          'GHS ${vehicle.rental?.price ?? 0}',
+                          style: const TextStyle(fontSize: 15),
                         ),
                         const Spacer(),
+                        //drop down button to select from as available or rental or sharing
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 3.2,
                           child: Container(
@@ -132,7 +142,7 @@ class _CarTileState extends State<CarTile> {
                                   color: black.withOpacity(.1),
                                 ),
                               ),
-                              child: DropdownButton<int>(
+                              child: DropdownButton<String>(
                                 isDense: true,
                                 isExpanded: true,
                                 iconSize: 25,
@@ -143,35 +153,37 @@ class _CarTileState extends State<CarTile> {
                                     newValue = value!;
                                   });
                                   // Check the selected value and take appropriate actions
-                                  if (newValue == 2) {
-                                    rideSharing(
-                                      context,
-                                      _datePicker,
-                                      _timePicker,
-                                    );
-                                  } else if (newValue == 1) {
+                                  // if (newValue == 2) {
+                                  //   rideSharing(
+                                  //     context,
+                                  //     _datePicker,
+                                  //     _timePicker,
+                                  //   );
+                                  // }
+                                  // else
+                                  if (newValue == 'unavailable') {
                                     // Handle the case when "Unavailable" is selected
-                                  } else if (newValue == 3) {
-                                    // Handle the case when "Rental" is selected
+                                  } else if (newValue == 'rental') {
+                                    updateRental(context, vehicle.id);
                                   }
                                 },
                                 items: const [
-                                  DropdownMenuItem<int>(
-                                    value: 1,
+                                  DropdownMenuItem<String>(
+                                    value: 'unavailable',
                                     child: Text(
                                       'Unavailable',
                                       style: TextStyle(fontSize: 13),
                                     ),
                                   ),
-                                  DropdownMenuItem<int>(
-                                    value: 2,
-                                    child: Text(
-                                      'Ride sharing',
-                                      style: TextStyle(fontSize: 13),
-                                    ),
-                                  ),
-                                  DropdownMenuItem<int>(
-                                    value: 3,
+                                  // DropdownMenuItem<int>(
+                                  //   value: 2,
+                                  //   child: Text(
+                                  //     'Ride sharing',
+                                  //     style: TextStyle(fontSize: 13),
+                                  //   ),
+                                  // ),
+                                  DropdownMenuItem<String>(
+                                    value: 'rental',
                                     child: Text(
                                       'Rental',
                                       style: TextStyle(fontSize: 13),

@@ -34,10 +34,8 @@ class APIService extends ChangeNotifier {
         String? storedUserID = prefs.getString('userID');
         if (storedUserID != null) {
           _user = storedUserID;
-          print('ID: $_user');
           notifyListeners();
         }
-        print('id: $_user');
       },
     ); // Store the user ID in SharedPreferences
     notifyListeners();
@@ -58,9 +56,7 @@ class APIService extends ChangeNotifier {
     notifyListeners();
   }
 
-  printUser() {
-    print('user: $_user');
-  }
+ 
 
   Future<void> postUser(SignUpBody requestBody) async {
     try {
