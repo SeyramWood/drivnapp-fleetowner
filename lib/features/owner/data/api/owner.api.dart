@@ -7,6 +7,7 @@ import 'package:drivn/shared/errors/exception.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../shared/utils/constants/baseUrl.dart';
+import '../../domain/entities/driver.dart';
 
 class OwnerApiService {
   //add a vehicle
@@ -112,20 +113,15 @@ class OwnerApiService {
     }
   }
 
- Future updateAvailability(
+  Future updateAvailability(
     String vehicleID,
-    int driver,
-    String location,
-    String price,
+    String status,
   ) async {
-    final url = Uri.parse('$baseUrl/vehicles/rental/$vehicleID');
-    final body = {
-      "driver": '51539607563',
-      "location": location,
-      "price": price,
-    };
+    final url =
+        Uri.parse('$baseUrl/vehicles/availability/$vehicleID?status=$status');
+
     try {
-      final response = await http.put(url, body: body);
+      final response = await http.put(url);
 
       if (response.statusCode != 200 || response.statusCode != 202) {
         log(response.statusCode.toString());
@@ -136,4 +132,18 @@ class OwnerApiService {
     }
   }
 
+  Future<List<Dryver>> fetchDrivers() async {
+    final url = Uri.parse('$baseUrl/drivers');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        log(response.statusCode.toString());
+      }
+      log(response.body.toString());
+      return Driver.fromJson(json.decode(response.body)).data.data;
+    } catch (e) {
+      print(e);
+      throw Exception('failed to get drivers');
+    }
+  }
 }

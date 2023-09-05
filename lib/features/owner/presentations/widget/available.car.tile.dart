@@ -1,7 +1,7 @@
+import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:drivn/features/owner/presentations/widget/rental.form.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn/features/owner/presentations/switch_icon_icons.dart';
-import 'package:drivn/features/owner/presentations/widget/ride.sharing.form.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -35,15 +35,15 @@ class _CarTileState extends State<CarTile> {
   }
 
   //time picker
-  void _timePicker() async {
-    final selectedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (selectedTime != null) {
-      context.read<CarProvider>().setTime = selectedTime;
-    }
-  }
+  // void _timePicker() async {
+  //   final selectedTime = await showTimePicker(
+  //     context: context,
+  //     initialTime: TimeOfDay.now(),
+  //   );
+  //   if (selectedTime != null) {
+  //     context.read<CarProvider>().setTime = selectedTime;
+  //   }
+  // }
 
   @override
   initState() {
@@ -76,7 +76,9 @@ class _CarTileState extends State<CarTile> {
                 width: MediaQuery.sizeOf(context).width / 3.5,
                 child: Container(
                   padding: const EdgeInsets.only(right: 5),
-                  child: Image.network(vehicle.images[0].image),
+                  child: Image.network(
+                    vehicle.images[0].image,
+                  ),
                 ),
               ),
               Expanded(
@@ -162,7 +164,8 @@ class _CarTileState extends State<CarTile> {
                                   // }
                                   // else
                                   if (newValue == 'unavailable') {
-                                    // Handle the case when "Unavailable" is selected
+                                    OwnerApiService().updateAvailability(
+                                        '${vehicle.id}', 'unavailable');
                                   } else if (newValue == 'rental') {
                                     updateRental(context, vehicle.id);
                                   }

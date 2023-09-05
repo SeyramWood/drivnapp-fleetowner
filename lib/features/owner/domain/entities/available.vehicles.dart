@@ -228,8 +228,28 @@ class Rental {
 
     Map<String, dynamic> toJson() => {
         "driver": driver?.toJson(),
-        "id": id,
         "location": location,
         "price": price,
     };
 }
+
+//using owner as a driver because they both have same parameters
+// class Driver {
+//     int count;
+//     List<Owner> data;
+
+//     Driver({
+//         required this.count,
+//         required this.data,
+//     });
+
+//     factory Driver.fromJson(Map<String, dynamic> json) => Driver(
+//         count: json["count"],
+//         data: List<Owner>.from(json["data"].map((x) => Owner.fromJson(x))),
+//     );
+
+//     Map<String, dynamic> toJson() => {
+//         "count": count,
+//         "data": List<dynamic>.from(data.map((x) => x.toJson())),
+//     };
+// }

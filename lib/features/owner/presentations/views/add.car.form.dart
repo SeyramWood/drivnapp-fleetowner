@@ -11,8 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../../vehicle/domain/entities/vehicle.features.dart';
+import '../../../vehicle/domain/entities/vehicle.features.dart' as sym;
 import '../../data/api/owner.api.dart';
+import '../../domain/entities/available.vehicles.dart';
+import '../../domain/entities/driver.dart';
 import '../widget/form.field.with.option.dart';
 import '../widget/multi.selection.dialog.dart';
 
@@ -32,9 +34,9 @@ class _AddFleetFormState extends State<AddFleetForm> {
   final space = const SizedBox(
     height: 10,
   );
-  List<Feature> selectedOptions = [];
+  List<sym.Feature> selectedOptions = [];
 //this list take vehicle features
-  List<Feature> featureList = [];
+  List<sym.Feature> featureList = [];
   //this list take vehicle brands
   List<Brand> brandList = [];
   //this list take vehicle type
@@ -45,8 +47,16 @@ class _AddFleetFormState extends State<AddFleetForm> {
 
   OwnerApiService apiService = OwnerApiService();
   //this method fetch the needed data asyncronosly and iterate into another local list variable for easy access at the init state
+  List<Dryver> driverLists = [];
+  getDrivers() async {
+    List<Dryver> drivers = await OwnerApiService().fetchDrivers();
+    for (var driver in drivers) {
+      driverLists.add(driver);
+    }
+  }
+
   Future getVehicleInfo() async {
-    List<Feature> features = await vehicleApiService.fetchFeatures();
+    List<sym.Feature> features = await vehicleApiService.fetchFeatures();
     List<Brand> brands = await vehicleApiService.fetchBrands();
     List<VType> types = await vehicleApiService.fetchTypes();
     //iterate features
@@ -74,6 +84,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
 
   @override
   void initState() {
+    getDrivers();
     getVehicleInfo();
     super.initState();
   }
@@ -260,7 +271,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
 
 //SHOW MULTI SELECT DIALOG TO SELECT VEHICLE FEATURES
   void openMultiSelectDialog() async {
-    final List<Feature>? result = await showDialog<List<Feature>>(
+    final List<sym.Feature>? result = await showDialog<List<sym.Feature>>(
       context: context,
       builder: (BuildContext context) {
         return MultiSelectDialog(
