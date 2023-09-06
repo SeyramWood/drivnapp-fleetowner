@@ -7,11 +7,12 @@ class AvailabilityTextField extends StatelessWidget {
     super.key,
     this.controller,
     required this.prefixIcon,
-    required this.title,
+    required this.title,this.validator
   });
   final TextEditingController? controller;
   final Widget prefixIcon;
   final String title;
+  final String? Function(String?)? validator;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -22,7 +23,7 @@ class AvailabilityTextField extends StatelessWidget {
           style: const TextStyle(color: yellow),
         ),
         TextFormField(
-          controller: controller,
+          controller: controller,validator: validator,
           decoration: InputDecoration(
             prefixIcon: prefixIcon,
             border: OutlineInputBorder(

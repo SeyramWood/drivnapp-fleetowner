@@ -9,27 +9,27 @@ Vehicles vehiclesFromJson(String str) => Vehicles.fromJson(json.decode(str));
 String vehiclesToJson(Vehicles data) => json.encode(data.toJson());
 
 class Vehicles {
-  Data data;
+  Data? data;
   bool status;
 
   Vehicles({
-    required this.data,
+    this.data,
     required this.status,
   });
 
-  factory Vehicles.fromJson(Map<String, dynamic> json) => Vehicles(
-        data: Data.fromJson(json["data"]),
+  factory Vehicles.fromJson(json) => Vehicles(
+        data: Data.fromJson(json["data"] ?? {}),
         status: json["status"],
       );
 
   Map<String, dynamic> toJson() => {
-        "data": data.toJson(),
+        "data": data?.toJson(),
         "status": status,
       };
 }
 
 class Data {
-  int count;
+  int? count;
   List<Vehicle> data;
 
   Data({
@@ -39,7 +39,8 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         count: json["count"],
-        data: List<Vehicle>.from(json["data"].map((x) => Vehicle.fromJson(x))),
+        data: List<Vehicle>.from(
+            json["data"]?.map((x) => Vehicle.fromJson(x)) ?? []),
       );
 
   Map<String, dynamic> toJson() => {
@@ -194,9 +195,9 @@ class Owner {
   });
 
   factory Owner.fromJson(Map<String, dynamic> json) => Owner(
-        firstName: json["firstName"] ,
+        firstName: json["firstName"],
         id: json["id"],
-        lastName: json["lastName"] ,
+        lastName: json["lastName"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -207,30 +208,30 @@ class Owner {
 }
 
 class Rental {
-    Owner? driver;
-    int id;
-    String location;
-    int price;
+  Owner? driver;
+  int id;
+  String location;
+  int price;
 
-    Rental({
-        this.driver,
-        required this.id,
-        required this.location,
-        required this.price,
-    });
+  Rental({
+    this.driver,
+    required this.id,
+    required this.location,
+    required this.price,
+  });
 
-    factory Rental.fromJson(Map<String, dynamic> json) => Rental(
+  factory Rental.fromJson(Map<String, dynamic> json) => Rental(
         driver: json["driver"] == null ? null : Owner.fromJson(json["driver"]),
         id: json["id"],
         location: json["location"],
         price: json["price"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "driver": driver?.toJson(),
         "location": location,
         "price": price,
-    };
+      };
 }
 
 //using owner as a driver because they both have same parameters

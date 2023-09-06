@@ -56,8 +56,6 @@ class APIService extends ChangeNotifier {
     notifyListeners();
   }
 
- 
-
   Future<void> postUser(SignUpBody requestBody) async {
     try {
       Uri url = Uri.parse(
@@ -146,9 +144,12 @@ class APIService extends ChangeNotifier {
       if (response.statusCode != 200) {
         print('logging in: ${response.statusCode}');
       }
-      String id = jsonDecode(response.body)['data']['id'].toString();
+      if (response.statusCode == 200) {
+        String id = jsonDecode(response.body)['data']['id'].toString();
+        await setUserId(id);
+      }
       //store user's id locally
-      await setUserId(id);
+
       print('user1: $_user');
     } on Exception catch (e) {
       print(e);

@@ -140,7 +140,9 @@ class _LoginViewState extends State<LoginView> {
                         isLoading = true;
                       });
                       Provider.of<APIService>(context, listen: false)
-                          .logIn('51539607562')
+                          .logIn(context.read<APIService>().accTypeIsOwner
+                              ? '51539607562'
+                              : '51539607554')
                           .then(
                         (value) async {
                           await Future.delayed(const Duration(seconds: 2), () {

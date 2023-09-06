@@ -1,15 +1,12 @@
+import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
 import 'package:drivn/features/owner/presentations/views/booked.car.detail.page.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-
-
 class InfoCard extends StatelessWidget {
-  const InfoCard({
-    super.key,
-  });
-
+  const InfoCard({super.key, required this.info});
+  final BVehicle? info;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,10 +19,12 @@ class InfoCard extends StatelessWidget {
             width: MediaQuery.sizeOf(context).width,
             height: MediaQuery.sizeOf(context).height / 4.5,
             padding: const EdgeInsets.only(right: 5),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+            decoration: BoxDecoration(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(10)),
                 image: DecorationImage(
-                    image: AssetImage('assets/bg.png'), fit: BoxFit.fitWidth)),
+                    image: NetworkImage(info!.vehicle.images[0].image),
+                    fit: BoxFit.fitWidth)),
             child: Stack(
               alignment: Alignment.bottomRight,
               children: [
@@ -43,8 +42,8 @@ class InfoCard extends StatelessWidget {
                         ));
                       },
                       style: ElevatedButton.styleFrom(
-                          padding:
-                              const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 5),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
@@ -68,29 +67,29 @@ class InfoCard extends StatelessWidget {
             child: Column(
               children: [
                 const Tile(
-                  leading: 'leadingText',
+                  leading: 'CarID',
                   trailing: 'trailingText',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
                 const Tile(
-                  leading: 'leadingText',
+                  leading: 'Pickup location',
                   trailing: 'trailingText',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
                 const Tile(
-                  leading: 'leadingText',
+                  leading: 'Time remaining',
                   trailing: 'trailingText',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
-                const Tile(
-                  leading: 'leadingText',
-                  trailing: 'trailingText',
+                Tile(
+                  leading: 'Price',
+                  trailing: 'GHC ${info!.rental.vehicleAmount.toString()}',
                 ),
               ],
             ),

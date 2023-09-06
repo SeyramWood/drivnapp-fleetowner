@@ -2,7 +2,7 @@ import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
-import '../../domain/entities/driver.dart';
+import '../../domain/entities/driver.model.dart';
 
 // ignore: must_be_immutable
 class DriverField extends StatefulWidget {
@@ -21,6 +21,7 @@ class _DriverFieldState extends State<DriverField> {
     for (var driver in drivers) {
       driverLists.add(driver);
     }
+    print(driverLists);
   }
 
   @override
@@ -34,10 +35,16 @@ class _DriverFieldState extends State<DriverField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Driver'),
+        const Text('Driver (Optional)'),
         Autocomplete<String>(
           onSelected: (selectedOption) {
-            //  var selectedDriver = driverLists.firstWhere((driver) => driver.firstName==se,)
+            try {
+              var selectedDriver = driverLists.firstWhere((driver) =>
+                  '${driver.firstName} ${driver.lastName}' == selectedOption);
+              widget.controller.text = selectedDriver.id.toString();
+            } catch (e) {
+              print('Error: No matching driver found');
+            }
           },
           optionsBuilder: (textEditingValue) {
             if (textEditingValue.text.isEmpty) {
@@ -51,6 +58,7 @@ class _DriverFieldState extends State<DriverField> {
               (context, textEditingController, focusNode, onFieldSubmitted) {
             return TextFormField(
               textCapitalization: TextCapitalization.sentences,
+              
               controller: textEditingController,
               focusNode: focusNode,
               onEditingComplete: onFieldSubmitted,
@@ -88,6 +96,6 @@ class _DriverFieldState extends State<DriverField> {
         ),
       ],
     );
-    ;
+    
   }
 }

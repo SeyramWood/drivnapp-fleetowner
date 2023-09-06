@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:drivn/features/owner/domain/entities/available.vehicles.dart';
+import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
+import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
 import 'package:drivn/shared/errors/exception.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../shared/utils/constants/baseUrl.dart';
-import '../../domain/entities/driver.dart';
+import '../../domain/entities/driver.model.dart';
+import '../../domain/entities/vehicle.request.model.dart ' as r;
 
 class OwnerApiService {
   //add a vehicle
@@ -29,7 +31,9 @@ class OwnerApiService {
         request.fields['owner'] = userID;
         request.fields['brand'] = carBrand;
         request.fields['type'] = carType;
-        request.fields['feature[]'] = jsonEncode(features);
+        for (int i = 0; i < features.length; i++) {
+          request.fields['feature'] = features[i];
+        }
         request.fields['moreFeature'] = moreFeatures ?? '';
 
         for (var file in imageFiles) {
@@ -51,6 +55,7 @@ class OwnerApiService {
           throw CustomException(
               'Request failed with status code: ${response.statusCode}');
         }
+        log(response.stream.bytesToString.toString());
       } else {
         print('No files selected');
       }
@@ -65,7 +70,7 @@ class OwnerApiService {
   }
 
 //http get request for vehicles belonging to a user
-  Future<List<Vehicle>> fetchVehicles(String userID) async {
+  Future<List<v.Vehicle>> fetchVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/vehicles/owner/$userID');
     final response = await http.get(uri);
     if (response.statusCode != 200) {
@@ -73,10 +78,10 @@ class OwnerApiService {
         '${response.statusCode}\n${response.reasonPhrase}\n${response.body}',
       );
     }
-    return vehiclesFromJson(response.body).data.data;
+    return v.vehiclesFromJson(response.body).data!.data;
   }
 
-  Future fetchBookedVehicles(String userID) async {
+  Future<List<BVehicle>> fetchBookedVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/bookings/owner/$userID');
     try {
       final response = await http.get(uri);
@@ -84,20 +89,22 @@ class OwnerApiService {
         print(response.statusCode);
       }
       log(response.body);
+      return bookedVehicleFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
+      throw Exception("couldn't fetch vehicles");
     }
   }
 
   Future updateRental(
     String vehicleID,
-    int driver,
+    String? driver,
     String location,
     String price,
   ) async {
     final url = Uri.parse('$baseUrl/vehicles/rental/$vehicleID');
     final body = {
-      "driver": '51539607563',
+      "driver": driver ?? '',
       "location": location,
       "price": price,
     };
@@ -146,4 +153,35 @@ class OwnerApiService {
       throw Exception('failed to get drivers');
     }
   }
+
+  Future<List<r.VRequest>> allRequests(String userID) async {
+    final url = Uri.parse('$baseUrl/booking/requests/owner/$userID');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+      }
+      return r.vehicleRequestFromJson(response.body).data!.data;
+    } catch (e) {
+      print(e);
+      throw Exception("couldn't fetch request");
+    }
+  }
+
+  Future acceptRequest(String requestID) async {
+    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+    try {
+      final body = {"requestType": "owner", "status": "accepted", "reason": ""};
+      final response = await http.put(url, body: body);
+      if (response.statusCode != 200 || response.statusCode == 202) {
+        print(response.statusCode);
+      }
+      print(response.body);
+      print(response.reasonPhrase);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future cancelRequest() async {}
 }

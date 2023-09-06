@@ -6,7 +6,7 @@ import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-import '../../domain/entities/available.vehicles.dart' as data;
+import '../../domain/entities/vehicle.model.dart' as data;
 import '../providers/available.or.booked.dart';
 import '../views/car.detail.dart';
 
@@ -21,18 +21,18 @@ class _CarTileState extends State<CarTile> {
   String newValue = '';
 
   //date picker
-  void _datePicker() async {
-    await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2050),
-    ).then(
-      (value) {
-        context.read<CarProvider>().setDate = value!;
-      },
-    );
-  }
+  // void _datePicker() async {
+  //   await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime.now(),
+  //     lastDate: DateTime(2050),
+  //   ).then(
+  //     (value) {
+  //       context.read<CarProvider>().setDate = value!;
+  //     },
+  //   );
+  // }
 
   //time picker
   // void _timePicker() async {
@@ -60,7 +60,7 @@ class _CarTileState extends State<CarTile> {
         Navigator.of(context).push(
           PageTransition(
             type: PageTransitionType.rightToLeft,
-            duration: const Duration(milliseconds: 600),
+            duration: const Duration(milliseconds: 300),
             child: CarDetails(vehicle: vehicle),
           ),
         );

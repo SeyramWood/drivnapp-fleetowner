@@ -1,3 +1,4 @@
+import 'package:drivn/features/driver/domain/entities/request.model.dart' as r;
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -5,8 +6,8 @@ import '../../../../shared/utils/constants/dimensions.dart';
 import '../../../auth/presentation/widget/elevated.button.dart';
 
 class RequestInfo extends StatelessWidget {
-  const RequestInfo({super.key});
-
+  const RequestInfo({super.key, required this.request});
+  final r.DRequest? request;
   @override
   Widget build(BuildContext context) {
     var space = const SizedBox(
@@ -21,7 +22,7 @@ class RequestInfo extends StatelessWidget {
           ListTile(
             leading: Image.asset('assets/car1.png'),
             title: Text(
-              'Mecedies Benz',
+              request?.vehicle.type ?? '',
               style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                     fontWeight: FontWeight.w500,
                     fontSize: 20,

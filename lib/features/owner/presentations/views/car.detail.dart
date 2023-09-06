@@ -1,4 +1,4 @@
-import 'package:drivn/features/owner/domain/entities/available.vehicles.dart';
+import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
 import 'package:drivn/features/owner/presentations/widget/car.carousel.dart';
 import 'package:flutter/material.dart';
 

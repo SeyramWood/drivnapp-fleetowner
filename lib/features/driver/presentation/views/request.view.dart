@@ -1,5 +1,9 @@
+import 'package:drivn/features/driver/data/api/driver.api.service.dart';
+import 'package:drivn/features/driver/domain/entities/request.model.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widget/request.tile.dart';
 
@@ -13,6 +17,17 @@ class RequestView extends StatefulWidget {
 class _RequestViewState extends State<RequestView> {
   int _selectedDropdownValue = 1;
   bool _isOffline = false;
+  late Future<List<DRequest>> request;
+  getAllRequest() async {
+    request =
+        DriverApiService().fetchRequest(context.read<APIService>().userId);
+  }
+
+  @override
+  void initState() {
+    getAllRequest();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +95,28 @@ class _RequestViewState extends State<RequestView> {
                 ],
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return const RequestTile();
-                  },
-                ),
-              ),
+                  child: FutureBuilder<List<DRequest>>(
+                future: request,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    return ListView.builder(
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (context, index) {
+                        var request = snapshot.data?[index];
+                        return  RequestTile(request:request);
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No available request.'));
+                  }
+
+                  return const Center(child: CircularProgressIndicator());
+                },
+              )),
             ],
           ),
         ),

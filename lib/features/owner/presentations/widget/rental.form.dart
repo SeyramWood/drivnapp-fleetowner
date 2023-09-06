@@ -9,6 +9,7 @@ updateRental(BuildContext context, int id) {
   final locationController = TextEditingController();
   final priceController = TextEditingController();
   final driverController = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -16,10 +17,12 @@ updateRental(BuildContext context, int id) {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       content: SingleChildScrollView(
         child: Form(
+          key: _formkey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               AvailabilityTextField(
+                validator: (p0) => p0!.isEmpty ? 'Please add location' : null,
                 title: 'Location',
                 controller: locationController,
                 prefixIcon:
@@ -27,6 +30,7 @@ updateRental(BuildContext context, int id) {
               ),
               const SizedBox(height: 10),
               AvailabilityTextField(
+                validator: (p0) => p0!.isEmpty ? 'Please add price' : null,
                 title: 'Price',
                 controller: priceController,
                 prefixIcon:
@@ -46,12 +50,25 @@ updateRental(BuildContext context, int id) {
             width: MediaQuery.sizeOf(context).width / 3,
             child: ElevatedButton(
               onPressed: () {
-                OwnerApiService()
-                    .updateRental(
-                        '$id', 0, locationController.text, priceController.text)
-                    .then(
-                      (value) => Navigator.of(context).pop(),
-                    );
+                if (_formkey.currentState!.validate()) {
+                  OwnerApiService()
+                      .updateRental(
+                    '$id',
+                    driverController.text,
+                    locationController.text,
+                    priceController.text,
+                  )
+                      .then(
+                    (value) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Rental updated successfully'),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
               child: const Text('Update'),
             ),

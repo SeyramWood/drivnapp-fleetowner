@@ -2,9 +2,11 @@ import 'package:drivn/features/driver/presentation/widget/request.dialog.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-class RequestTile extends StatelessWidget {
-  const RequestTile({super.key});
+import '../../domain/entities/request.model.dart';
 
+class RequestTile extends StatelessWidget {
+  const RequestTile({super.key, this.request});
+  final DRequest? request;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -15,7 +17,7 @@ class RequestTile extends StatelessWidget {
             context: context,
             builder: (context) {
               return BottomSheet(
-                builder: (context) => const RequestInfo(),
+                builder: (context) =>  RequestInfo(request:request),
                 onClosing: () {},
               );
             },
@@ -23,7 +25,7 @@ class RequestTile extends StatelessWidget {
         },
         child: Material(
           shadowColor: white,
-          elevation: 5,
+          elevation: 1,
           child: Container(
             padding: const EdgeInsets.symmetric(
               vertical: 10,
@@ -31,7 +33,7 @@ class RequestTile extends StatelessWidget {
             ),
             decoration: BoxDecoration(
                 border: Border.all(
-                  color: yellow.withOpacity(.4),
+                  color: red.withOpacity(.4),
                 ),
                 borderRadius: BorderRadius.circular(5)),
             child: Row(
@@ -46,17 +48,18 @@ class RequestTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'John Doe',
+                      '${request!.driver.firstName} ${request!.driver.lastName}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
                           .copyWith(fontWeight: FontWeight.w500, fontSize: 18),
                     ),
                     const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ImageIcon(
-                          AssetImage('assets/icons/location_tick.png'),
-                        ),
+                        // ImageIcon(
+                        //   AssetImage('assets/icons/location_tick.png'),
+                        // ),
                         Text(
                           'Circle Main Station',
                         ),
@@ -74,7 +77,7 @@ class RequestTile extends StatelessWidget {
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                           border: Border.all(
-                            color: yellow.withOpacity(.5),
+                            color: red.withOpacity(.5),
                           ),
                           borderRadius: BorderRadius.circular(5)),
                       child: const Text('10:57 AM'),
@@ -89,3 +92,5 @@ class RequestTile extends StatelessWidget {
     );
   }
 }
+
+
