@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +19,28 @@ class RequestsView extends StatefulWidget {
 
 class _RequestsViewState extends State<RequestsView> {
   late Future<List<r.VRequest>> request;
-  void fetchRequest() async {
+
+  final StreamController<List<r.VRequest>> _streamController =
+      StreamController();
+  // ignore: unused_field
+  late Timer _timer;
+  fetchRequest() async {
     request = OwnerApiService().allRequests(context.read<APIService>().userId);
+
+    if (mounted) {
+      var streamData = await request;
+
+      if (!_streamController.isClosed) {
+        _streamController.sink.add(streamData);
+      }
+    }
   }
 
   @override
   void initState() {
-    fetchRequest();
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      fetchRequest();
+    });
     super.initState();
   }
 
@@ -33,8 +50,8 @@ class _RequestsViewState extends State<RequestsView> {
       appBar: AppBar(title: const Text('All Request')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: FutureBuilder(
-          future: request,
+        child: StreamBuilder(
+          stream: _streamController.stream,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active &&
                 snapshot.connectionState == ConnectionState.waiting) {

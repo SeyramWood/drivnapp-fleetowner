@@ -133,36 +133,43 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  CustomElevatedButton(
-                    backgroundColor: black,
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Provider.of<APIService>(context, listen: false)
-                          .logIn(context.read<APIService>().accTypeIsOwner
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * .8,
+                    child: CustomElevatedButton(
+                      backgroundColor: black,
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        Provider.of<APIService>(context, listen: false)
+                            .logIn(
+                          context.read<APIService>().accTypeIsOwner
                               ? '51539607562'
-                              : '51539607554')
-                          .then(
-                        (value) async {
-                          await Future.delayed(const Duration(seconds: 2), () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      context.read<APIService>().accTypeIsOwner
-                                          ? const OMainPage()
-                                          : const DMainPage()),
-                              (route) => false,
-                            );
-                            setState(() {
-                              isLoading = false;
+                              : '51539607554',
+                        )
+                            .then(
+                          (value) async {
+                            await Future.delayed(const Duration(seconds: 2),
+                                () {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => context
+                                            .read<APIService>()
+                                            .accTypeIsOwner
+                                        ? const OMainPage()
+                                        : const DMainPage()),
+                                (route) => false,
+                              );
+                              setState(() {
+                                isLoading = false;
+                              });
                             });
-                          });
-                        },
-                      );
-                    },
-                    child: const Text('Login'),
-                  ).loading(isLoading),
+                          },
+                        );
+                      },
+                      child: const Text('Login'),
+                    ).loading(isLoading),
+                  ),
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushAndRemoveUntil(
@@ -179,7 +186,7 @@ class _LoginViewState extends State<LoginView> {
                             ),
                         children: const [
                           TextSpan(
-                            text: ' Register.',
+                            text: ' Signup.',
                             style: TextStyle(
                               color: yellow,
                               fontWeight: FontWeight.w700,

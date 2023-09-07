@@ -71,7 +71,7 @@ class _RegisterViewState extends State<RegisterView> {
     return Scaffold(
       backgroundColor: blue,
       body: Padding(
-        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 5),
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 15),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -139,41 +139,47 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      CustomElevatedButton(
-                        backgroundColor: black,
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            //fleetOwner object
-                            final fleetOwner = SignUpBody(
-                              lastName: _lastNameController.text.trim(),
-                              firstName: _firstNameController.text.trim(),
-                              username:
-                                  context.read<AuthSharedProvider>().phone.trim(),
-                              password: _passwordController.text.trim(),
-                              confirmPassword: _repeatPasswordController.text.trim(),
-                            );
-                            //method to create a fleetowner account
-                            context
-                                .read<UserAuthProvider>()
-                                .postUser(fleetOwner, context)
-                                .then(
-                              (failure) {
-                                if (failure != null) {
-                                  showErrorDialogue(
-                                    context,
-                                    failure,
-                                  );
-                                }
-                                // if (failure == null) {
-                                //   clearControllers();
-                                // }
-                              },
-                            );
-                          }
-                        },
-                        child: const Text('Register'),
-                      ).loading(
-                        context.watch<UserAuthProvider>().isLoading,
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width * .8,
+                        child: CustomElevatedButton(
+                          backgroundColor: black,
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              //fleetOwner object
+                              final fleetOwner = SignUpBody(
+                                lastName: _lastNameController.text.trim(),
+                                firstName: _firstNameController.text.trim(),
+                                username: context
+                                    .read<AuthSharedProvider>()
+                                    .phone
+                                    .trim(),
+                                password: _passwordController.text.trim(),
+                                confirmPassword:
+                                    _repeatPasswordController.text.trim(),
+                              );
+                              //method to create a fleetowner account
+                              context
+                                  .read<UserAuthProvider>()
+                                  .postUser(fleetOwner, context)
+                                  .then(
+                                (failure) {
+                                  if (failure != null) {
+                                    showErrorDialogue(
+                                      context,
+                                      failure,
+                                    );
+                                  }
+                                  // if (failure == null) {
+                                  //   clearControllers();
+                                  // }
+                                },
+                              );
+                            }
+                          },
+                          child: const Text('Sign up'),
+                        ).loading(
+                          context.watch<UserAuthProvider>().isLoading,
+                        ),
                       ),
                       const SizedBox(height: 10),
                       GestureDetector(

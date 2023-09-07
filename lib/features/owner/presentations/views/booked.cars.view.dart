@@ -27,15 +27,16 @@ class _BookedCarsBuilderState extends State<BookedCarsBuilder> {
     return FutureBuilder(
       future: bookedCars,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active &&
-            snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           return ListView.builder(
             itemCount: snapshot.data?.length,
             itemBuilder: (context, index) {
               final info = snapshot.data?[index];
-              return  InfoCard(info: info,);
+              return InfoCard(
+                info: info,
+              );
             },
           );
         } else if (!snapshot.hasData) {

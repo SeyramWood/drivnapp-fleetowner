@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,36 +17,53 @@ class CarsAvailableBuilder extends StatefulWidget {
 
 class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   late Future<List<Vehicle>> vehicles;
-  // String id = '';
-  // getID() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   id = (prefs.getString('userID'));
-  //   print(id);
-  // }
+  final StreamController<List<Vehicle>> _controller = StreamController();
+  late Timer _timer;
+  void fetchVehicles() async {
+    vehicles =
+        OwnerApiService().fetchVehicles(context.read<APIService>().userId);
+    var streamData = await vehicles;
+    if (mounted) {
+      if (!_controller.isClosed) {
+        _controller.sink.add(streamData);
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    vehicles =
-        OwnerApiService().fetchVehicles(context.read<APIService>().userId);
+    _timer = Timer.periodic(
+      const Duration(seconds: 2),
+      (timer) {
+        fetchVehicles();
+      },
+    );
   }
 
   @override
-  void didChangeDependencies() {
-    vehicles =
-        OwnerApiService().fetchVehicles(context.read<APIService>().userId);
-    super.didChangeDependencies();
+  void dispose() {
+    _controller.close();
+    _timer.cancel();
+    super.dispose();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   vehicles =
+  //       OwnerApiService().fetchVehicles(context.read<APIService>().userId);
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Vehicle>>(
-      future: vehicles,
+    return StreamBuilder<List<Vehicle>>(
+      stream: _controller.stream,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active &&
+        if (
             snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+        } else if (snapshot.hasData) {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {

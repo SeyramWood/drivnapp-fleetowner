@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drivn/features/driver/data/api/driver.api.service.dart';
 import 'package:drivn/features/driver/domain/entities/request.model.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
@@ -18,14 +20,27 @@ class _RequestViewState extends State<RequestView> {
   int _selectedDropdownValue = 1;
   bool _isOffline = false;
   late Future<List<DRequest>> request;
+  final StreamController<List<DRequest>> _streamController = StreamController();
+  // ignore: unused_field
+  late Timer _timer;
   getAllRequest() async {
     request =
         DriverApiService().fetchRequest(context.read<APIService>().userId);
+
+    if (mounted) {
+      var streamData = await request;
+
+      if (!_streamController.isClosed) {
+        _streamController.sink.add(streamData);
+      }
+    }
   }
 
   @override
   void initState() {
-    getAllRequest();
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      getAllRequest();
+    });
     super.initState();
   }
 
@@ -95,15 +110,15 @@ class _RequestViewState extends State<RequestView> {
                 ],
               ),
               Expanded(
-                  child: FutureBuilder<List<DRequest>>(
-                future: request,
+                  child: StreamBuilder<List<DRequest>>(
+                stream: _streamController.stream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                     return ListView.builder(
                       itemCount: snapshot.data?.length,
                       itemBuilder: (context, index) {
                         var request = snapshot.data?[index];
-                        return  RequestTile(request:request);
+                        return RequestTile(request: request);
                       },
                     );
                   } else if (snapshot.hasError) {

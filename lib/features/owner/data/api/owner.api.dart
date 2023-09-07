@@ -71,7 +71,7 @@ class OwnerApiService {
 //http get request for vehicles belonging to a user
   Future<List<v.Vehicle>> fetchVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/vehicles/owner/$userID');
-    final response = await http.get(uri);
+    final response = await http.get(uri).timeout(const Duration(seconds: 30));
     if (response.statusCode != 200) {
       print(
         '${response.statusCode}\n${response.reasonPhrase}\n${response.body}',
@@ -157,6 +157,8 @@ class OwnerApiService {
     final url = Uri.parse('$baseUrl/booking/requests/owner/$userID');
     try {
       final response = await http.get(url);
+      print(response.reasonPhrase);
+
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
@@ -198,6 +200,18 @@ class OwnerApiService {
     final url = Uri.parse('$baseUrl/bookings/$bookingID/trip-status/ended');
     try {
       final response = await http.put(url);
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future deleteVehicle(String vehicleID) async {
+    final url = Uri.parse('$baseUrl/vehicles/$vehicleID');
+    try {
+      final response = await http.delete(url);
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
