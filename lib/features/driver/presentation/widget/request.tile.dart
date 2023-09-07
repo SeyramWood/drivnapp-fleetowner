@@ -17,7 +17,7 @@ class RequestTile extends StatelessWidget {
             context: context,
             builder: (context) {
               return BottomSheet(
-                builder: (context) =>  RequestInfo(request:request),
+                builder: (context) => RequestInfo(request: request),
                 onClosing: () {},
               );
             },
@@ -38,8 +38,10 @@ class RequestTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5)),
             child: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 28,
+                  backgroundImage:
+                      NetworkImage(request!.vehicle.images[0].image),
                 ),
                 const SizedBox(
                   width: 20,
@@ -54,14 +56,14 @@ class RequestTile extends StatelessWidget {
                           .headlineMedium!
                           .copyWith(fontWeight: FontWeight.w500, fontSize: 18),
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         // ImageIcon(
                         //   AssetImage('assets/icons/location_tick.png'),
                         // ),
                         Text(
-                          'Circle Main Station',
+                          request!.rental.customerLocation,
                         ),
                       ],
                     )
@@ -92,5 +94,3 @@ class RequestTile extends StatelessWidget {
     );
   }
 }
-
-

@@ -37,8 +37,8 @@ class InfoCard extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).push(PageTransition(
                           type: PageTransitionType.fade,
-                          duration: const Duration(milliseconds: 500),
-                          child: const MoreOfBookedCar(),
+                          duration: const Duration(milliseconds: 300),
+                          child: MoreOfBookedCar(info: info),
                         ));
                       },
                       style: ElevatedButton.styleFrom(
@@ -66,23 +66,23 @@ class InfoCard extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
-                const Tile(
+                Tile(
                   leading: 'CarID',
-                  trailing: 'trailingText',
+                  trailing: '...',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
-                const Tile(
+                Tile(
                   leading: 'Pickup location',
-                  trailing: 'trailingText',
+                  trailing: info!.rental.customerLocation,
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
                 const Tile(
                   leading: 'Time remaining',
-                  trailing: 'trailingText',
+                  trailing: '...',
                 ),
                 Divider(
                   color: black.withOpacity(.1),

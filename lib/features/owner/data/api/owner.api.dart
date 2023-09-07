@@ -31,9 +31,8 @@ class OwnerApiService {
         request.fields['owner'] = userID;
         request.fields['brand'] = carBrand;
         request.fields['type'] = carType;
-        for (int i = 0; i < features.length; i++) {
-          request.fields['feature'] = features[i];
-        }
+        request.fields['feature'] = features.join(',');
+
         request.fields['moreFeature'] = moreFeatures ?? '';
 
         for (var file in imageFiles) {
@@ -51,7 +50,7 @@ class OwnerApiService {
         var response = await request.send();
 
         if (response.statusCode != 201) {
-          print(response.stream.bytesToString);
+          print(response.reasonPhrase);
           throw CustomException(
               'Request failed with status code: ${response.statusCode}');
         }
@@ -183,5 +182,27 @@ class OwnerApiService {
     }
   }
 
-  Future cancelRequest() async {}
+  Future cancelRequest(requestID) async {
+    final url = Uri.parse('$baseUrl/bookings/$requestID/canceled');
+    try {
+      final response = await http.put(url);
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future endTrip(String bookingID) async {
+    final url = Uri.parse('$baseUrl/bookings/$bookingID/trip-status/ended');
+    try {
+      final response = await http.put(url);
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }

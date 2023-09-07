@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../../shared/utils/constants/dimensions.dart';
 import '../../../auth/presentation/widget/elevated.button.dart';
+import '../../../driver/data/api/driver.api.service.dart';
 
 class RequestInfo extends StatelessWidget {
   const RequestInfo({super.key, required this.request});
@@ -89,7 +90,12 @@ class RequestInfo extends StatelessWidget {
                   child: CustomElevatedButton(
                     backgroundColor: red,
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      var requestID = request!.id.toString();
+                      DriverApiService().cancelRequest(requestID).then(
+                        (value) {
+                          Navigator.of(context).pop();
+                        },
+                      );
                     },
                     child: const Text('reject'),
                   ),
@@ -99,39 +105,46 @@ class RequestInfo extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    DriverApiService()
+                        .acceptRequest(request!.id.toString())
+                        .then(
+                      (value) {
+                        Navigator.of(context).pop();
 
-                    showDialog(
-                        context: context,
-                        builder: (context) => BottomSheet(
-                              builder: (context) => SizedBox(
-                                height: 100,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 100,
-                                        height: 40,
-                                        child: CustomElevatedButton(
-                                          backgroundColor: red,
-                                          onPressed: () {},
-                                          child: const Text('call'),
-                                        ),
+                        showDialog(
+                            context: context,
+                            builder: (context) => BottomSheet(
+                                  builder: (context) => SizedBox(
+                                    height: 100,
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 100,
+                                            height: 40,
+                                            child: CustomElevatedButton(
+                                              backgroundColor: red,
+                                              onPressed: () {},
+                                              child: const Text('call'),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 20,
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {},
+                                            child: const Text('Message'),
+                                          )
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        width: 20,
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {},
-                                        child: const Text('Message'),
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                              onClosing: () {},
-                            ));
+                                  onClosing: () {},
+                                ));
+                      },
+                    );
                   },
                   child: const Text('Accept'),
                 )

@@ -40,7 +40,7 @@ class _RequestsViewState extends State<RequestsView> {
                 snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            if (snapshot.hasData&& snapshot.data!.isNotEmpty) {
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return ListView.builder(
                   itemCount: snapshot.data?.length,
                   itemBuilder: (context, index) {
@@ -239,7 +239,12 @@ class RequestInfo extends StatelessWidget {
                   child: CustomElevatedButton(
                     backgroundColor: red,
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      var requestID = request!.id.toString();
+                      OwnerApiService().cancelRequest(requestID).then(
+                        (value) {
+                          Navigator.of(context).pop();
+                        },
+                      );
                     },
                     child: const Text('reject'),
                   ),
