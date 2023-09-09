@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drivn/features/driver/data/api/driver.api.service.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +17,24 @@ class MyTrips extends StatefulWidget {
 
 class _MyTripsState extends State<MyTrips> {
   late Future<List<DTrip>> trips;
+  final StreamController<List<DTrip>> _streamController = StreamController();
+// ignore: unused_field
+  late Timer _timer;
   void fetchTrips() async {
     trips = DriverApiService().fetchTrips(context.read<APIService>().userId);
+    if (mounted) {
+      var streamData = await trips;
+      if (!_streamController.isClosed) {
+        _streamController.sink.add(streamData);
+      }
+    }
   }
 
   @override
   void initState() {
-    fetchTrips();
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      fetchTrips();
+    });
     super.initState();
   }
 
@@ -33,14 +46,14 @@ class _MyTripsState extends State<MyTrips> {
       ),
       body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: FutureBuilder(
-            future: trips,
+          child: StreamBuilder(
+            stream: _streamController.stream,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              } else if (snapshot.hasData) {
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                 return ListView.builder(
                   itemCount: snapshot.data?.length ?? 0,
                   itemBuilder: (context, index) {
@@ -51,7 +64,7 @@ class _MyTripsState extends State<MyTrips> {
                 return Center(
                   child: Text('Error: ${snapshot.error}'),
                 );
-              } else if (!snapshot.hasData) {
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('No available vehicle.'));
               }
               return const Center(
