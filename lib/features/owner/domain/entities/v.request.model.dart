@@ -1,24 +1,24 @@
 // To parse this JSON data, do
 //
-//     final vehicleRequest = vehicleRequestFromJson(jsonString);
+//     final requestModel = requestModelFromJson(jsonString);
 
 import 'dart:convert';
 
-VehicleRequest vehicleRequestFromJson(String str) =>
-    VehicleRequest.fromJson(json.decode(str));
+RequestModel requestModelFromJson(String str) =>
+    RequestModel.fromJson(json.decode(str));
 
-String vehicleRequestToJson(VehicleRequest data) => json.encode(data.toJson());
+String requestModelToJson(RequestModel data) => json.encode(data.toJson());
 
-class VehicleRequest {
+class RequestModel {
   Data? data;
   bool status;
 
-  VehicleRequest({
-    this.data,
+  RequestModel({
+    required this.data,
     required this.status,
   });
 
-  factory VehicleRequest.fromJson(Map<String, dynamic> json) => VehicleRequest(
+  factory RequestModel.fromJson(Map<String, dynamic> json) => RequestModel(
         data: Data.fromJson(json["data"] ?? {}),
         status: json["status"],
       );
@@ -30,7 +30,7 @@ class VehicleRequest {
 }
 
 class Data {
-  int count;
+  int? count;
   List<VRequest> data;
 
   Data({
@@ -39,7 +39,7 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        count: json["count"] ?? 0,
+        count: json["count"],
         data: List<VRequest>.from(
             json["data"]?.map((x) => VRequest.fromJson(x)) ?? []),
       );
@@ -95,11 +95,12 @@ class Rental {
   String customerLocation;
   String customerLocationAudio;
   String paymentStatus;
-  DateTime pickupDate;
-  DateTime pickupTime;
-  DateTime returnDate;
-  DateTime returnTime;
+  String pickupDate;
+  String pickupTime;
+  String returnDate;
+  String returnTime;
   int vehicleAmount;
+  int? refundAmount;
 
   Rental({
     required this.customer,
@@ -111,6 +112,7 @@ class Rental {
     required this.returnDate,
     required this.returnTime,
     required this.vehicleAmount,
+    this.refundAmount,
   });
 
   factory Rental.fromJson(Map<String, dynamic> json) => Rental(
@@ -118,11 +120,12 @@ class Rental {
         customerLocation: json["customerLocation"],
         customerLocationAudio: json["customerLocationAudio"],
         paymentStatus: json["paymentStatus"],
-        pickupDate: DateTime.parse(json["pickupDate"]),
-        pickupTime: DateTime.parse(json["pickupTime"]),
-        returnDate: DateTime.parse(json["returnDate"]),
-        returnTime: DateTime.parse(json["returnTime"]),
+        pickupDate: json["pickupDate"],
+        pickupTime: json["pickupTime"],
+        returnDate: json["returnDate"],
+        returnTime: json["returnTime"],
         vehicleAmount: json["vehicleAmount"],
+        refundAmount: json["refundAmount"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -130,11 +133,12 @@ class Rental {
         "customerLocation": customerLocation,
         "customerLocationAudio": customerLocationAudio,
         "paymentStatus": paymentStatus,
-        "pickupDate": pickupDate.toIso8601String(),
-        "pickupTime": pickupTime.toIso8601String(),
-        "returnDate": returnDate.toIso8601String(),
-        "returnTime": returnTime.toIso8601String(),
+        "pickupDate": pickupDate,
+        "pickupTime": pickupTime,
+        "returnDate": returnDate,
+        "returnTime": returnTime,
         "vehicleAmount": vehicleAmount,
+        "refundAmount": refundAmount,
       };
 }
 
@@ -172,7 +176,7 @@ class Vehicle {
   String brand;
   List<Feature> features;
   int id;
-  List<Image> images;
+  List<VImage> images;
   String moreFeature;
   Customer owner;
   String type;
@@ -196,7 +200,8 @@ class Vehicle {
         features: List<Feature>.from(
             json["features"].map((x) => Feature.fromJson(x))),
         id: json["id"],
-        images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+        images:
+            List<VImage>.from(json["images"].map((x) => VImage.fromJson(x))),
         moreFeature: json["moreFeature"],
         owner: Customer.fromJson(json["owner"]),
         type: json["type"],
@@ -239,16 +244,16 @@ class Feature {
       };
 }
 
-class Image {
+class VImage {
   int id;
   String image;
 
-  Image({
+  VImage({
     required this.id,
     required this.image,
   });
 
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
+  factory VImage.fromJson(Map<String, dynamic> json) => VImage(
         id: json["id"],
         image: json["image"],
       );

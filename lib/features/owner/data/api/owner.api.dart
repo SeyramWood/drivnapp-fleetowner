@@ -3,13 +3,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
+import 'package:drivn/features/owner/domain/entities/v.request.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
 import 'package:drivn/shared/errors/exception.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../shared/utils/constants/baseUrl.dart';
 import '../../domain/entities/driver.model.dart';
-import '../../domain/entities/vehicle.request.model.dart ' as r;
 
 class OwnerApiService {
   //add a vehicle
@@ -71,13 +71,13 @@ class OwnerApiService {
 //http get request for vehicles belonging to a user
   Future<List<v.Vehicle>> fetchVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/vehicles/owner/$userID');
-    final response = await http.get(uri).timeout(const Duration(seconds: 30));
+    final response = await http.get(uri);
     if (response.statusCode != 200) {
       print(
         '${response.statusCode}\n${response.reasonPhrase}\n${response.body}',
       );
     }
-    return v.vehiclesFromJson(response.body).data!.data;
+    return v.vehicleFromJson(response.body).data!.data;
   }
 
   Future<List<BVehicle>> fetchBookedVehicles(String userID) async {
@@ -87,7 +87,6 @@ class OwnerApiService {
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
-      log(response.body);
       return bookedVehicleFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
@@ -153,7 +152,7 @@ class OwnerApiService {
     }
   }
 
-  Future<List<r.VRequest>> allRequests(String userID) async {
+  Future<List<VRequest>> allRequests(String userID) async {
     final url = Uri.parse('$baseUrl/booking/requests/owner/$userID');
     try {
       final response = await http.get(url);
@@ -162,7 +161,7 @@ class OwnerApiService {
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
-      return r.vehicleRequestFromJson(response.body).data!.data;
+      return requestModelFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
       throw Exception("couldn't fetch request");

@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../../shared/utils/constants/dimensions.dart';
 import '../../../auth/presentation/widget/elevated.button.dart';
-import '../../domain/entities/vehicle.request.model.dart ' as r;
+import '../../domain/entities/v.request.model.dart';
 
 class RequestsView extends StatefulWidget {
   const RequestsView({super.key});
@@ -18,15 +18,13 @@ class RequestsView extends StatefulWidget {
 }
 
 class _RequestsViewState extends State<RequestsView> {
-  late Future<List<r.VRequest>> request;
+  late Future<List<VRequest>> request;
 
-  final StreamController<List<r.VRequest>> _streamController =
-      StreamController();
+  final StreamController<List<VRequest>> _streamController = StreamController();
   // ignore: unused_field
   late Timer _timer;
   fetchRequest() async {
     request = OwnerApiService().allRequests(context.read<APIService>().userId);
-
     if (mounted) {
       var streamData = await request;
 
@@ -53,8 +51,7 @@ class _RequestsViewState extends State<RequestsView> {
         child: StreamBuilder(
           stream: _streamController.stream,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active &&
-                snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -83,7 +80,7 @@ class _RequestsViewState extends State<RequestsView> {
 
 class RequestTile extends StatelessWidget {
   const RequestTile({super.key, this.request});
-  final r.VRequest? request;
+  final VRequest? request;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -174,7 +171,7 @@ class RequestTile extends StatelessWidget {
 
 class RequestInfo extends StatelessWidget {
   const RequestInfo({super.key, required this.request});
-  final r.VRequest? request;
+  final VRequest? request;
   @override
   Widget build(BuildContext context) {
     var space = const SizedBox(

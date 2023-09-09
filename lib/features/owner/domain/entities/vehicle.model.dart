@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-Vehicles vehiclesFromJson(String str) => Vehicles.fromJson(json.decode(str));
+Vehicles vehicleFromJson(String str) => Vehicles.fromJson(json.decode(str));
 
-String vehiclesToJson(Vehicles data) => json.encode(data.toJson());
+String vehicleToJson(Vehicles data) => json.encode(data.toJson());
 
 class Vehicles {
   Data? data;
