@@ -14,19 +14,19 @@ class _OnbordingPageState extends State<OnbordingPage> {
 
   List pages = [
     {
-      "img": 'assets/step_1_image.png',
+      "img": 'assets/onb1.jpg',
       "title": "Endless options",
       "description":
           "We offer diverse array of chauffeur drive services. Our chauffeur drive and luxury service allows you to travel in a safe and relaxed way.",
     },
     {
-      "img": 'assets/step_1_image.png',
+      "img": 'assets/onb2.jpg',
       "title": "Drive confidently",
       "description":
           "We also provides short-term corporate mini leases from one month to a year.",
     },
     {
-      "img": 'assets/step_1_image.png',
+      "img": 'assets/onb3.jpg',
       "title": "24/7 support",
       "description":
           "You can also book our luxury chauffeur drive service for your weddings and special occasions."

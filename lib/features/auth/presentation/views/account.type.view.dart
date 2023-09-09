@@ -1,4 +1,5 @@
 import 'package:drivn/features/auth/presentation/views/login_screen.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,23 +14,23 @@ class AccountTypeView extends StatefulWidget {
 }
 
 class _AccountTypeViewState extends State<AccountTypeView> {
-  _setFleetOwner(bool isFleetOwner) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-
-    Future.delayed(const Duration(seconds: 2), () {
+  bool _loadingOwner = false;
+  bool _loadingDriver = false;
+  Future _setFleetOwner(bool isFleetOwner) async {
+    await Future.delayed(const Duration(seconds: 2), () {
       context.read<APIService>().isOwner(isFleetOwner);
-      Navigator.pop(context);
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.of(context)
+          .push(MaterialPageRoute(
         builder: (context) => const LoginView(),
-      ));
+      ))
+          .then(
+        (value) {
+          setState(() {
+            _loadingDriver = false;
+            _loadingOwner = false;
+          });
+        },
+      );
     });
   }
 
@@ -51,17 +52,26 @@ class _AccountTypeViewState extends State<AccountTypeView> {
               const SizedBox(height: 20),
               CustomElevatedButton(
                 onPressed: () {
+                  setState(() {
+                    _loadingOwner = true;
+                  });
                   _setFleetOwner(true);
                 },
                 child: const Text('Fleet Owner'),
-              ),
+              ).loading(_loadingOwner),
               const SizedBox(height: 20),
               CustomElevatedButton(
                 onPressed: () {
+                  setState(() {
+                    _loadingDriver = true;
+                  });
                   _setFleetOwner(false);
+                  // setState(() {
+                  //   _loadingDriver = false;
+                  // });
                 },
                 child: const Text('Driver'),
-              )
+              ).loading(_loadingDriver)
             ],
           ),
         ),

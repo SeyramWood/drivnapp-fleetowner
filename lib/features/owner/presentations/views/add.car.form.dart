@@ -1,15 +1,17 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/features/vehicle/data/api/vehicle.api.service.dart';
+import 'package:drivn/features/vehicle/domain/entities/vehicle.brands.dart';
+import 'package:drivn/features/vehicle/domain/entities/vehicle.type.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../vehicle/domain/entities/vehicle.features.dart' as sym;
 import '../../data/api/owner.api.dart';
 import '../widget/form.field.with.option.dart';
 import '../widget/multi.selection.dialog.dart';
@@ -26,20 +28,39 @@ class AddFleetForm extends StatefulWidget {
 class _AddFleetFormState extends State<AddFleetForm> {
   final carBrand = TextEditingController();
   final carType = TextEditingController();
+  final optionalFeatures = TextEditingController();
   final space = const SizedBox(
     height: 10,
   );
-  List<String> selectedOptions = [];
+  List<sym.Feature> selectedOptions = [];
+//this list take vehicle features
+  List<sym.Feature> featureList = [];
+  //this list take vehicle brands
+  List<Brand> brandList = [];
+  //this list take vehicle type
+  List<VType> vtypeList = [];
 
-  List<String> options = [];
   List<File> imageFile = [];
   List<File> proofFile = [];
+
   OwnerApiService apiService = OwnerApiService();
-  //a method to pass the features to the list of options
-  Future getFeatures() async {
-    var result = await vehicleApiService.fetchFeatures();
-    for (var feature in result) {
-      options.add(feature.split('.')[1]);
+  //this method fetch the needed data asyncronosly and iterate into another local list variable for easy access at the init state
+
+  Future getVehicleInfo() async {
+    List<sym.Feature> features = await vehicleApiService.fetchFeatures();
+    List<Brand> brands = await vehicleApiService.fetchBrands();
+    List<VType> types = await vehicleApiService.fetchTypes();
+    //iterate features
+    for (var feature in features) {
+      featureList.add(feature);
+    }
+    //iterate brands
+    for (var brand in brands) {
+      brandList.add(brand);
+    }
+    //iterate types
+    for (var type in types) {
+      vtypeList.add(type);
     }
   }
 
@@ -49,11 +70,12 @@ class _AddFleetFormState extends State<AddFleetForm> {
     selectedOptions.clear();
     carBrand.clear();
     carType.clear();
+    optionalFeatures.clear();
   }
 
   @override
   void initState() {
-    getFeatures();
+    getVehicleInfo();
     super.initState();
   }
 
@@ -73,19 +95,19 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   labelText: 'Car Brand',
                   controller: carBrand,
                   onSelected: (value) {
-                    var text = value.split('.');
-                    carBrand.text = text[1];
+                    // Find the brand with the selected name and get its ID
+                    final selectedBrand = brandList.firstWhere(
+                      (brand) => brand.name == value,
+                    );
+
+                    carBrand.text = selectedBrand.id.toString();
                   },
+                  //displays list items(vehicle brand) as a dropdown for easy selection
                   customOptionsBuilder: (String text) async {
-                    final List<String> brands =
-                        await vehicleApiService.fetchBrands();
-                    List<String> carBrands = [];
-                    for (var brand in brands) {
-                      carBrands.add(brand.split('.')[0]);
-                    }
-                    return brands
-                        .where((brand) => brand.contains(text))
-                        .toList();
+                    return List.from(
+                        brandList.map((vBrand) => vBrand.name).where(
+                              (brand) => brand.contains(text),
+                            ));
                   },
                 ),
                 space,
@@ -93,21 +115,17 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   labelText: 'Car Type',
                   controller: carType,
                   onSelected: (value) {
-                    var text = value.split('.');
-                    carType.text = text[1];
+                    //find the selected name and get its id
+                    final selectType = vtypeList.firstWhere(
+                      (type) => type.name == value,
+                    );
+                    carType.text = selectType.id.toString();
                   },
+                  //displays list items(vehicle types) as a dropdown for easy selection
                   customOptionsBuilder: (String text) async {
-                    final List<String> types =
-                        await vehicleApiService.fetchTypes();
-                    List<String> carTypes = [];
-                    for (var type in types) {
-                      carTypes.add(type.split('.')[1]);
-                    }
-                    return types
-                        .where(
+                    return List.from(vtypeList.map((vType) => vType.name).where(
                           (type) => type.contains(text),
-                        )
-                        .toList();
+                        ));
                   },
                 ),
                 space,
@@ -127,8 +145,6 @@ class _AddFleetFormState extends State<AddFleetForm> {
                               .toList();
                           setState(() {});
                         }
-
-                        print(imageFile);
                       },
                       backgroundColor:
                           imageFile.isNotEmpty ? Colors.green : blue,
@@ -155,7 +171,6 @@ class _AddFleetFormState extends State<AddFleetForm> {
                               .toList();
                           setState(() {});
                         }
-                        print(proofFile);
                       },
                       backgroundColor:
                           proofFile.isNotEmpty ? Colors.green : blue,
@@ -188,7 +203,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   children: [
                     const Text('Optional'),
                     CustomElevatedButton(
-                      onPressed: () {},
+                      onPressed: showFieldForFeatures,
                       child: const Text('More features'),
                     ),
                   ],
@@ -198,17 +213,22 @@ class _AddFleetFormState extends State<AddFleetForm> {
                 ),
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width / 1.5,
+                  //elevated button for submission of data
                   child: CustomElevatedButton(
                     onPressed: () {
                       apiService
                           .addVehicle(
-                        userID: context.read<APIService>().userId,
-                        carBrand: carBrand.text,
-                        carType: carType.text,
-                        features: selectedOptions,
-                        imageFiles: imageFile,
-                        proofFiles: proofFile,
-                      )
+                              userID: context.read<APIService>().userId,
+                              carBrand: carBrand.text,
+                              carType: carType.text,
+                              features: List.from(selectedOptions
+                                  .map(
+                                    (feature) => feature.id.toString(),
+                                  )
+                                  .toList()),
+                              imageFiles: imageFile,
+                              proofFiles: proofFile,
+                              moreFeatures: optionalFeatures.text.trim())
                           .then((failure) {
                         if (failure != null) {
                           showErrorDialogue(
@@ -217,7 +237,6 @@ class _AddFleetFormState extends State<AddFleetForm> {
                           );
                         } else {
                           // clearFields();
-                          print(context.read<APIService>().userId);
                           setState(() {});
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
@@ -240,12 +259,13 @@ class _AddFleetFormState extends State<AddFleetForm> {
     );
   }
 
+//SHOW MULTI SELECT DIALOG TO SELECT VEHICLE FEATURES
   void openMultiSelectDialog() async {
-    final result = await showDialog<List<String>>(
+    final List<sym.Feature>? result = await showDialog<List<sym.Feature>>(
       context: context,
       builder: (BuildContext context) {
         return MultiSelectDialog(
-          options: options,
+          options: featureList,
           selectedOptions: selectedOptions,
         );
       },
@@ -256,5 +276,63 @@ class _AddFleetFormState extends State<AddFleetForm> {
         selectedOptions = result;
       });
     }
+  }
+
+  //optional features textfield
+  showFieldForFeatures() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        String enteredValue = ''; // Initialize with an empty string
+        return AlertDialog(
+          title: const Text(
+            'Add more features',
+            style: TextStyle(color: black),
+          ),
+          content: Container(
+            height: 100,
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: Colors
+                      .grey), // Optional: Add a border for visual separation
+              borderRadius: BorderRadius.circular(
+                  5.0), // Optional: Add border radius for rounded corners
+            ),
+            child: TextField(
+              controller: TextEditingController(text: optionalFeatures.text),
+              onChanged: (value) {
+                enteredValue =
+                    value; // Update the enteredValue as the user types
+              },
+              maxLines: 5,
+              decoration: const InputDecoration(
+                hintText: 'Separate each feature with a comma',
+                hintStyle: TextStyle(overflow: TextOverflow.fade),
+                border: InputBorder.none, // Remove the border
+                contentPadding:
+                    EdgeInsets.all(8.0), // Optional: Add padding for text input
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Use the enteredValue as needed
+                optionalFeatures.text = enteredValue;
+                print('Entered Value: $enteredValue');
+                Navigator.of(context).pop(enteredValue); // Close the dialog
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

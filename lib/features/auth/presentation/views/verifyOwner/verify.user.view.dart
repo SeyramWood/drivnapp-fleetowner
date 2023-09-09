@@ -1,4 +1,3 @@
-import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/owner/presentations/views/home.dart';
 import 'package:drivn/features/auth/presentation/views/verifyOwner/identity.info.view.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
@@ -7,7 +6,6 @@ import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../login_screen.dart';
 import 'driver.doc.dart';
 
 class GetVerifiedOption extends StatelessWidget {

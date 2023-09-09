@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:dartz/dartz.dart';
-import 'package:drivn/features/owner/domain/entities/available.vehicles.dart';
-import 'package:drivn/features/vehicle/domain/entities/vehicle.features.dart';
+import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
+import 'package:drivn/features/owner/domain/entities/v.request.model.dart';
+import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
 import 'package:drivn/shared/errors/exception.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../shared/utils/constants/baseUrl.dart';
+import '../../domain/entities/driver.model.dart';
 
 class OwnerApiService {
   //add a vehicle
@@ -31,7 +31,8 @@ class OwnerApiService {
         request.fields['owner'] = userID;
         request.fields['brand'] = carBrand;
         request.fields['type'] = carType;
-        request.fields['feature[]'] = '$features';
+        request.fields['feature'] = features.join(',');
+
         request.fields['moreFeature'] = moreFeatures ?? '';
 
         for (var file in imageFiles) {
@@ -48,13 +49,12 @@ class OwnerApiService {
 
         var response = await request.send();
 
-        if (response.statusCode == 201) {
-          print('Request successful');
-          print(await response.stream.bytesToString());
-        } else {
+        if (response.statusCode != 201) {
+          print(response.reasonPhrase);
           throw CustomException(
               'Request failed with status code: ${response.statusCode}');
         }
+        log(response.stream.bytesToString.toString());
       } else {
         print('No files selected');
       }
@@ -68,8 +68,8 @@ class OwnerApiService {
     return null;
   }
 
-  List<Vehicle> vehicles = [];
-  Future<List<Vehicle>> fetchVehicles(String userID) async {
+//http get request for vehicles belonging to a user
+  Future<List<v.Vehicle>> fetchVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/vehicles/owner/$userID');
     final response = await http.get(uri);
     if (response.statusCode != 200) {
@@ -77,17 +77,143 @@ class OwnerApiService {
         '${response.statusCode}\n${response.reasonPhrase}\n${response.body}',
       );
     }
-    return vehiclesFromJson(response.body).data.data;
+    return v.vehicleFromJson(response.body).data!.data;
   }
 
-  Future fetchBookedVehicles(String userID) async {
+  Future<List<BVehicle>> fetchBookedVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/bookings/owner/$userID');
     try {
       final response = await http.get(uri);
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
+      return bookedVehicleFromJson(response.body).data!.data;
+    } catch (e) {
+      print(e);
+      throw Exception("couldn't fetch vehicles");
+    }
+  }
+
+  Future updateRental(
+    String vehicleID,
+    String? driver,
+    String location,
+    String price,
+  ) async {
+    final url = Uri.parse('$baseUrl/vehicles/rental/$vehicleID');
+    final body = {
+      "driver": driver ?? '',
+      "location": location,
+      "price": price,
+    };
+    try {
+      final response = await http.put(url, body: body);
+
+      if (response.statusCode != 200 || response.statusCode != 202) {
+        log(response.statusCode.toString());
+      }
       log(response.body);
+    } catch (e) {
+      log('$e');
+    }
+  }
+
+  Future updateAvailability(
+    String vehicleID,
+    String status,
+  ) async {
+    final url =
+        Uri.parse('$baseUrl/vehicles/availability/$vehicleID?status=$status');
+
+    try {
+      final response = await http.put(url);
+
+      if (response.statusCode != 200 || response.statusCode != 202) {
+        log(response.statusCode.toString());
+      }
+      log(response.body);
+    } catch (e) {
+      log('$e');
+    }
+  }
+
+  Future<List<Dryver>> fetchDrivers() async {
+    final url = Uri.parse('$baseUrl/drivers');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        log(response.statusCode.toString());
+      }
+      log(response.body.toString());
+      return Driver.fromJson(json.decode(response.body)).data.data;
+    } catch (e) {
+      print(e);
+      throw Exception('failed to get drivers');
+    }
+  }
+
+  Future<List<VRequest>> allRequests(String userID) async {
+    final url = Uri.parse('$baseUrl/booking/requests/owner/$userID');
+    try {
+      final response = await http.get(url);
+      print(response.reasonPhrase);
+
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+      }
+      return requestModelFromJson(response.body).data!.data;
+    } catch (e) {
+      print(e);
+      throw Exception("couldn't fetch request");
+    }
+  }
+
+  Future acceptRequest(String requestID) async {
+    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+    try {
+      final body = {"requestType": "owner", "status": "accepted", "reason": ""};
+      final response = await http.put(url, body: body);
+      if (response.statusCode != 200 || response.statusCode == 202) {
+        print(response.statusCode);
+      }
+      print(response.body);
+      print(response.reasonPhrase);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future cancelRequest(requestID) async {
+    final url = Uri.parse('$baseUrl/bookings/$requestID/canceled');
+    try {
+      final response = await http.put(url);
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future endTrip(String bookingID) async {
+    final url = Uri.parse('$baseUrl/bookings/$bookingID/trip-status/ended');
+    try {
+      final response = await http.put(url);
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future deleteVehicle(String vehicleID) async {
+    final url = Uri.parse('$baseUrl/vehicles/$vehicleID');
+    try {
+      final response = await http.delete(url);
+      if (response.statusCode != 200) {
+        print(response.statusCode);
+      }
     } catch (e) {
       print(e);
     }

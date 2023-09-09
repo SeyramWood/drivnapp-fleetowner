@@ -19,7 +19,9 @@ class CustomElevatedButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(backgroundColor)),
+              backgroundColor: MaterialStateProperty.all(backgroundColor),
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7)))),
           child: child,
         ) //this extention indicate a loading progress when the button is pressed,
         );

@@ -29,7 +29,7 @@ class WeeklySummaryView extends StatelessWidget {
         const SliverToBoxAdapter(
           child: SizedBox(height: 15),
         ),
-        const WeeklySummaryCart(),
+        const WeeklySummaryChart(),
         const SliverToBoxAdapter(
           child: SizedBox(height: 15),
         ),
@@ -37,24 +37,24 @@ class WeeklySummaryView extends StatelessWidget {
           child: Row(
             children: [
               SummaryContainer(
-                title: 'Title',
-                subTitle: 'SubTitle',
+                title: '0',
+                subTitle: 'Trips',
                 color: red,
               ),
               SizedBox(
                 width: 10,
               ),
               SummaryContainer(
-                title: 'Title',
-                subTitle: 'SubTitle',
+                title: '0',
+                subTitle: 'Hours',
                 color: yellow,
               ),
               SizedBox(
                 width: 10,
               ),
               SummaryContainer(
-                title: 'Title',
-                subTitle: 'SubTitle',
+                title: 'Ghc 0.00',
+                subTitle: 'Earned',
                 color: blue,
               ),
             ],
@@ -70,8 +70,8 @@ class WeeklySummaryView extends StatelessWidget {
   }
 }
 
-class WeeklySummaryCart extends StatelessWidget {
-  const WeeklySummaryCart({super.key});
+class WeeklySummaryChart extends StatelessWidget {
+  const WeeklySummaryChart({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class WeeklySummaryCart extends StatelessWidget {
                         height: 150,
                         width: 30,
                         decoration: BoxDecoration(
-                            // color: grey.withOpacity(.3),
+                            color: grey.withOpacity(.3),
                             borderRadius: BorderRadius.circular(60)),
                         padding: const EdgeInsets.all(13),
                         //second indicator bg//

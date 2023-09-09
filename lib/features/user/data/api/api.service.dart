@@ -34,10 +34,8 @@ class APIService extends ChangeNotifier {
         String? storedUserID = prefs.getString('userID');
         if (storedUserID != null) {
           _user = storedUserID;
-          print('ID: $_user');
           notifyListeners();
         }
-        print('id: $_user');
       },
     ); // Store the user ID in SharedPreferences
     notifyListeners();
@@ -56,10 +54,6 @@ class APIService extends ChangeNotifier {
   setfield(field) {
     _field = field;
     notifyListeners();
-  }
-
-  printUser() {
-    print('user: $_user');
   }
 
   Future<void> postUser(SignUpBody requestBody) async {
@@ -150,9 +144,12 @@ class APIService extends ChangeNotifier {
       if (response.statusCode != 200) {
         print('logging in: ${response.statusCode}');
       }
-      String id = jsonDecode(response.body)['data']['id'].toString();
+      if (response.statusCode == 200) {
+        String id = jsonDecode(response.body)['data']['id'].toString();
+        await setUserId(id);
+      }
       //store user's id locally
-      await setUserId(id);
+
       print('user1: $_user');
     } on Exception catch (e) {
       print(e);

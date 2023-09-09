@@ -1,19 +1,21 @@
+import 'package:drivn/features/vehicle/domain/entities/vehicle.features.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 
 class MultiSelectDialog extends StatefulWidget {
-  final List<String> options;
-  final List<String> selectedOptions;
+  final List<Feature> options;
+  final List<Feature> selectedOptions;
 
-  const MultiSelectDialog({super.key, required this.options, required this.selectedOptions});
+  const MultiSelectDialog(
+      {super.key, required this.options, required this.selectedOptions});
 
   @override
-  _MultiSelectDialogState createState() => _MultiSelectDialogState();
+  State<MultiSelectDialog> createState() => _MultiSelectDialogState();
 }
 
 class _MultiSelectDialogState extends State<MultiSelectDialog> {
-  List<String> _selectedOptions = [];
+  List<Feature> _selectedOptions = [];
 
   @override
   void initState() {
@@ -26,7 +28,7 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       title: const Text(
-        'Select Options',
+        'Select features',
         style: TextStyle(color: black),
       ),
       content: SingleChildScrollView(
@@ -48,15 +50,18 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
                     });
                   },
                 ),
-                const SizedBox(width: 8), // Adjust spacing between checkbox and text
-                Text(option),
+                Expanded(
+                  child: Text(
+                    option.name,
+                  ),
+                ),
               ],
             );
           }).toList(),
         ),
       ),
       actions: <Widget>[
-        ElevatedButton(
+        TextButton(
           onPressed: () {
             Navigator.pop(context, _selectedOptions);
           },

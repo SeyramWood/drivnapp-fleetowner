@@ -1,23 +1,23 @@
 // To parse this JSON data, do
 //
-//     final vehicleType = vehicleTypeFromJson(jsonString);
+//     final driver = driverFromJson(jsonString);
 
 import 'dart:convert';
 
-VehicleType vehicleTypeFromJson(String str) => VehicleType.fromJson(json.decode(str));
+Driver driverFromJson(String str) => Driver.fromJson(json.decode(str));
 
-String vehicleTypeToJson(VehicleType data) => json.encode(data.toJson());
+String driverToJson(Driver data) => json.encode(data.toJson());
 
-class VehicleType {
+class Driver {
     Data data;
     bool status;
 
-    VehicleType({
+    Driver({
         required this.data,
         required this.status,
     });
 
-    factory VehicleType.fromJson(Map<String, dynamic> json) => VehicleType(
+    factory Driver.fromJson(Map<String, dynamic> json) => Driver(
         data: Data.fromJson(json["data"]),
         status: json["status"],
     );
@@ -30,7 +30,7 @@ class VehicleType {
 
 class Data {
     int count;
-    List<VType> data;
+    List<Dryver> data;
 
     Data({
         required this.count,
@@ -39,7 +39,7 @@ class Data {
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
         count: json["count"],
-        data: List<VType>.from(json["data"].map((x) => VType.fromJson(x))),
+        data: List<Dryver>.from(json["data"].map((x) => Dryver.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -48,30 +48,38 @@ class Data {
     };
 }
 
-class VType {
+class Dryver {
     DateTime createdAt;
+    String firstName;
     int id;
-    String name;
+    String lastName;
     DateTime updatedAt;
+    String username;
 
-    VType({
+    Dryver({
         required this.createdAt,
+        required this.firstName,
         required this.id,
-        required this.name,
+        required this.lastName,
         required this.updatedAt,
+        required this.username,
     });
 
-    factory VType.fromJson(Map<String, dynamic> json) => VType(
+    factory Dryver.fromJson(Map<String, dynamic> json) => Dryver(
         createdAt: DateTime.parse(json["createdAt"]),
+        firstName: json["firstName"],
         id: json["id"],
-        name: json["name"],
+        lastName: json["lastName"],
         updatedAt: DateTime.parse(json["updatedAt"]),
+        username: json["username"],
     );
 
     Map<String, dynamic> toJson() => {
         "createdAt": createdAt.toIso8601String(),
+        "firstName": firstName,
         "id": id,
-        "name": name,
+        "lastName": lastName,
         "updatedAt": updatedAt.toIso8601String(),
+        "username": username,
     };
 }

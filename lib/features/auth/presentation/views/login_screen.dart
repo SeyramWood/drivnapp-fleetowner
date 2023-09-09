@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
@@ -10,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
@@ -136,34 +133,43 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  CustomElevatedButton(
-                    backgroundColor: black,
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      Provider.of<APIService>(context, listen: false)
-                          .logIn('51539607561')
-                          .then(
-                        (value) async {
-                          await Future.delayed(const Duration(seconds: 2), () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      context.read<APIService>().accTypeIsOwner
-                                          ? const OMainPage()
-                                          : const DMainPage()),
-                              (route) => false,
-                            );
-                            setState(() {
-                              isLoading = false;
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * .8,
+                    child: CustomElevatedButton(
+                      backgroundColor: black,
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        Provider.of<APIService>(context, listen: false)
+                            .logIn(
+                          context.read<APIService>().accTypeIsOwner
+                              ? '51539607569'
+                              : '51539607554',
+                        )
+                            .then(
+                          (value) async {
+                            await Future.delayed(const Duration(seconds: 2),
+                                () {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => context
+                                            .read<APIService>()
+                                            .accTypeIsOwner
+                                        ? const OMainPage()
+                                        : const DMainPage()),
+                                (route) => false,
+                              );
+                              setState(() {
+                                isLoading = false;
+                              });
                             });
-                          });
-                        },
-                      );
-                    },
-                    child: const Text('Login'),
-                  ).loading(isLoading),
+                          },
+                        );
+                      },
+                      child: const Text('Login'),
+                    ).loading(isLoading),
+                  ),
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushAndRemoveUntil(
@@ -180,7 +186,7 @@ class _LoginViewState extends State<LoginView> {
                             ),
                         children: const [
                           TextSpan(
-                            text: ' Register.',
+                            text: ' Signup.',
                             style: TextStyle(
                               color: yellow,
                               fontWeight: FontWeight.w700,

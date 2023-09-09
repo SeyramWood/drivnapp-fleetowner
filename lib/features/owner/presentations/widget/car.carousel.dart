@@ -3,22 +3,30 @@ import 'package:flutter/material.dart';
 import '../../../../shared/utils/constants/colors.dart';
 
 class CarCarousel extends StatefulWidget {
-  const CarCarousel({Key? key}) : super(key: key);
-
+  const CarCarousel({
+    Key? key,
+    required this.images,
+  }) : super(key: key);
+  final List<dynamic> images;
   @override
   State<CarCarousel> createState() => _CarCarouselState();
 }
 
 class _CarCarouselState extends State<CarCarousel> {
-  final images = <String>[
-    'assets/bg.png',
-    'assets/car1.png',
-    'assets/otp.png',
-    'assets/tick.png',
-    'assets/logo.png'
-  ];
+  final imageList = <String>[];
+  getImages() {
+    for (var image in widget.images) {
+      imageList.add(image.image);
+    }
+  }
+
   final PageController _pageController = PageController();
   int _currentPageIndex = 0;
+  @override
+  void initState() {
+    getImages();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -34,7 +42,7 @@ class _CarCarouselState extends State<CarCarousel> {
         Expanded(
           child: PageView.builder(
             controller: _pageController,
-            itemCount: images.length,
+            itemCount: imageList.length,
             onPageChanged: (value) {
               setState(() {
                 _currentPageIndex = value;
@@ -50,8 +58,8 @@ class _CarCarouselState extends State<CarCarousel> {
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(
-                        images[index],
+                      image: NetworkImage(
+                        imageList[index],
                       ),
                     ),
                   ),
@@ -63,7 +71,7 @@ class _CarCarouselState extends State<CarCarousel> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
-            images.length,
+            imageList.length,
             (index) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(

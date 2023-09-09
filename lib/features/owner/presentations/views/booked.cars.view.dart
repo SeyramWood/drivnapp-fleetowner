@@ -1,8 +1,10 @@
 import 'package:drivn/features/owner/data/api/owner.api.dart';
-import 'package:drivn/features/owner/presentations/widget/widgets.for.booked.cars.dart';
+import 'package:drivn/features/owner/presentations/widget/booked.vehicle.info.card.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../domain/entities/booked.vehicle.model.dart';
 
 class BookedCarsBuilder extends StatefulWidget {
   const BookedCarsBuilder({super.key});
@@ -12,7 +14,7 @@ class BookedCarsBuilder extends StatefulWidget {
 }
 
 class _BookedCarsBuilderState extends State<BookedCarsBuilder> {
-  late Future bookedCars;
+  late Future<List<BVehicle>> bookedCars;
   @override
   void initState() {
     bookedCars = OwnerApiService()
@@ -25,15 +27,21 @@ class _BookedCarsBuilderState extends State<BookedCarsBuilder> {
     return FutureBuilder(
       future: bookedCars,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData) {
           return ListView.builder(
+            itemCount: snapshot.data?.length,
             itemBuilder: (context, index) {
-              return const InfoCard();
+              final info = snapshot.data?[index];
+              return InfoCard(
+                info: info,
+              );
             },
           );
-        }
-        if (!snapshot.hasData) {
-          return const Center(child: Text('No booked vehicle.'));
+        } else if (!snapshot.hasData) {
+          return const Center(
+              child: Text('Your booked vehicles will show here.'));
         } else if (snapshot.hasError) {
           return Center(
             child: Text('Error: ${snapshot.error}'),

@@ -1,14 +1,177 @@
-import 'package:drivn/features/driver/domain/entities/request.model.dart' as r;
+import 'dart:async';
+
+import 'package:drivn/features/owner/data/api/owner.api.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../../shared/utils/constants/dimensions.dart';
 import '../../../auth/presentation/widget/elevated.button.dart';
-import '../../../driver/data/api/driver.api.service.dart';
+import '../../domain/entities/v.request.model.dart';
+
+class RequestsView extends StatefulWidget {
+  const RequestsView({super.key});
+
+  @override
+  State<RequestsView> createState() => _RequestsViewState();
+}
+
+class _RequestsViewState extends State<RequestsView> {
+  late Future<List<VRequest>> request;
+
+  final StreamController<List<VRequest>> _streamController = StreamController();
+  // ignore: unused_field
+  late Timer _timer;
+  fetchRequest() async {
+    request = OwnerApiService().allRequests(context.read<APIService>().userId);
+    if (mounted) {
+      var streamData = await request;
+
+      if (!_streamController.isClosed) {
+        _streamController.sink.add(streamData);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      fetchRequest();
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('All Request')),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: StreamBuilder(
+          stream: _streamController.stream,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return ListView.builder(
+                  itemCount: snapshot.data?.length,
+                  itemBuilder: (context, index) {
+                    var request = snapshot.data?[index];
+                    return RequestTile(
+                      request: request,
+                    );
+                  });
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No available request.'));
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class RequestTile extends StatelessWidget {
+  const RequestTile({super.key, this.request});
+  final VRequest? request;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return BottomSheet(
+                builder: (context) => RequestInfo(request: request),
+                onClosing: () {},
+              );
+            },
+          );
+        },
+        child: Material(
+          shadowColor: white,
+          elevation: 1,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 5,
+            ),
+            decoration: BoxDecoration(
+                border: Border.all(
+                  color: red.withOpacity(.4),
+                ),
+                borderRadius: BorderRadius.circular(5)),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 28,
+                  backgroundImage:
+                      NetworkImage(request!.vehicle.images[0].image),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${request?.rental.customer.firstName} ${request?.rental.customer.lastName}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontWeight: FontWeight.w500, fontSize: 18),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // ImageIcon(
+                        //   AssetImage('assets/icons/location_tick.png'),
+                        // ),
+                        Text(
+                          request?.rental.customerLocation ?? '',
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                const Spacer(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('23th July'),
+                    const SizedBox(height: 5),
+                    Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: red.withOpacity(.5),
+                          ),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: const Text('10:57 AM'),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class RequestInfo extends StatelessWidget {
   const RequestInfo({super.key, required this.request});
-  final r.DRequest? request;
+  final VRequest? request;
   @override
   Widget build(BuildContext context) {
     var space = const SizedBox(
@@ -70,7 +233,7 @@ class RequestInfo extends StatelessWidget {
                     .bodyMedium!
                     .copyWith(fontWeight: FontWeight.w600),
               ),
-              Text('\$200',
+              Text('GHc ${request?.rental.vehicleAmount.toString() ?? 0.00}',
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -91,7 +254,7 @@ class RequestInfo extends StatelessWidget {
                     backgroundColor: red,
                     onPressed: () {
                       var requestID = request!.id.toString();
-                      DriverApiService().cancelRequest(requestID).then(
+                      OwnerApiService().cancelRequest(requestID).then(
                         (value) {
                           Navigator.of(context).pop();
                         },
@@ -105,9 +268,8 @@ class RequestInfo extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    DriverApiService()
-                        .acceptRequest(request!.id.toString())
-                        .then(
+                    var requestID = request!.id.toString();
+                    OwnerApiService().acceptRequest(requestID).then(
                       (value) {
                         Navigator.of(context).pop();
 

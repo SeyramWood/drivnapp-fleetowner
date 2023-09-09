@@ -28,24 +28,24 @@ class TodaySummaryView extends StatelessWidget {
           child: Row(
             children: [
               SummaryContainer(
-                title: 'Title',
-                subTitle: 'SubTitle',
+                title: '0',
+                subTitle: 'Trips',
                 color: red,
               ),
               SizedBox(
                 width: 10,
               ),
               SummaryContainer(
-                title: 'Title',
-                subTitle: 'SubTitle',
+                title: '0',
+                subTitle: 'Hours',
                 color: yellow,
               ),
               SizedBox(
                 width: 10,
               ),
               SummaryContainer(
-                title: 'Title',
-                subTitle: 'SubTitle',
+                title: 'Ghc 0.00',
+                subTitle: 'Earned',
                 color: blue,
               ),
             ],
