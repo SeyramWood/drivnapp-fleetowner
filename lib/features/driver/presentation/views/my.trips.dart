@@ -65,7 +65,9 @@ class _MyTripsState extends State<MyTrips> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('No available vehicle.'));
+                return const Center(
+                    child: Text(
+                        'Nothing to show here.\nComplete or accept a\ntrip request to see it here.'));
               }
               return const Center(
                 child: CircularProgressIndicator(),

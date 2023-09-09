@@ -24,8 +24,9 @@ class _RequestsViewState extends State<RequestsView> {
   // ignore: unused_field
   late Timer _timer;
   fetchRequest() async {
-    request = OwnerApiService().allRequests(context.read<APIService>().userId);
     if (mounted) {
+      request =
+          OwnerApiService().allRequests(context.read<APIService>().userId);
       var streamData = await request;
 
       if (!_streamController.isClosed) {

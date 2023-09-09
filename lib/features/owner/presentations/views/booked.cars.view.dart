@@ -29,25 +29,24 @@ class _BookedCarsBuilderState extends State<BookedCarsBuilder> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData) {
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return ListView.builder(
-            itemCount: snapshot.data?.length,
+            itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              final info = snapshot.data?[index];
+              final info = snapshot.data![index];
               return InfoCard(
                 info: info,
               );
             },
           );
-        } else if (!snapshot.hasData) {
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(
               child: Text('Your booked vehicles will show here.'));
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
         }
-
         return const Center(child: CircularProgressIndicator());
       },
     );

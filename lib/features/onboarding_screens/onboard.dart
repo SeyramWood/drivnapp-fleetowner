@@ -78,7 +78,7 @@ class _OnbordingPageState extends State<OnbordingPage> {
                           pages[index]['title'],
                           style:
                               Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    fontSize: 30,
+                                    fontSize: 25,
                                     fontWeight: FontWeight.bold,
                                   ),
                         ),
