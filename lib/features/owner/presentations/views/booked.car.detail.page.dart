@@ -6,7 +6,7 @@ import '../../data/api/owner.api.dart';
 
 class MoreOfBookedCar extends StatelessWidget {
   const MoreOfBookedCar({super.key, required this.info});
-  final BVehicle? info;
+  final BookedVehicle? info;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

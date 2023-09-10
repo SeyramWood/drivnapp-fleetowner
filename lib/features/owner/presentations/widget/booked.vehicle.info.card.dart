@@ -6,7 +6,7 @@ import 'package:page_transition/page_transition.dart';
 
 class InfoCard extends StatelessWidget {
   const InfoCard({super.key, required this.info});
-  final BVehicle? info;
+  final BookedVehicle? info;
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -14,7 +14,7 @@ class BookedCarsBuilder extends StatefulWidget {
 }
 
 class _BookedCarsBuilderState extends State<BookedCarsBuilder> {
-  late Future<List<BVehicle>> bookedCars;
+  late Future<List<BookedVehicle>> bookedCars;
   @override
   void initState() {
     bookedCars = OwnerApiService()

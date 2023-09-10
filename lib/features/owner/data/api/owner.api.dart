@@ -80,14 +80,14 @@ class OwnerApiService {
     return v.vehicleFromJson(response.body).data!.data;
   }
 
-  Future<List<BVehicle>> fetchBookedVehicles(String userID) async {
+  Future<List<BookedVehicle>> fetchBookedVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/bookings/owner/$userID');
     try {
       final response = await http.get(uri);
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
-      return bookedVehicleFromJson(response.body).data!.data;
+      return bookedVehicleModelFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
       throw Exception("couldn't fetch vehicles");
@@ -145,7 +145,7 @@ class OwnerApiService {
         log(response.statusCode.toString());
       }
       log(response.body.toString());
-      return Driver.fromJson(json.decode(response.body)).data.data;
+      return DriverModel.fromJson(json.decode(response.body)).data.data;
     } catch (e) {
       print(e);
       throw Exception('failed to get drivers');
