@@ -8,7 +8,7 @@ import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
 import 'package:drivn/shared/errors/exception.dart';
 import 'package:http/http.dart' as http;
 
-import '../../../../shared/utils/constants/baseUrl.dart';
+import '../../../../shared/utils/constants/base.url.dart';
 import '../../domain/entities/driver.model.dart';
 
 class OwnerApiService {
@@ -171,22 +171,21 @@ class OwnerApiService {
   Future acceptRequest(String requestID) async {
     final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
     try {
-      final body = {"requestType": "owner", "status": "accepted", "reason": ""};
+      final body = {"requestType": "owner", "status": "accepted",};
       final response = await http.put(url, body: body);
       if (response.statusCode != 200 || response.statusCode == 202) {
         print(response.statusCode);
       }
-      print(response.body);
-      print(response.reasonPhrase);
     } catch (e) {
       print(e);
     }
   }
 
-  Future cancelRequest(requestID) async {
+  Future cancelRequest(requestID, String? reason) async {
     final url = Uri.parse('$baseUrl/bookings/$requestID/canceled');
+    final body = {'declineReason': reason ?? ''};
     try {
-      final response = await http.put(url);
+      final response = await http.put(url, body: body);
       if (response.statusCode != 200) {
         print(response.statusCode);
       }

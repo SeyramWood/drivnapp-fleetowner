@@ -4,10 +4,14 @@
 
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 RequestModel requestModelFromJson(String str) =>
     RequestModel.fromJson(json.decode(str));
 
 String requestModelToJson(RequestModel data) => json.encode(data.toJson());
+
+var formatter = DateFormat("yyyy-MM-dd HH:mm:ss");
 
 class RequestModel {
   Data? data;

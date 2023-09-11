@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:drivn/features/driver/domain/entities/trips.model.dart';
-import 'package:drivn/shared/utils/constants/baseUrl.dart';
+import 'package:drivn/shared/utils/constants/base.url.dart';
 import 'package:http/http.dart' as http;
 
 import '../../domain/entities/request.model.dart';
