@@ -60,7 +60,8 @@ class Vehicle {
   Owner owner;
   String type;
   DateTime updatedAt;
-  List<Feature>? features;
+  List<Feature> features;
+  String? moreFeature;
   Rental? rental;
 
   Vehicle({
@@ -74,7 +75,7 @@ class Vehicle {
     required this.owner,
     required this.type,
     required this.updatedAt,
-    this.features,
+   required this.features,
     this.rental,
   });
 
@@ -108,9 +109,7 @@ class Vehicle {
         "owner": owner.toJson(),
         "type": type,
         "updatedAt": updatedAt.toIso8601String(),
-        "features": features == null
-            ? []
-            : List<dynamic>.from(features!.map((x) => x.toJson())),
+        "features": List<dynamic>.from(features.map((x) => x.toJson())),
         "rental": rental?.toJson(),
       };
 }

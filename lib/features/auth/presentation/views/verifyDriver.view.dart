@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class VerifyDriverView extends StatefulWidget {
 }
 
 class _VerifyDriverViewState extends State<VerifyDriverView> {
+  bool isLoading = false;
   Future<List<File>> selectFiles(files) async {
     final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
     if (fileResult != null) {
@@ -77,6 +79,7 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                           .map((platformFile) =>
                               File(platformFile.path.toString()))
                           .toList();
+                      setState(() {});
                     }
                     // context
                     //     .read<UserAuthProvider>()
@@ -84,10 +87,10 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                     // selectFiles(idCardFiles);
                   },
                   backgroundColor:
-                      selectedOptions.isNotEmpty ? Colors.green : black,
-                  child: Text(selectedOptions.isNotEmpty
-                      ? '${selectedOptions.length} file selected'
-                      : 'Add file'),
+                      idCardFiles.isNotEmpty ? Colors.green : black,
+                  child: Text(idCardFiles.isNotEmpty
+                      ? '${idCardFiles.length} file(s) selected'
+                      : 'Add file (Front and Back)'),
                 )
               ],
             ),
@@ -105,6 +108,7 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                           .map((platformFile) =>
                               File(platformFile.path.toString()))
                           .toList();
+                      setState(() {});
                     }
 
                     // context
@@ -112,9 +116,9 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                     //     .selectFiles(file: licenceFiles);
                   },
                   backgroundColor:
-                      selectedOptions.isNotEmpty ? Colors.green : black,
-                  child: Text(selectedOptions.isNotEmpty
-                      ? '${selectedOptions.length} file selected'
+                      licenceFiles.isNotEmpty ? Colors.green : black,
+                  child: Text(licenceFiles.isNotEmpty
+                      ? '${licenceFiles.length} file(s) selected'
                       : 'Add file'),
                 )
               ],
@@ -160,19 +164,31 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               width: 200,
               child: CustomElevatedButton(
                 onPressed: () {
-                  context.read<APIService>().submitData(
+                  setState(() {
+                    isLoading = true;
+                  });
+                  context
+                      .read<APIService>()
+                      .submitData(
                         idCardFiles: idCardFiles,
                         licenseFiles: licenceFiles,
                         licenseNumber: licenceNumber.text,
                         licenseType: licenceType.text,
                         yearsOfExperience: 8,
-                      );
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const VerifyingView(),
-                  ));
+                      )
+                      .then(
+                    (value) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const VerifyingView(),
+                      ));
+                    },
+                  );
                 },
                 child: const Text('Submit for review'),
-              ),
+              ).loading(isLoading),
             ),
           ]),
         ),

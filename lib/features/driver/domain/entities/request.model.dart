@@ -1,24 +1,26 @@
 // To parse this JSON data, do
 //
-//     final driverRequest = driverRequestFromJson(jsonString);
+//     final driverRequestModel = driverRequestModelFromJson(jsonString);
 
 import 'dart:convert';
 
-DriverRequest driverRequestFromJson(String str) =>
-    DriverRequest.fromJson(json.decode(str));
+DriverRequestModel driverRequestModelFromJson(String str) =>
+    DriverRequestModel.fromJson(json.decode(str));
 
-String driverRequestToJson(DriverRequest data) => json.encode(data.toJson());
+String driverRequestModelToJson(DriverRequestModel data) =>
+    json.encode(data.toJson());
 
-class DriverRequest {
+class DriverRequestModel {
   Data? data;
   bool status;
 
-  DriverRequest({
-    required this.data,
+  DriverRequestModel({
+    this.data,
     required this.status,
   });
 
-  factory DriverRequest.fromJson(Map<String, dynamic> json) => DriverRequest(
+  factory DriverRequestModel.fromJson(Map<String, dynamic> json) =>
+      DriverRequestModel(
         data: Data.fromJson(json["data"] ?? {}),
         status: json["status"],
       );
@@ -34,7 +36,7 @@ class Data {
   List<DRequest> data;
 
   Data({
-     this.count,
+    required this.count,
     required this.data,
   });
 
@@ -177,7 +179,6 @@ class Vehicle {
   List<Feature> features;
   int id;
   List<Image> images;
-  String moreFeature;
   String type;
 
   Vehicle({
@@ -187,7 +188,6 @@ class Vehicle {
     required this.features,
     required this.id,
     required this.images,
-    required this.moreFeature,
     required this.type,
   });
 
@@ -199,7 +199,6 @@ class Vehicle {
             json["features"].map((x) => Feature.fromJson(x))),
         id: json["id"],
         images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
-        moreFeature: json["moreFeature"],
         type: json["type"],
       );
 
@@ -210,7 +209,6 @@ class Vehicle {
         "features": List<dynamic>.from(features.map((x) => x.toJson())),
         "id": id,
         "images": List<dynamic>.from(images.map((x) => x.toJson())),
-        "moreFeature": moreFeature,
         "type": type,
       };
 }

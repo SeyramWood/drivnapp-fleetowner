@@ -11,14 +11,11 @@ class DriverApiService {
     final uri = Uri.parse('$baseUrl/booking/requests/driver/$userID');
     try {
       final response = await http.get(uri);
-      print(response.reasonPhrase);
-      print(response.body);
 
       if (response.statusCode != 200) {
         print(response.reasonPhrase);
       }
-      print(response.body);
-      return driverRequestFromJson(response.body).data!.data;
+      return driverRequestModelFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
       throw Exception("couldn't fetch requests");
@@ -37,8 +34,6 @@ class DriverApiService {
       if (response.statusCode != 200 || response.statusCode == 202) {
         print(response.statusCode);
       }
-      print(response.body);
-      print(response.reasonPhrase);
     } catch (e) {
       print(e);
     }
@@ -51,7 +46,6 @@ class DriverApiService {
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
-      log(response.body);
       return dvriverTripFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
@@ -59,10 +53,15 @@ class DriverApiService {
     }
   }
 
-  Future cancelRequest(String requestID) async {
-    final url = Uri.parse('$baseUrl/bookings/$requestID/canceled');
+  Future cancelRequest(String requestID,String reason) async {
+    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+     final body = {
+        "requestType": "driver",
+        "status": "declined",
+        "reason": reason
+      };
     try {
-      final response = await http.put(url);
+      final response = await http.put(url,body: body);
       if (response.statusCode != 200) {
         print(response.statusCode);
       }

@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/shared/utils/cached.network.image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../shared/utils/audio.player.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../../shared/utils/constants/date_time.formatting.dart';
 import '../../../../shared/utils/constants/dimensions.dart';
@@ -141,8 +143,7 @@ class _RequestTileState extends State<RequestTile>
               children: [
                 CircleAvatar(
                   radius: 28,
-                  backgroundImage:
-                      NetworkImage(widget.request!.vehicle.images[0].image),
+                  child: Text(widget.request!.rental.customer.firstName[0]),
                 ),
                 const SizedBox(
                   width: 20,
@@ -172,7 +173,7 @@ class _RequestTileState extends State<RequestTile>
                 ),
                 const Spacer(),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       date.format(widget.request!.createdAt),
@@ -216,7 +217,9 @@ class RequestInfo extends StatelessWidget {
         children: [
           space,
           ListTile(
-            leading: Image.asset('assets/car1.png'),
+            leading: SizedBox(
+                width: 80,
+                child: showImage(imageUrl: request!.vehicle.images[0].image)),
             title: Text(
               request?.vehicle.type ?? '',
               style: Theme.of(context).textTheme.headlineMedium!.copyWith(
@@ -237,7 +240,9 @@ class RequestInfo extends StatelessWidget {
             rentInfo: request,
           ),
           space,
-          LocAndTime(rentInfo: request),
+          // LocAndTime(rentInfo: request),
+          if (request?.rental.customerLocationAudio != null)
+            AudioPlayer(source: request!.rental.customerLocationAudio),
           space,
           divider,
           space,
@@ -250,7 +255,7 @@ class RequestInfo extends StatelessWidget {
                       .bodyMedium!
                       .copyWith(fontWeight: FontWeight.w600)),
               Text(
-                  '${DateTime.parse(request!.rental.pickupTime).difference(DateTime.parse(request!.rental.returnTime)).inHours} Hours',
+                  '${DateTime.parse(request!.rental.returnTime.toIso8601String()).difference(DateTime.parse(request!.rental.pickupTime.toIso8601String())).inHours} Hours',
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -404,7 +409,7 @@ class LocAndTime extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Car pick up location',
+              'Cutomer location',
               style: Theme.of(context)
                   .textTheme
                   .bodySmall!
@@ -419,13 +424,14 @@ class LocAndTime extends StatelessWidget {
                     color: yellow,
                   ),
                   borderRadius: BorderRadius.circular(5)),
-              child: const Row(
+              child: Row(
                 children: [
-                  ImageIcon(
+                  const ImageIcon(
                     AssetImage('assets/icons/location_tick.png'),
                   ),
                   Text(
-                    'Circle Main Station',
+                    rentInfo!.rental.customerLocation,
+                    style: const TextStyle(overflow: TextOverflow.ellipsis),
                   ),
                 ],
               ),
@@ -436,7 +442,7 @@ class LocAndTime extends StatelessWidget {
         Column(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(date.format(DateTime.parse(rentInfo!.rental.pickupDate)),
+            Text(date.format(rentInfo!.rental.pickupDate),
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!
@@ -450,7 +456,8 @@ class LocAndTime extends StatelessWidget {
                     color: yellow,
                   ),
                   borderRadius: BorderRadius.circular(5)),
-              child: const Center(child: Text('10:57 AM')),
+              child:
+                  Center(child: Text(time.format(rentInfo!.rental.pickupDate))),
             )
           ],
         )

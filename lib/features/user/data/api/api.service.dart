@@ -203,6 +203,7 @@ class APIService extends ChangeNotifier {
     final uri = Uri.parse('$baseUrl/drivers/document/$_user');
 
     try {
+      print(_user);
       if (idCardFiles.isNotEmpty && licenseFiles.isNotEmpty) {
         var request = http.MultipartRequest('POST', uri);
 
@@ -226,7 +227,7 @@ class APIService extends ChangeNotifier {
         request.fields['experience'] = '$yearsOfExperience';
 
         var response = await request.send();
-        // print(response.headers);
+        print(response.reasonPhrase);
       } else {
         print('no files selected');
       }

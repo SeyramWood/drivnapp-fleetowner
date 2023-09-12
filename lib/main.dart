@@ -4,6 +4,8 @@ import 'package:drivn/features/owner/presentations/providers/available.or.booked
 import 'package:drivn/features/user/presentation/bindings/fleet.owner.bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'features/auth/presentation/views/verifyDriver.view.dart';
+import 'features/auth/presentation/views/verifyOwner/driver.doc.dart';
 import 'features/onboarding_screens/onboard.dart';
 
 void main() {
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppLightTheme.themeData,
         home: const OnbordingPage(),
-        // home: const GetVerifiedOption(),
+        // home: const DriverDocsView(),
       ),
     );
   }

@@ -236,7 +236,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                             failure,
                           );
                         } else {
-                          // clearFields();
+                          clearFields();
                           setState(() {});
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(

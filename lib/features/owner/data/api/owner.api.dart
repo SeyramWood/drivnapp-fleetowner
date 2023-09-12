@@ -156,12 +156,11 @@ class OwnerApiService {
     final url = Uri.parse('$baseUrl/booking/requests/owner/$userID');
     try {
       final response = await http.get(url);
-      print(response.reasonPhrase);
 
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
-      return requestModelFromJson(response.body).data!.data;
+      return vehicleRequestModelFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
       throw Exception("couldn't fetch request");
@@ -171,7 +170,10 @@ class OwnerApiService {
   Future acceptRequest(String requestID) async {
     final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
     try {
-      final body = {"requestType": "owner", "status": "accepted",};
+      final body = {
+        "requestType": "owner",
+        "status": "accepted",
+      };
       final response = await http.put(url, body: body);
       if (response.statusCode != 200 || response.statusCode == 202) {
         print(response.statusCode);
@@ -182,8 +184,12 @@ class OwnerApiService {
   }
 
   Future cancelRequest(requestID, String? reason) async {
-    final url = Uri.parse('$baseUrl/bookings/$requestID/canceled');
-    final body = {'declineReason': reason ?? ''};
+    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+    final body = {
+      "requestType": "owner",
+      "status": "declined",
+      'reason': reason
+    };
     try {
       final response = await http.put(url, body: body);
       if (response.statusCode != 200) {
@@ -211,7 +217,7 @@ class OwnerApiService {
     try {
       final response = await http.delete(url);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        print(response.reasonPhrase);
       }
     } catch (e) {
       print(e);

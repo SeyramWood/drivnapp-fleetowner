@@ -50,33 +50,25 @@ class Data {
 }
 
 class Feature {
-  DateTime createdAt;
   int id;
   String info;
   String name;
-  DateTime updatedAt;
 
   Feature({
-    required this.createdAt,
     required this.id,
     required this.info,
     required this.name,
-    required this.updatedAt,
   });
 
   factory Feature.fromJson(Map<String, dynamic> json) => Feature(
-        createdAt: DateTime.parse(json["createdAt"]),
         id: json["id"],
         info: json["info"] ?? '',
         name: json["name"],
-        updatedAt: DateTime.parse(json["updatedAt"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "createdAt": createdAt.toIso8601String(),
         "id": id,
         "info": info,
         "name": name,
-        "updatedAt": updatedAt.toIso8601String(),
       };
 }

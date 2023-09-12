@@ -1,6 +1,7 @@
 import 'package:drivn/features/driver/domain/entities/request.model.dart' as r;
 import 'package:flutter/material.dart';
 
+import '../../../../shared/utils/audio.player.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../../shared/utils/constants/dimensions.dart';
 import '../../../auth/presentation/widget/elevated.button.dart';
@@ -40,7 +41,8 @@ class RequestInfo extends StatelessWidget {
           space,
           const LocAndTime(),
           space,
-          const LocAndTime(),
+          // const LocAndTime(),
+          AudioPlayer(source: request!.rental.customerLocationAudio),
           space,
           divider,
           space,
@@ -52,7 +54,8 @@ class RequestInfo extends StatelessWidget {
                       .textTheme
                       .bodyMedium!
                       .copyWith(fontWeight: FontWeight.w600)),
-              Text('20 hours',
+              Text(
+                  '${DateTime.parse('${request!.rental.returnTime}').difference(DateTime.parse('${request!.rental.pickupTime}')).inHours} Hours',
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -70,7 +73,7 @@ class RequestInfo extends StatelessWidget {
                     .bodyMedium!
                     .copyWith(fontWeight: FontWeight.w600),
               ),
-              Text('\$200',
+              Text('GHC ${request?.rental.driverAmount}',
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -91,13 +94,50 @@ class RequestInfo extends StatelessWidget {
                     backgroundColor: red,
                     onPressed: () {
                       var requestID = request!.id.toString();
-                      DriverApiService().cancelRequest(requestID).then(
-                        (value) {
-                          Navigator.of(context).pop();
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          final controller = TextEditingController();
+                          return AlertDialog(
+                            content: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: red),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: TextFormField(
+                                  controller: controller,
+                                  maxLines: 4,
+                                  decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.all(5),
+                                      hintText: 'reason to decline',
+                                      border: InputBorder.none),
+                                )),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  DriverApiService()
+                                      .cancelRequest(requestID, controller.text)
+                                      .then(
+                                    (value) {
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                },
+                                child: const Text(
+                                  'Continue',
+                                  style: TextStyle(color: red),
+                                ),
+                              )
+                            ],
+                          );
                         },
                       );
                     },
-                    child: const Text('reject'),
+                    child: const Text('Decline'),
                   ),
                 ),
                 const SizedBox(

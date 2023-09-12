@@ -2,6 +2,7 @@ import 'package:drivn/features/driver/presentation/widget/request.dialog.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../shared/utils/constants/date_time.formatting.dart';
 import '../../domain/entities/request.model.dart';
 
 class RequestTile extends StatelessWidget {
@@ -40,8 +41,7 @@ class RequestTile extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 28,
-                  backgroundImage:
-                      NetworkImage(request!.vehicle.images[0].image),
+                  child: Text(request!.rental.customer.firstName[0]),
                 ),
                 const SizedBox(
                   width: 20,
@@ -50,7 +50,7 @@ class RequestTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${request!.driver.firstName} ${request!.driver.lastName}',
+                      '${request!.rental.customer.firstName} ${request!.rental.customer.lastName}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
@@ -71,9 +71,9 @@ class RequestTile extends StatelessWidget {
                 ),
                 const Spacer(),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('23th July'),
+                    Text(date.format(request!.createdAt)),
                     const SizedBox(height: 5),
                     Container(
                       padding: const EdgeInsets.all(3),
@@ -82,7 +82,7 @@ class RequestTile extends StatelessWidget {
                             color: red.withOpacity(.5),
                           ),
                           borderRadius: BorderRadius.circular(5)),
-                      child: const Text('10:57 AM'),
+                      child: Text(time.format(request!.createdAt)),
                     )
                   ],
                 )

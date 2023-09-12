@@ -28,6 +28,16 @@ class InfoCard extends StatelessWidget {
             child: Stack(
               alignment: Alignment.bottomRight,
               children: [
+                Positioned(
+                    right: 200,
+                    left: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        'State:\n${info?.bookingStatus ?? ''}',
+                        style: const TextStyle(backgroundColor: white),
+                      ),
+                    )),
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: SizedBox(
@@ -75,7 +85,7 @@ class InfoCard extends StatelessWidget {
                 ),
                 Tile(
                   leading: 'Pickup location',
-                  trailing: info!.rental.customerLocation,
+                  trailing: info?.rental.customerLocation ?? '',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
@@ -89,7 +99,7 @@ class InfoCard extends StatelessWidget {
                 ),
                 Tile(
                   leading: 'Price',
-                  trailing: 'GHC ${info!.rental.vehicleAmount.toString()}',
+                  trailing: 'GHC ${info?.rental.vehicleAmount.toString() ?? 0}',
                 ),
               ],
             ),
