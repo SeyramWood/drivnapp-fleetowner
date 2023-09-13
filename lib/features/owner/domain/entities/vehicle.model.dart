@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:drivn/features/vehicle/domain/entities/vehicle.features.dart';
+
 Vehicles vehicleFromJson(String str) => Vehicles.fromJson(json.decode(str));
 
 String vehicleToJson(Vehicles data) => json.encode(data.toJson());
@@ -61,23 +63,23 @@ class Vehicle {
   String type;
   DateTime updatedAt;
   List<Feature> features;
-  String? moreFeature;
+  String? moreFeatures;
   Rental? rental;
 
-  Vehicle({
-    required this.availability,
-    required this.booked,
-    required this.brand,
-    required this.createdAt,
-    required this.documents,
-    required this.id,
-    required this.images,
-    required this.owner,
-    required this.type,
-    required this.updatedAt,
-   required this.features,
-    this.rental,
-  });
+  Vehicle(
+      {required this.availability,
+      required this.booked,
+      required this.brand,
+      required this.createdAt,
+      required this.documents,
+      required this.id,
+      required this.images,
+      required this.owner,
+      required this.type,
+      required this.updatedAt,
+      required this.features,
+      this.rental,
+      this.moreFeatures});
 
   factory Vehicle.fromJson(Map<String, dynamic> json) => Vehicle(
         availability: json["availability"],
@@ -89,12 +91,13 @@ class Vehicle {
         id: json["id"],
         images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
         owner: Owner.fromJson(json["owner"]),
-        type: json["type"],
+        type: json["type"] ?? '',
         updatedAt: DateTime.parse(json["updatedAt"]),
         features: json["features"] == null
             ? []
             : List<Feature>.from(
                 json["features"]!.map((x) => Feature.fromJson(x))),
+        moreFeatures: json["moreFeature"] ?? '',
         rental: json["rental"] == null ? null : Rental.fromJson(json["rental"]),
       );
 
@@ -131,34 +134,6 @@ class Document {
   Map<String, dynamic> toJson() => {
         "document": document,
         "id": id,
-      };
-}
-
-class Feature {
-  int id;
-  String info;
-  String name;
-  String slug;
-
-  Feature({
-    required this.id,
-    required this.info,
-    required this.name,
-    required this.slug,
-  });
-
-  factory Feature.fromJson(Map<String, dynamic> json) => Feature(
-        id: json["id"],
-        info: json["info"],
-        name: json["name"],
-        slug: json["slug"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "info": info,
-        "name": name,
-        "slug": slug,
       };
 }
 
@@ -232,24 +207,3 @@ class Rental {
         "price": price,
       };
 }
-
-//using owner as a driver because they both have same parameters
-// class Driver {
-//     int count;
-//     List<Owner> data;
-
-//     Driver({
-//         required this.count,
-//         required this.data,
-//     });
-
-//     factory Driver.fromJson(Map<String, dynamic> json) => Driver(
-//         count: json["count"],
-//         data: List<Owner>.from(json["data"].map((x) => Owner.fromJson(x))),
-//     );
-
-//     Map<String, dynamic> toJson() => {
-//         "count": count,
-//         "data": List<dynamic>.from(data.map((x) => x.toJson())),
-//     };
-// }

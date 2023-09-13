@@ -78,7 +78,7 @@ class InfoCard extends StatelessWidget {
               children: [
                 Tile(
                   leading: 'CarID',
-                  trailing: '...',
+                  trailing: '${info!.vehicle.id}',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
@@ -90,9 +90,10 @@ class InfoCard extends StatelessWidget {
                 Divider(
                   color: black.withOpacity(.1),
                 ),
-                const Tile(
+                Tile(
                   leading: 'Time remaining',
-                  trailing: '...',
+                  trailing:
+                      '${info?.bookingStatus != 'successful' ? info!.rental.returnTime.difference(DateTime.now()).inHours : 0} hour(s)',
                 ),
                 Divider(
                   color: black.withOpacity(.1),

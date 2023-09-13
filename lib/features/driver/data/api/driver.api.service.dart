@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:drivn/features/driver/domain/entities/trips.model.dart';
 import 'package:drivn/shared/utils/constants/base.url.dart';
@@ -46,7 +45,7 @@ class DriverApiService {
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
-      return dvriverTripFromJson(response.body).data!.data;
+      return driverTripModelFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
       throw Exception("couldn't fetch vehicles");

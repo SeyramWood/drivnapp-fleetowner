@@ -176,6 +176,7 @@ class Vehicle {
   bool booked;
   String brand;
   List<Feature> features;
+  String? moreFeatures;
   int id;
   List<VImage> images;
   Customer owner;
@@ -186,6 +187,7 @@ class Vehicle {
     required this.booked,
     required this.brand,
     required this.features,
+    this.moreFeatures,
     required this.id,
     required this.images,
     required this.owner,
@@ -198,6 +200,7 @@ class Vehicle {
         brand: json["brand"],
         features: List<Feature>.from(
             json["features"].map((x) => Feature.fromJson(x))),
+        moreFeatures: json["moreFeature"] ?? '',
         id: json["id"],
         images:
             List<VImage>.from(json["images"].map((x) => VImage.fromJson(x))),
