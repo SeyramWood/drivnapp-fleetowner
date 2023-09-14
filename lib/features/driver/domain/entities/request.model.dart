@@ -60,7 +60,7 @@ class DRequest {
   Rental rental;
   String status;
   DateTime updatedAt;
-  Vehicle vehicle;
+  Vehicle? vehicle;
 
   DRequest({
     required this.createdAt,
@@ -70,7 +70,7 @@ class DRequest {
     required this.rental,
     required this.status,
     required this.updatedAt,
-    required this.vehicle,
+    this.vehicle,
   });
 
   factory DRequest.fromJson(Map<String, dynamic> json) => DRequest(
@@ -81,7 +81,7 @@ class DRequest {
         rental: Rental.fromJson(json["rental"]),
         status: json["status"],
         updatedAt: DateTime.parse(json["updatedAt"]),
-        vehicle: Vehicle.fromJson(json["vehicle"]),
+        vehicle: Vehicle.fromJson(json["vehicle"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -92,7 +92,7 @@ class DRequest {
         "rental": rental.toJson(),
         "status": status,
         "updatedAt": updatedAt.toIso8601String(),
-        "vehicle": vehicle.toJson(),
+        "vehicle": vehicle?.toJson(),
       };
 }
 
@@ -173,19 +173,21 @@ class Rental {
 }
 
 class Vehicle {
-  String availability;
-  bool booked;
-  String brand;
+  String? availability;
+  bool? booked;
+  String? brand;
   List<Feature> features;
-  int id;
+  String? moreFeatures;
+  int? id;
   List<Image> images;
-  String type;
+  String? type;
 
   Vehicle({
     required this.availability,
     required this.booked,
     required this.brand,
     required this.features,
+    this.moreFeatures,
     required this.id,
     required this.images,
     required this.type,
@@ -196,9 +198,11 @@ class Vehicle {
         booked: json["booked"],
         brand: json["brand"],
         features: List<Feature>.from(
-            json["features"].map((x) => Feature.fromJson(x))),
+            json["features"]?.map((x) => Feature.fromJson(x)) ?? []),
+        moreFeatures: json["moreFeature"],
         id: json["id"],
-        images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+        images: List<Image>.from(
+            json["images"]?.map((x) => Image.fromJson(x)) ?? []),
         type: json["type"],
       );
 

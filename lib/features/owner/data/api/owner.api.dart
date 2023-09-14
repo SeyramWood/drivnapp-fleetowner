@@ -138,7 +138,7 @@ class OwnerApiService {
   }
 
   Future<List<Dryver>> fetchDrivers() async {
-    final url = Uri.parse('$baseUrl/drivers');
+    final url = Uri.parse('$baseUrl/drivers?approved=true&assigned=false');
     try {
       final response = await http.get(url);
       if (response.statusCode != 200) {

@@ -57,8 +57,10 @@ class _MyTripsState extends State<MyTrips> {
                 return ListView.builder(
                   itemCount: snapshot.data?.length ?? 0,
                   itemBuilder: (context, index) {
-                    // var request = snapshot.data?[index].;
-                    return const TripCard();
+                    var request = snapshot.data?[index];
+                    return TripCard(
+                      tripInfo: request,
+                    );
                   },
                 );
               } else if (snapshot.hasError) {

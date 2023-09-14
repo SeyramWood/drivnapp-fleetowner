@@ -1,11 +1,12 @@
 import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
+import 'package:drivn/features/auth/presentation/views/authState/auth.state.dart';
+import 'package:drivn/features/driver/presentation/provider/toggle.dart';
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
 import 'package:drivn/features/user/presentation/bindings/fleet.owner.bindings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'features/auth/presentation/views/verifyDriver.view.dart';
-import 'features/auth/presentation/views/verifyOwner/driver.doc.dart';
+
 import 'features/onboarding_screens/onboard.dart';
 
 void main() {
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthSharedProvider()),
+        
         bindings.apiService,
         bindings.userRepo,
         bindings.postUser,

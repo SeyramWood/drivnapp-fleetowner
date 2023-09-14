@@ -1,4 +1,3 @@
-
 import 'package:drivn/features/driver/domain/entities/trips.model.dart';
 import 'package:drivn/shared/utils/constants/base.url.dart';
 import 'package:http/http.dart' as http;
@@ -52,20 +51,36 @@ class DriverApiService {
     }
   }
 
-  Future cancelRequest(String requestID,String reason) async {
+  Future cancelRequest(String requestID, String reason) async {
     final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
-     final body = {
-        "requestType": "driver",
-        "status": "declined",
-        "reason": reason
-      };
+    final body = {
+      "requestType": "driver",
+      "status": "declined",
+      "reason": reason
+    };
     try {
-      final response = await http.put(url,body: body);
+      final response = await http.put(url, body: body);
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future goOnline(String userID, String status) async {
+    final url = Uri.parse(
+        '$baseUrl/drivers/$userID/update-status/online?onlineStatus=$status');
+    try {
+      var response = await http.put(
+        url,
+      );
+      if (response.statusCode != 200) {
+        print('request failed with code:${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception(e);
     }
   }
 }
