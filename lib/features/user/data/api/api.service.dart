@@ -136,10 +136,13 @@ class APIService extends ChangeNotifier {
   }
 
   Future logIn(String userId) async {
-    var uri = Uri.parse(
+    var url = Uri.parse(
         '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/$userId');
     try {
-      final response = await http.get(uri);
+      final response = await http.get(url).timeout(const Duration(seconds: 60),
+          onTimeout: () {
+        return Future.delayed(const Duration(seconds: 3), () => http.get(url));
+      });
       print(response.statusCode);
       if (response.statusCode != 200) {
         print('logging in: ${response.statusCode}');

@@ -121,8 +121,14 @@ class _RequestViewState extends State<RequestView> {
                     stream: _streamController.stream,
                     builder: (context, snapshot) {
                       if (value == false) {
-                        return const Center(
-                          child: Text('Go online to see requests'),
+                        return const Align(
+                          alignment: Alignment.topCenter,
+                          child: ListTile(
+                            tileColor: red,
+                            textColor: white,
+                            title: Text('Your are offline'),
+                            subtitle: Text('Go online to see request'),
+                          ),
                         );
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {

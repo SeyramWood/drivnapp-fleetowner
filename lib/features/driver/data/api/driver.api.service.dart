@@ -78,6 +78,7 @@ class DriverApiService {
       if (response.statusCode != 200) {
         print('request failed with code:${response.statusCode}');
       }
+      print(response.body);
     } catch (e) {
       print(e);
       throw Exception(e);
