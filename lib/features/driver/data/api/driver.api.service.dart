@@ -69,12 +69,10 @@ class DriverApiService {
   }
 
   Future goOnline(String userID, String status) async {
-    final url = Uri.parse(
-        '$baseUrl/drivers/$userID/update-status/online?onlineStatus=$status');
+    final url = Uri.parse('$baseUrl/drivers/$userID/update-status/$status');
     try {
-      var response = await http.put(
-        url,
-      );
+      final body = {'onlineStatus': status};
+      var response = await http.put(url, body: body);
       if (response.statusCode != 200) {
         print('request failed with code:${response.statusCode}');
       }

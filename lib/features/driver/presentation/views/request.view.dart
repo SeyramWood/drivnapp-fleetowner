@@ -105,11 +105,11 @@ class _RequestViewState extends State<RequestView> {
                         scale: 0.6,
                         child: Switch(
                           activeColor: red,
-                          onChanged: (newValue) {
+                          onChanged: (newValue) async {
                             GoOnline().goOnline(newValue);
-                            DriverApiService().goOnline(
+                            await DriverApiService().goOnline(
                                 context.read<APIService>().userId,
-                                value ? 'true' : 'false');
+                                value ? 'offline' : 'online');
                           },
                           value: value,
                         ),
@@ -126,6 +126,8 @@ class _RequestViewState extends State<RequestView> {
                           child: ListTile(
                             tileColor: red,
                             textColor: white,
+                            leading: ImageIcon(
+                                AssetImage('assets/icons/network.png')),
                             title: Text('Your are offline'),
                             subtitle: Text('Go online to see request'),
                           ),
