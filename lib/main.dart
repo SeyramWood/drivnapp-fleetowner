@@ -1,6 +1,7 @@
 import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
 import 'package:drivn/features/auth/presentation/views/authState/auth.state.dart';
+import 'package:drivn/features/driver/presentation/dependency.injection/bindings.dart';
 import 'package:drivn/features/driver/presentation/provider/toggle.dart';
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
 import 'package:drivn/features/user/presentation/bindings/fleet.owner.bindings.dart';
@@ -10,11 +11,8 @@ import 'package:provider/provider.dart';
 import 'features/onboarding_screens/onboard.dart';
 
 void main() {
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
-      create: (context) => CarProvider(),
-    )
-  ], child: const MyApp()));
+  setupDriverDependencies();
+  runApp(const MyApp());
 }
 
 UserBindings bindings = UserBindings();
@@ -26,8 +24,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => CarProvider()),
         ChangeNotifierProvider(create: (context) => AuthSharedProvider()),
-        
+        ChangeNotifierProvider(create: (context) => driverImplProvider),
         bindings.apiService,
         bindings.userRepo,
         bindings.postUser,

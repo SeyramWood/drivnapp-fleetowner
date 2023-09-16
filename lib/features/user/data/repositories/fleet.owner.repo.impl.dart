@@ -24,7 +24,6 @@ class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      log('$e');
       return Left(Failure('Unkown error'));
     }
   }
@@ -49,7 +48,6 @@ class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      log(e.toString());
       return Left(Failure('Something went wrong'));
     }
   }

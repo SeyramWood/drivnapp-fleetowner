@@ -14,3 +14,10 @@ class Params<T> {
 class NoParams {
   NoParams();
 }
+
+class MultiParams<T,E>{
+  final T data;
+  final E data2;
+
+  MultiParams(this.data, this.data2);
+}

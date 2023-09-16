@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:drivn/features/driver/data/api/driver.api.service.dart';
+import 'package:drivn/features/driver/presentation/provider/driver.impl.provider.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class _MyTripsState extends State<MyTrips> {
 // ignore: unused_field
   late Timer _timer;
   void fetchTrips() async {
-    trips = DriverApiService().fetchTrips(context.read<APIService>().userId);
+    trips = context.read<DriverImplProvider>().fetchTrips(context.read<APIService>().userId);
     if (mounted) {
       var streamData = await trips;
       if (!_streamController.isClosed) {

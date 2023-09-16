@@ -1,4 +1,5 @@
 import 'package:drivn/features/driver/domain/entities/trips.model.dart';
+import 'package:drivn/shared/errors/exception.dart';
 import 'package:drivn/shared/utils/constants/base.url.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,12 +12,11 @@ class DriverApiService {
       final response = await http.get(uri);
 
       if (response.statusCode != 200) {
-        print(response.reasonPhrase);
+        throw CustomException("couldn't fetch requests");
       }
       return driverRequestModelFromJson(response.body).data!.data;
     } catch (e) {
-      print(e);
-      throw Exception("couldn't fetch requests");
+      rethrow;
     }
   }
 
@@ -29,11 +29,11 @@ class DriverApiService {
         "reason": ""
       };
       final response = await http.put(url, body: body);
-      if (response.statusCode != 200 || response.statusCode == 202) {
-        print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw CustomException('An error occurred');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
@@ -42,12 +42,11 @@ class DriverApiService {
     try {
       final response = await http.get(uri);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        CustomException("couldn't fetch vehicles");
       }
       return driverTripModelFromJson(response.body).data!.data;
     } catch (e) {
-      print(e);
-      throw Exception("couldn't fetch vehicles");
+      rethrow;
     }
   }
 
@@ -61,10 +60,10 @@ class DriverApiService {
     try {
       final response = await http.put(url, body: body);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        throw CustomException('Could not cancel request.Retry!');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
@@ -74,12 +73,10 @@ class DriverApiService {
       final body = {'onlineStatus': status};
       var response = await http.put(url, body: body);
       if (response.statusCode != 200) {
-        print('request failed with code:${response.statusCode}');
+        throw CustomException("Couldn't switch.Retry!");
       }
-      print(response.body);
     } catch (e) {
-      print(e);
-      throw Exception(e);
+      rethrow;
     }
   }
 }

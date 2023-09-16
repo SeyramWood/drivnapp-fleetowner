@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:drivn/features/driver/data/api/driver.api.service.dart';
 import 'package:drivn/features/driver/domain/entities/request.model.dart';
+import 'package:drivn/features/driver/presentation/provider/driver.impl.provider.dart';
 import 'package:drivn/features/driver/presentation/provider/toggle.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../shared/errors/error.alert.dart';
+import '../../../../shared/errors/network.error.dart';
 import '../widget/request.tile.dart';
 
 class RequestView extends StatefulWidget {
@@ -18,20 +21,28 @@ class RequestView extends StatefulWidget {
 }
 
 class _RequestViewState extends State<RequestView> {
+  bool isOnline = true;
   int _selectedDropdownValue = 1;
   late Future<List<DRequest>> request;
   final StreamController<List<DRequest>> _streamController = StreamController();
   // ignore: unused_field
   late Timer _timer;
   getAllRequest() async {
-    request =
-        DriverApiService().fetchRequest(context.read<APIService>().userId);
+    //try fetch only when user is ready to work
+    if (GoOnline().value == true) {
+      try {
+        request = context
+            .read<DriverImplProvider>()
+            .fetchRequest(context.read<APIService>().userId);
+      } catch (e) {
+        NetworkErrorHandler.handleNetworkError(context, e);
+      }
+      if (mounted) {
+        var streamData = await request;
 
-    if (mounted) {
-      var streamData = await request;
-
-      if (!_streamController.isClosed) {
-        _streamController.sink.add(streamData);
+        if (!_streamController.isClosed) {
+          _streamController.sink.add(streamData);
+        }
       }
     }
   }
@@ -107,7 +118,7 @@ class _RequestViewState extends State<RequestView> {
                           activeColor: red,
                           onChanged: (newValue) async {
                             GoOnline().goOnline(newValue);
-                            await DriverApiService().goOnline(
+                            await context.read<DriverImplProvider>().goOnline(
                                 context.read<APIService>().userId,
                                 value ? 'offline' : 'online');
                           },
