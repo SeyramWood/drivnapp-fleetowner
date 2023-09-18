@@ -6,7 +6,7 @@ import '../../data/api/owner.api.dart';
 
 class MoreOfBookedCar extends StatelessWidget {
   const MoreOfBookedCar({super.key, required this.info});
-  final BVehicle? info;
+  final BookedVehicle? info;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,50 +21,66 @@ class MoreOfBookedCar extends StatelessWidget {
           mainAxisExtent: 130,
         ),
         children: [
-          Card(
-              color: yellow,
-              shadowColor: white,
-              child: Center(
-                child: Text(
-                  'Track',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(color: white),
-                ),
-              )),
-          GestureDetector(
-            onTap: () {
-              var bookingID = info!.id.toString();
-              OwnerApiService().endTrip(bookingID);
-            },
-            child: Card(
-                color: blue,
-                shadowColor: white,
-                child: Center(
-                  child: Text(
-                    'End trip',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
-                        .copyWith(color: white),
-                  ),
-                )),
+          ActionCard(
+            color: yellow,
+            text: 'Track',
+            info: info,
+            onTap: () {},
           ),
-          Card(
-              color: red,
-              shadowColor: white,
-              child: Center(
-                child: Text(
-                  'Report issue',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(color: white),
-                ),
-              )),
+          ActionCard(
+            onTap: info?.bookingStatus != 'successful'
+                ? () {
+                    var bookingID = info!.id.toString();
+                    print(bookingID);
+                    OwnerApiService().endTrip(bookingID);
+                  }
+                : null,
+            info: info,
+            text: 'End Trip',
+            color: blue,
+          ),
+          ActionCard(
+            color: red,
+            text: 'Report issue',
+            info: info,
+            onTap: () {},
+          )
         ],
       ),
+    );
+  }
+}
+
+class ActionCard extends StatelessWidget {
+  const ActionCard({
+    super.key,
+    required this.info,
+    required this.color,
+    required this.text,
+    required this.onTap,
+  });
+
+  final BookedVehicle? info;
+  final String text;
+  final Color color;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+          color: color,
+          shadowColor: white,
+          child: Center(
+            child: Text(
+              text,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium!
+                  .copyWith(color: white),
+            ),
+          )),
     );
   }
 }

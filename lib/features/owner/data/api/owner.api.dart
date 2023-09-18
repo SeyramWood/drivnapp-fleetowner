@@ -8,7 +8,7 @@ import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
 import 'package:drivn/shared/errors/exception.dart';
 import 'package:http/http.dart' as http;
 
-import '../../../../shared/utils/constants/baseUrl.dart';
+import '../../../../shared/utils/constants/base.url.dart';
 import '../../domain/entities/driver.model.dart';
 
 class OwnerApiService {
@@ -80,14 +80,14 @@ class OwnerApiService {
     return v.vehicleFromJson(response.body).data!.data;
   }
 
-  Future<List<BVehicle>> fetchBookedVehicles(String userID) async {
+  Future<List<BookedVehicle>> fetchBookedVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/bookings/owner/$userID');
     try {
       final response = await http.get(uri);
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
-      return bookedVehicleFromJson(response.body).data!.data;
+      return bookedVehicleModelFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
       throw Exception("couldn't fetch vehicles");
@@ -138,14 +138,14 @@ class OwnerApiService {
   }
 
   Future<List<Dryver>> fetchDrivers() async {
-    final url = Uri.parse('$baseUrl/drivers');
+    final url = Uri.parse('$baseUrl/drivers?approved=true&assigned=false');
     try {
       final response = await http.get(url);
       if (response.statusCode != 200) {
         log(response.statusCode.toString());
       }
       log(response.body.toString());
-      return Driver.fromJson(json.decode(response.body)).data.data;
+      return DriverModel.fromJson(json.decode(response.body)).data.data;
     } catch (e) {
       print(e);
       throw Exception('failed to get drivers');
@@ -156,12 +156,11 @@ class OwnerApiService {
     final url = Uri.parse('$baseUrl/booking/requests/owner/$userID');
     try {
       final response = await http.get(url);
-      print(response.reasonPhrase);
 
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
-      return requestModelFromJson(response.body).data!.data;
+      return vehicleRequestModelFromJson(response.body).data!.data;
     } catch (e) {
       print(e);
       throw Exception("couldn't fetch request");
@@ -171,22 +170,28 @@ class OwnerApiService {
   Future acceptRequest(String requestID) async {
     final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
     try {
-      final body = {"requestType": "owner", "status": "accepted", "reason": ""};
+      final body = {
+        "requestType": "owner",
+        "status": "accepted",
+      };
       final response = await http.put(url, body: body);
       if (response.statusCode != 200 || response.statusCode == 202) {
         print(response.statusCode);
       }
-      print(response.body);
-      print(response.reasonPhrase);
     } catch (e) {
       print(e);
     }
   }
 
-  Future cancelRequest(requestID) async {
-    final url = Uri.parse('$baseUrl/bookings/$requestID/canceled');
+  Future cancelRequest(requestID, String? reason) async {
+    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+    final body = {
+      "requestType": "owner",
+      "status": "declined",
+      'reason': reason
+    };
     try {
-      final response = await http.put(url);
+      final response = await http.put(url, body: body);
       if (response.statusCode != 200) {
         print(response.statusCode);
       }
@@ -200,7 +205,7 @@ class OwnerApiService {
     try {
       final response = await http.put(url);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        print(response.reasonPhrase);
       }
     } catch (e) {
       print(e);
@@ -212,7 +217,7 @@ class OwnerApiService {
     try {
       final response = await http.delete(url);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        print(response.reasonPhrase);
       }
     } catch (e) {
       print(e);

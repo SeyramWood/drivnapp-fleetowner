@@ -6,7 +6,7 @@ import 'package:page_transition/page_transition.dart';
 
 class InfoCard extends StatelessWidget {
   const InfoCard({super.key, required this.info});
-  final BVehicle? info;
+  final BookedVehicle? info;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,6 +28,17 @@ class InfoCard extends StatelessWidget {
             child: Stack(
               alignment: Alignment.bottomRight,
               children: [
+                Positioned(
+                  right: 200,
+                  left: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      info?.bookingStatus ?? '',
+                      style: const TextStyle(backgroundColor: white),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: SizedBox(
@@ -68,28 +79,29 @@ class InfoCard extends StatelessWidget {
               children: [
                 Tile(
                   leading: 'CarID',
-                  trailing: '...',
+                  trailing: '${info!.vehicle.id}',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
                 Tile(
                   leading: 'Pickup location',
-                  trailing: info!.rental.customerLocation,
+                  trailing: info?.rental.customerLocation ?? '',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
-                const Tile(
+                Tile(
                   leading: 'Time remaining',
-                  trailing: '...',
+                  trailing:
+                      '${info?.bookingStatus != 'successful' ? info!.rental.returnTime.difference(DateTime.now()).inHours : 0} hour(s)',
                 ),
                 Divider(
                   color: black.withOpacity(.1),
                 ),
                 Tile(
                   leading: 'Price',
-                  trailing: 'GHC ${info!.rental.vehicleAmount.toString()}',
+                  trailing: 'GHC ${info?.rental.vehicleAmount.toString() ?? 0}',
                 ),
               ],
             ),

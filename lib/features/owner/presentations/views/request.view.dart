@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/shared/utils/cached.network.image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../shared/utils/audio.player.dart';
 import '../../../../shared/utils/constants/colors.dart';
+import '../../../../shared/utils/constants/date_time.formatting.dart';
 import '../../../../shared/utils/constants/dimensions.dart';
 import '../../../auth/presentation/widget/elevated.button.dart';
 import '../../domain/entities/v.request.model.dart';
@@ -24,8 +27,9 @@ class _RequestsViewState extends State<RequestsView> {
   // ignore: unused_field
   late Timer _timer;
   fetchRequest() async {
-    request = OwnerApiService().allRequests(context.read<APIService>().userId);
     if (mounted) {
+      request =
+          OwnerApiService().allRequests(context.read<APIService>().userId);
       var streamData = await request;
 
       if (!_streamController.isClosed) {
@@ -78,9 +82,33 @@ class _RequestsViewState extends State<RequestsView> {
   }
 }
 
-class RequestTile extends StatelessWidget {
+class RequestTile extends StatefulWidget {
   const RequestTile({super.key, this.request});
   final VRequest? request;
+
+  @override
+  State<RequestTile> createState() => _RequestTileState();
+}
+
+class _RequestTileState extends State<RequestTile>
+    with SingleTickerProviderStateMixin {
+  late AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -91,7 +119,8 @@ class RequestTile extends StatelessWidget {
             context: context,
             builder: (context) {
               return BottomSheet(
-                builder: (context) => RequestInfo(request: request),
+                animationController: animationController,
+                builder: (context) => RequestInfo(request: widget.request),
                 onClosing: () {},
               );
             },
@@ -114,8 +143,7 @@ class RequestTile extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 28,
-                  backgroundImage:
-                      NetworkImage(request!.vehicle.images[0].image),
+                  child: Text(widget.request!.rental.customer.firstName[0]),
                 ),
                 const SizedBox(
                   width: 20,
@@ -124,7 +152,7 @@ class RequestTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${request?.rental.customer.firstName} ${request?.rental.customer.lastName}',
+                      '${widget.request?.rental.customer.firstName} ${widget.request?.rental.customer.lastName}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
@@ -137,7 +165,7 @@ class RequestTile extends StatelessWidget {
                         //   AssetImage('assets/icons/location_tick.png'),
                         // ),
                         Text(
-                          request?.rental.customerLocation ?? '',
+                          widget.request?.rental.customerLocation ?? '',
                         ),
                       ],
                     )
@@ -145,19 +173,24 @@ class RequestTile extends StatelessWidget {
                 ),
                 const Spacer(),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text('23th July'),
+                    Text(
+                      date.format(widget.request!.createdAt),
+                    ),
                     const SizedBox(height: 5),
                     Container(
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
-                          border: Border.all(
-                            color: red.withOpacity(.5),
-                          ),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: const Text('10:57 AM'),
-                    )
+                        border: Border.all(
+                          color: red.withOpacity(.5),
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        time.format(widget.request!.createdAt),
+                      ),
+                    ),
                   ],
                 )
               ],
@@ -184,7 +217,9 @@ class RequestInfo extends StatelessWidget {
         children: [
           space,
           ListTile(
-            leading: Image.asset('assets/car1.png'),
+            leading: SizedBox(
+                width: 80,
+                child: showImage(imageUrl: request!.vehicle.images[0].image)),
             title: Text(
               request?.vehicle.type ?? '',
               style: Theme.of(context).textTheme.headlineMedium!.copyWith(
@@ -201,9 +236,13 @@ class RequestInfo extends StatelessWidget {
             ),
           ),
           space,
-          const LocAndTime(),
+          LocAndTime(
+            rentInfo: request,
+          ),
           space,
-          const LocAndTime(),
+          // LocAndTime(rentInfo: request),
+          if (request?.rental.customerLocationAudio != null)
+            AudioPlayer(source: request!.rental.customerLocationAudio),
           space,
           divider,
           space,
@@ -215,7 +254,8 @@ class RequestInfo extends StatelessWidget {
                       .textTheme
                       .bodyMedium!
                       .copyWith(fontWeight: FontWeight.w600)),
-              Text('20 hours',
+              Text(
+                  '${DateTime.parse(request!.rental.returnTime.toIso8601String()).difference(DateTime.parse(request!.rental.pickupTime.toIso8601String())).inHours} Hours',
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -254,13 +294,51 @@ class RequestInfo extends StatelessWidget {
                     backgroundColor: red,
                     onPressed: () {
                       var requestID = request!.id.toString();
-                      OwnerApiService().cancelRequest(requestID).then(
-                        (value) {
-                          Navigator.of(context).pop();
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          final controller = TextEditingController();
+                          return AlertDialog(
+                            content: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: red),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: TextFormField(
+                                  controller: controller,
+                                  maxLines: 4,
+                                  decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.all(5),
+                                      hintText: 'reason to decline',
+                                      border: InputBorder.none),
+                                )),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  print(requestID);
+                                  OwnerApiService()
+                                      .cancelRequest(requestID, controller.text)
+                                      .then(
+                                    (value) {
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                },
+                                child: const Text(
+                                  'Continue',
+                                  style: TextStyle(color: red),
+                                ),
+                              )
+                            ],
+                          );
                         },
                       );
                     },
-                    child: const Text('reject'),
+                    child: const Text('Decline'),
                   ),
                 ),
                 const SizedBox(
@@ -321,10 +399,8 @@ class RequestInfo extends StatelessWidget {
 }
 
 class LocAndTime extends StatelessWidget {
-  const LocAndTime({
-    super.key,
-  });
-
+  const LocAndTime({super.key, required this.rentInfo});
+  final VRequest? rentInfo;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -333,7 +409,7 @@ class LocAndTime extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Car pick up location',
+              'Cutomer location',
               style: Theme.of(context)
                   .textTheme
                   .bodySmall!
@@ -348,13 +424,14 @@ class LocAndTime extends StatelessWidget {
                     color: yellow,
                   ),
                   borderRadius: BorderRadius.circular(5)),
-              child: const Row(
+              child: Row(
                 children: [
-                  ImageIcon(
+                  const ImageIcon(
                     AssetImage('assets/icons/location_tick.png'),
                   ),
                   Text(
-                    'Circle Main Station',
+                    rentInfo!.rental.customerLocation,
+                    style: const TextStyle(overflow: TextOverflow.ellipsis),
                   ),
                 ],
               ),
@@ -365,7 +442,7 @@ class LocAndTime extends StatelessWidget {
         Column(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('23th July, 2023',
+            Text(date.format(rentInfo!.rental.pickupDate),
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!
@@ -379,7 +456,8 @@ class LocAndTime extends StatelessWidget {
                     color: yellow,
                   ),
                   borderRadius: BorderRadius.circular(5)),
-              child: const Center(child: Text('10:57 AM')),
+              child:
+                  Center(child: Text(time.format(rentInfo!.rental.pickupDate))),
             )
           ],
         )

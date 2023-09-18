@@ -1,7 +1,10 @@
+import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../auth/presentation/views/login_screen.dart';
+import '../../../../shared/utils/constants/dimensions.dart';
 
 class DProfileView extends StatelessWidget {
   const DProfileView({super.key});
@@ -51,17 +54,30 @@ class DProfileView extends StatelessWidget {
             subtitle: Text('john.doe@example.com'),
             trailing: Icon(Icons.arrow_forward_ios),
           ),
-          const Divider(),
+          divider,
           const ListTile(
             title: Text('Phone'),
             subtitle: Text('+1234567890'),
             trailing: Icon(Icons.arrow_forward_ios),
           ),
-          const Divider(),
+          divider,
           const ListTile(
             title: Text('Location'),
             subtitle: Text('City, Country'),
             trailing: Icon(Icons.arrow_forward_ios),
+          ),
+          divider,
+          ListTile(
+            onTap: () => Navigator.of(context).push(
+              PageTransition(
+                type: PageTransitionType.rightToLeftJoined,
+                duration: const Duration(milliseconds: 400),
+                child: const VerifyingView(),
+                childCurrent: this,
+              ),
+            ),
+            title: const Text('Document verification'),
+            trailing: const Icon(Icons.arrow_forward_ios),
           ),
           const Spacer(),
           ListTile(

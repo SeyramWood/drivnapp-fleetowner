@@ -1,3 +1,4 @@
+import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,11 @@ class VerifyingView extends StatelessWidget {
             height: 100,
             width: 100,
             decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(
+                    'assets/icons/Vector.png',
+                  ),
+                  scale: 1.5),
               shape: BoxShape.circle,
               color: blue,
             ),
@@ -33,13 +39,14 @@ class VerifyingView extends StatelessWidget {
           ListTile(
             leading: Container(
               padding: const EdgeInsets.all(9),
-              decoration: const BoxDecoration(shape: BoxShape.circle, color: black),
+              decoration:
+                  const BoxDecoration(shape: BoxShape.circle, color: black),
               child: const Text(
                 '1',
                 style: TextStyle(color: white, fontSize: 15),
               ),
             ),
-            title: const Text('asdfghkl'),
+            title: const Text('Verifying national id'),
             trailing: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: const BoxDecoration(
@@ -56,13 +63,14 @@ class VerifyingView extends StatelessWidget {
           ListTile(
             leading: Container(
               padding: const EdgeInsets.all(9),
-              decoration: const BoxDecoration(shape: BoxShape.circle, color: black),
+              decoration:
+                  const BoxDecoration(shape: BoxShape.circle, color: black),
               child: const Text(
                 '2',
                 style: TextStyle(color: white, fontSize: 15),
               ),
             ),
-            title: const Text('asdfghkl'),
+            title: const Text('Verifying driving licence'),
             trailing: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: const BoxDecoration(
@@ -80,7 +88,11 @@ class VerifyingView extends StatelessWidget {
           SizedBox(
             width: 150,
             child: CustomElevatedButton(
-              onPressed: () => () {},
+              onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const DMainPage(),
+                  ),
+                  (route) => false),
               child: const Text('Go Home'),
             ),
           )

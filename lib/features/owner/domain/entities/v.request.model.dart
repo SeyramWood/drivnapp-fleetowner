@@ -1,24 +1,26 @@
 // To parse this JSON data, do
 //
-//     final requestModel = requestModelFromJson(jsonString);
+//     final vehicleRequestModel = vehicleRequestModelFromJson(jsonString);
 
 import 'dart:convert';
 
-RequestModel requestModelFromJson(String str) =>
-    RequestModel.fromJson(json.decode(str));
+VehicleRequestModel vehicleRequestModelFromJson(String str) =>
+    VehicleRequestModel.fromJson(json.decode(str));
 
-String requestModelToJson(RequestModel data) => json.encode(data.toJson());
+String vehicleRequestModelToJson(VehicleRequestModel data) =>
+    json.encode(data.toJson());
 
-class RequestModel {
+class VehicleRequestModel {
   Data? data;
   bool status;
 
-  RequestModel({
-    required this.data,
+  VehicleRequestModel({
+    this.data,
     required this.status,
   });
 
-  factory RequestModel.fromJson(Map<String, dynamic> json) => RequestModel(
+  factory VehicleRequestModel.fromJson(Map<String, dynamic> json) =>
+      VehicleRequestModel(
         data: Data.fromJson(json["data"] ?? {}),
         status: json["status"],
       );
@@ -95,12 +97,12 @@ class Rental {
   String customerLocation;
   String customerLocationAudio;
   String paymentStatus;
-  String pickupDate;
-  String pickupTime;
-  String returnDate;
-  String returnTime;
-  int vehicleAmount;
-  int? refundAmount;
+  DateTime pickupDate;
+  DateTime pickupTime;
+  DateTime returnDate;
+  DateTime returnTime;
+  num vehicleAmount;
+  num? refundAmount;
 
   Rental({
     required this.customer,
@@ -120,10 +122,10 @@ class Rental {
         customerLocation: json["customerLocation"],
         customerLocationAudio: json["customerLocationAudio"],
         paymentStatus: json["paymentStatus"],
-        pickupDate: json["pickupDate"],
-        pickupTime: json["pickupTime"],
-        returnDate: json["returnDate"],
-        returnTime: json["returnTime"],
+        pickupDate: DateTime.parse(json["pickupDate"]),
+        pickupTime: DateTime.parse(json["pickupTime"]),
+        returnDate: DateTime.parse(json["returnDate"]),
+        returnTime: DateTime.parse(json["returnTime"]),
         vehicleAmount: json["vehicleAmount"],
         refundAmount: json["refundAmount"],
       );
@@ -133,12 +135,11 @@ class Rental {
         "customerLocation": customerLocation,
         "customerLocationAudio": customerLocationAudio,
         "paymentStatus": paymentStatus,
-        "pickupDate": pickupDate,
-        "pickupTime": pickupTime,
-        "returnDate": returnDate,
-        "returnTime": returnTime,
+        "pickupDate": pickupDate.toIso8601String(),
+        "pickupTime": pickupTime.toIso8601String(),
+        "returnDate": returnDate.toIso8601String(),
+        "returnTime": returnTime.toIso8601String(),
         "vehicleAmount": vehicleAmount,
-        "refundAmount": refundAmount,
       };
 }
 
@@ -175,9 +176,9 @@ class Vehicle {
   bool booked;
   String brand;
   List<Feature> features;
+  String? moreFeatures;
   int id;
   List<VImage> images;
-  String moreFeature;
   Customer owner;
   String type;
 
@@ -186,9 +187,9 @@ class Vehicle {
     required this.booked,
     required this.brand,
     required this.features,
+    this.moreFeatures,
     required this.id,
     required this.images,
-    required this.moreFeature,
     required this.owner,
     required this.type,
   });
@@ -199,10 +200,10 @@ class Vehicle {
         brand: json["brand"],
         features: List<Feature>.from(
             json["features"].map((x) => Feature.fromJson(x))),
+        moreFeatures: json["moreFeature"] ?? '',
         id: json["id"],
         images:
             List<VImage>.from(json["images"].map((x) => VImage.fromJson(x))),
-        moreFeature: json["moreFeature"],
         owner: Customer.fromJson(json["owner"]),
         type: json["type"],
       );
@@ -214,7 +215,6 @@ class Vehicle {
         "features": List<dynamic>.from(features.map((x) => x.toJson())),
         "id": id,
         "images": List<dynamic>.from(images.map((x) => x.toJson())),
-        "moreFeature": moreFeature,
         "owner": owner.toJson(),
         "type": type,
       };

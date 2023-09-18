@@ -21,8 +21,8 @@ class _MyTripsState extends State<MyTrips> {
 // ignore: unused_field
   late Timer _timer;
   void fetchTrips() async {
-    trips = DriverApiService().fetchTrips(context.read<APIService>().userId);
     if (mounted) {
+      trips = DriverApiService().fetchTrips(context.read<APIService>().userId);
       var streamData = await trips;
       if (!_streamController.isClosed) {
         _streamController.sink.add(streamData);
@@ -57,7 +57,10 @@ class _MyTripsState extends State<MyTrips> {
                 return ListView.builder(
                   itemCount: snapshot.data?.length ?? 0,
                   itemBuilder: (context, index) {
-                    return const TripCard();
+                    var request = snapshot.data?[index];
+                    return TripCard(
+                      tripInfo: request,
+                    );
                   },
                 );
               } else if (snapshot.hasError) {
@@ -65,7 +68,9 @@ class _MyTripsState extends State<MyTrips> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('No available vehicle.'));
+                return const Center(
+                    child: Text(
+                        'Nothing to show here.\nComplete or accept a\ntrip request to see it here.'));
               }
               return const Center(
                 child: CircularProgressIndicator(),

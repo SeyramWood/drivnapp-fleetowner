@@ -1,15 +1,13 @@
 import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:drivn/features/owner/presentations/widget/rental.form.dart';
+import 'package:drivn/shared/utils/cached.network.image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn/features/owner/presentations/switch_icon_icons.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-
 import '../../domain/entities/vehicle.model.dart' as data;
-import '../providers/available.or.booked.dart';
 import '../views/car.detail.dart';
 
 class CarTile extends StatefulWidget {
@@ -62,7 +60,7 @@ class _CarTileState extends State<CarTile> {
         Navigator.of(context).push(
           PageTransition(
             type: PageTransitionType.rightToLeft,
-            duration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 400),
             child: CarDetails(vehicle: vehicle),
           ),
         );
@@ -93,14 +91,12 @@ class _CarTileState extends State<CarTile> {
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width / 3.5,
                   height: 70,
-                  child: Container(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: Image.network(
-                      vehicle.images[0].image,
-                      fit: BoxFit.fill,
-                    ),
+                  child: showImage(
+                    imageUrl: vehicle.images[0].image,
+                    radius: 5,
                   ),
                 ),
+                const SizedBox(width: 5),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +144,7 @@ class _CarTileState extends State<CarTile> {
                       Row(
                         children: [
                           Text(
-                            'GHS ${vehicle.rental?.price ?? 0}',
+                            'GHC ${vehicle.rental?.price ?? 0}',
                             style: const TextStyle(fontSize: 15),
                           ),
                           const Spacer(),

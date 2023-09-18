@@ -1,3 +1,4 @@
+import 'package:drivn/shared/utils/cached.network.image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -51,19 +52,7 @@ class _CarCarouselState extends State<CarCarousel> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: blue,
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                        imageList[index],
-                      ),
-                    ),
-                  ),
-                ),
+                child: showImage(imageUrl: imageList[index]),
               );
             },
           ),

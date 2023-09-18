@@ -10,3 +10,14 @@ class Toggled extends ValueNotifier<bool> {
     notifyListeners();
   }
 }
+
+class GoOnline extends ValueNotifier<bool> {
+  GoOnline._go() : super(true);
+  static final GoOnline _goOnline = GoOnline._go();
+  factory GoOnline() => _goOnline;
+  bool get isOnline => value;
+  void goOnline(bool isonline) {
+    value = isonline;
+    notifyListeners();
+  }
+}

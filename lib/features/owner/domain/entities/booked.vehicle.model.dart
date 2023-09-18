@@ -1,37 +1,39 @@
 // To parse this JSON data, do
 //
-//     final bookedVehicle = bookedVehicleFromJson(jsonString);
+//     final bookedVehicleModel = bookedVehicleModelFromJson(jsonString);
 
 import 'dart:convert';
 
-BookedVehicle bookedVehicleFromJson(String str) =>
-    BookedVehicle.fromJson(json.decode(str));
+BookedVehicleModel bookedVehicleModelFromJson(String str) =>
+    BookedVehicleModel.fromJson(json.decode(str));
 
-String bookedVehicleToJson(BookedVehicle data) => json.encode(data.toJson());
+// String bookedVehicleModelToJson(BookedVehicleModel data) =>
+//     json.encode(data.toJson());
 
-class BookedVehicle {
+class BookedVehicleModel {
   Data? data;
   bool status;
 
-  BookedVehicle({
-    required this.data,
+  BookedVehicleModel({
+    this.data,
     required this.status,
   });
 
-  factory BookedVehicle.fromJson(Map<String, dynamic> json) => BookedVehicle(
+  factory BookedVehicleModel.fromJson(Map<String, dynamic> json) =>
+      BookedVehicleModel(
         data: Data.fromJson(json["data"] ?? {}),
         status: json["status"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "data": data?.toJson(),
-        "status": status,
-      };
+  // Map<String, dynamic> toJson() => {
+  //       "data": data?.toJson(),
+  //       "status": status,
+  //     };
 }
 
 class Data {
   int? count;
-  List<BVehicle> data;
+  List<BookedVehicle> data;
 
   Data({
     required this.count,
@@ -40,19 +42,20 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         count: json["count"],
-        data: List<BVehicle>.from(
-            json["data"]?.map((x) => BVehicle.fromJson(x)) ?? []),
+        data: List<BookedVehicle>.from(
+            json["data"]?.map((x) => BookedVehicle.fromJson(x)) ?? []),
       );
 
-  Map<String, dynamic> toJson() => {
-        "count": count,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
-      };
+  // Map<String, dynamic> toJson() => {
+  //       "count": count,
+  //       "data": List<dynamic>.from(data.map((x) => x.toJson())),
+  //     };
 }
 
-class BVehicle {
+class BookedVehicle {
   String bookingStatus;
   DateTime createdAt;
+  Customer? driver;
   int id;
   String reference;
   Rental rental;
@@ -61,11 +64,12 @@ class BVehicle {
   String tripStatus;
   DateTime updatedAt;
   Vehicle vehicle;
-  bool withDriver;
+  bool? withDriver;
 
-  BVehicle({
+  BookedVehicle({
     required this.bookingStatus,
     required this.createdAt,
+    this.driver,
     required this.id,
     required this.reference,
     required this.rental,
@@ -77,9 +81,11 @@ class BVehicle {
     required this.withDriver,
   });
 
-  factory BVehicle.fromJson(Map<String, dynamic> json) => BVehicle(
+  factory BookedVehicle.fromJson(Map<String, dynamic> json) => BookedVehicle(
         bookingStatus: json["bookingStatus"],
         createdAt: DateTime.parse(json["createdAt"]),
+        driver:
+            json["driver"] == null ? null : Customer.fromJson(json["driver"]),
         id: json["id"],
         reference: json["reference"],
         rental: Rental.fromJson(json["rental"]),
@@ -91,67 +97,20 @@ class BVehicle {
         withDriver: json["withDriver"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "bookingStatus": bookingStatus,
-        "createdAt": createdAt.toIso8601String(),
-        "id": id,
-        "reference": reference,
-        "rental": rental.toJson(),
-        "tripEndedAt": tripEndedAt,
-        "tripStartedAt": tripStartedAt,
-        "tripStatus": tripStatus,
-        "updatedAt": updatedAt.toIso8601String(),
-        "vehicle": vehicle.toJson(),
-        "withDriver": withDriver,
-      };
-}
-
-class Rental {
-  Customer customer;
-  String customerLocation;
-  String customerLocationAudio;
-  String paymentStatus;
-  DateTime pickupDate;
-  DateTime pickupTime;
-  DateTime returnDate;
-  DateTime returnTime;
-  int vehicleAmount;
-
-  Rental({
-    required this.customer,
-    required this.customerLocation,
-    required this.customerLocationAudio,
-    required this.paymentStatus,
-    required this.pickupDate,
-    required this.pickupTime,
-    required this.returnDate,
-    required this.returnTime,
-    required this.vehicleAmount,
-  });
-
-  factory Rental.fromJson(Map<String, dynamic> json) => Rental(
-        customer: Customer.fromJson(json["customer"]),
-        customerLocation: json["customerLocation"],
-        customerLocationAudio: json["customerLocationAudio"],
-        paymentStatus: json["paymentStatus"],
-        pickupDate: DateTime.parse(json["pickupDate"]),
-        pickupTime: DateTime.parse(json["pickupTime"]),
-        returnDate: DateTime.parse(json["returnDate"]),
-        returnTime: DateTime.parse(json["returnTime"]),
-        vehicleAmount: json["vehicleAmount"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "customer": customer.toJson(),
-        "customerLocation": customerLocation,
-        "customerLocationAudio": customerLocationAudio,
-        "paymentStatus": paymentStatus,
-        "pickupDate": pickupDate.toIso8601String(),
-        "pickupTime": pickupTime.toIso8601String(),
-        "returnDate": returnDate.toIso8601String(),
-        "returnTime": returnTime.toIso8601String(),
-        "vehicleAmount": vehicleAmount,
-      };
+  // Map<String, dynamic> toJson() => {
+  //       "bookingStatus": bookingStatus,
+  //       "createdAt": createdAt.toIso8601String(),
+  //       "driver": driver?.toJson(),
+  //       "id": id,
+  //       "reference": reference,
+  //       "rental": rental.toJson(),
+  //       "tripEndedAt": tripEndedAt,
+  //       "tripStartedAt": tripStartedAt,
+  //       "tripStatus": tripStatus,
+  //       "updatedAt": updatedAt.toIso8601String(),
+  //       "vehicle": vehicle.toJson(),
+  //       "withDriver": withDriver,
+  //     };
 }
 
 class Customer {
@@ -182,6 +141,58 @@ class Customer {
       };
 }
 
+class Rental {
+  Customer customer;
+  String customerLocation;
+  String customerLocationAudio;
+  String paymentStatus;
+  DateTime pickupDate;
+  DateTime pickupTime;
+  DateTime returnDate;
+  DateTime returnTime;
+  num vehicleAmount;
+  num? refundAmount;
+
+  Rental({
+    required this.customer,
+    required this.customerLocation,
+    required this.customerLocationAudio,
+    required this.paymentStatus,
+    required this.pickupDate,
+    required this.pickupTime,
+    required this.returnDate,
+    required this.returnTime,
+    required this.vehicleAmount,
+    required refundAmount,
+  });
+
+  factory Rental.fromJson(Map<String, dynamic> json) => Rental(
+        customer: Customer.fromJson(json["customer"]),
+        customerLocation: json["customerLocation"],
+        customerLocationAudio: json["customerLocationAudio"],
+        paymentStatus: json["paymentStatus"],
+        pickupDate: DateTime.parse(json["pickupDate"]),
+        pickupTime: DateTime.parse(json["pickupTime"]),
+        returnDate: DateTime.parse(json["returnDate"]),
+        returnTime: DateTime.parse(json["returnTime"]),
+        vehicleAmount: json["vehicleAmount"],
+        refundAmount: json["refundAmount"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "customer": customer.toJson(),
+        "customerLocation": customerLocation,
+        "customerLocationAudio": customerLocationAudio,
+        "paymentStatus": paymentStatus,
+        "pickupDate": pickupDate,
+        "pickupTime": pickupTime,
+        "returnDate": returnDate,
+        "returnTime": returnTime,
+        "vehicleAmount": vehicleAmount,
+        "refundAmount": refundAmount,
+      };
+}
+
 class Vehicle {
   String availability;
   bool booked;
@@ -189,8 +200,8 @@ class Vehicle {
   List<Feature> features;
   int id;
   List<Image> images;
-  String moreFeature;
-  Customer owner;
+  String? moreFeature;
+  // Customer owner;
   String type;
 
   Vehicle({
@@ -201,7 +212,7 @@ class Vehicle {
     required this.id,
     required this.images,
     required this.moreFeature,
-    required this.owner,
+    // required this.owner,
     required this.type,
   });
 
@@ -213,22 +224,22 @@ class Vehicle {
             json["features"].map((x) => Feature.fromJson(x))),
         id: json["id"],
         images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
-        moreFeature: json["moreFeature"],
-        owner: Customer.fromJson(json["owner"]),
+        moreFeature: json["moreFeature"] ?? '',
+        // owner: Customer.fromJson(json["owner"]),
         type: json["type"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "availability": availability,
-        "booked": booked,
-        "brand": brand,
-        "features": List<dynamic>.from(features.map((x) => x.toJson())),
-        "id": id,
-        "images": List<dynamic>.from(images.map((x) => x.toJson())),
-        "moreFeature": moreFeature,
-        "owner": owner.toJson(),
-        "type": type,
-      };
+  // Map<String, dynamic> toJson() => {
+  //       "availability": availability,
+  //       "booked": booked,
+  //       "brand": brand,
+  //       "features": List<dynamic>.from(features.map((x) => x.toJson())),
+  //       "id": id,
+  //       "images": List<dynamic>.from(images.map((x) => x.toJson())),
+  //       "moreFeature": moreFeature,
+  //       // "owner": owner.toJson(),
+  //       "type": type,
+  //     };
 }
 
 class Feature {

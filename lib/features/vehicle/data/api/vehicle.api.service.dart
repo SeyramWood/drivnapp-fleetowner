@@ -4,7 +4,7 @@ import 'package:drivn/features/vehicle/domain/entities/vehicle.brands.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.features.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.type.dart';
 
-import '../../../../shared/utils/constants/baseUrl.dart';
+import '../../../../shared/utils/constants/base.url.dart';
 import 'package:http/http.dart' as http;
 
 class VehicleApiService {

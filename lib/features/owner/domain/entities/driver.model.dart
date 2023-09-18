@@ -4,20 +4,20 @@
 
 import 'dart:convert';
 
-Driver driverFromJson(String str) => Driver.fromJson(json.decode(str));
+DriverModel driverFromJson(String str) => DriverModel.fromJson(json.decode(str));
 
-String driverToJson(Driver data) => json.encode(data.toJson());
+String driverToJson(DriverModel data) => json.encode(data.toJson());
 
-class Driver {
+class DriverModel {
     Data data;
     bool status;
 
-    Driver({
+    DriverModel({
         required this.data,
         required this.status,
     });
 
-    factory Driver.fromJson(Map<String, dynamic> json) => Driver(
+    factory DriverModel.fromJson(Map<String, dynamic> json) => DriverModel(
         data: Data.fromJson(json["data"]),
         status: json["status"],
     );

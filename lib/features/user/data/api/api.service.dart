@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../shared/utils/constants/baseUrl.dart';
+import '../../../../shared/utils/constants/base.url.dart';
 import '../../domain/entities/user.signup.model.dart';
 
 class APIService extends ChangeNotifier {
@@ -136,10 +136,13 @@ class APIService extends ChangeNotifier {
   }
 
   Future logIn(String userId) async {
-    var uri = Uri.parse(
+    var url = Uri.parse(
         '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/$userId');
     try {
-      final response = await http.get(uri);
+      final response = await http.get(url).timeout(const Duration(seconds: 60),
+          onTimeout: () {
+        return Future.delayed(const Duration(seconds: 3), () => http.get(url));
+      });
       print(response.statusCode);
       if (response.statusCode != 200) {
         print('logging in: ${response.statusCode}');
@@ -203,6 +206,7 @@ class APIService extends ChangeNotifier {
     final uri = Uri.parse('$baseUrl/drivers/document/$_user');
 
     try {
+      print(_user);
       if (idCardFiles.isNotEmpty && licenseFiles.isNotEmpty) {
         var request = http.MultipartRequest('POST', uri);
 
@@ -226,7 +230,7 @@ class APIService extends ChangeNotifier {
         request.fields['experience'] = '$yearsOfExperience';
 
         var response = await request.send();
-        // print(response.headers);
+        print(response.reasonPhrase);
       } else {
         print('no files selected');
       }
