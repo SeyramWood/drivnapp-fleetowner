@@ -21,8 +21,8 @@ class _MyTripsState extends State<MyTrips> {
 // ignore: unused_field
   late Timer _timer;
   void fetchTrips() async {
-    trips = DriverApiService().fetchTrips(context.read<APIService>().userId);
     if (mounted) {
+      trips = DriverApiService().fetchTrips(context.read<APIService>().userId);
       var streamData = await trips;
       if (!_streamController.isClosed) {
         _streamController.sink.add(streamData);

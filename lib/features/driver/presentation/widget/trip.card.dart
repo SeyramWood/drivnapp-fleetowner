@@ -100,7 +100,7 @@ class _TripCardState extends State<TripCard> {
                 space,
               ],
             ),
-            divider,
+            // divider,
             space,
             Center(
               child: Row(

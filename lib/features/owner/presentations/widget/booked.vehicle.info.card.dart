@@ -29,15 +29,16 @@ class InfoCard extends StatelessWidget {
               alignment: Alignment.bottomRight,
               children: [
                 Positioned(
-                    right: 200,
-                    left: 10,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        'State:\n${info?.bookingStatus ?? ''}',
-                        style: const TextStyle(backgroundColor: white),
-                      ),
-                    )),
+                  right: 200,
+                  left: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      info?.bookingStatus ?? '',
+                      style: const TextStyle(backgroundColor: white),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: SizedBox(

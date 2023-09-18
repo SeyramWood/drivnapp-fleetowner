@@ -205,7 +205,7 @@ class OwnerApiService {
     try {
       final response = await http.put(url);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        print(response.reasonPhrase);
       }
     } catch (e) {
       print(e);

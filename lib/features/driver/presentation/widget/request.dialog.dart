@@ -37,6 +37,12 @@ class RequestInfo extends StatelessWidget {
             subtitle: request!.rental.customerLocation,
             daTe: request!.rental.returnDate,
           ),
+          LocAndTime(
+            request: request,
+            title: 'Car return location',
+            subtitle: request!.rental.customerLocation,
+            daTe: request!.rental.returnDate,
+          ),
           space,
           AudioPlayer(source: request!.rental.customerLocationAudio),
           space,

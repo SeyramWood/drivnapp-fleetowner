@@ -144,7 +144,7 @@ class _CarTileState extends State<CarTile> {
                       Row(
                         children: [
                           Text(
-                            'GHS ${vehicle.rental?.price ?? 0}',
+                            'GHC ${vehicle.rental?.price ?? 0}',
                             style: const TextStyle(fontSize: 15),
                           ),
                           const Spacer(),

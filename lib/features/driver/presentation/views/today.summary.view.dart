@@ -44,7 +44,7 @@ class TodaySummaryView extends StatelessWidget {
                 width: 10,
               ),
               SummaryContainer(
-                title: 'Ghc 0.00',
+                title: 'GHC 0.00',
                 subTitle: 'Earned',
                 color: blue,
               ),
@@ -52,6 +52,7 @@ class TodaySummaryView extends StatelessWidget {
           ),
         ),
         SliverList.builder(
+          itemCount: 3,
           itemBuilder: (context, index) {
             return const SummaryTile();
           },
@@ -95,7 +96,7 @@ class SummaryTile extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const Spacer(),
-                  const Text('\$30'),
+                  const Text('GHC 50'),
                 ],
               ),
               Row(

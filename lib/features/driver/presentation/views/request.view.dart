@@ -24,10 +24,9 @@ class _RequestViewState extends State<RequestView> {
   // ignore: unused_field
   late Timer _timer;
   getAllRequest() async {
-    request =
-        DriverApiService().fetchRequest(context.read<APIService>().userId);
-
     if (mounted) {
+      request =
+          DriverApiService().fetchRequest(context.read<APIService>().userId);
       var streamData = await request;
 
       if (!_streamController.isClosed) {
@@ -127,12 +126,14 @@ class _RequestViewState extends State<RequestView> {
                             tileColor: red,
                             textColor: white,
                             leading: ImageIcon(
-                                AssetImage('assets/icons/network.png')),
+                              AssetImage('assets/icons/network.png'),
+                            ),
                             title: Text('Your are offline'),
                             subtitle: Text('Go online to see request'),
                           ),
                         );
                       }
+                      
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasData &&
