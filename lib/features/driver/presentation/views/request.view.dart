@@ -43,7 +43,6 @@ class _RequestViewState extends State<RequestView> {
     super.initState();
   }
 
-  String driverStatus = 'Online';
 
   @override
   Widget build(BuildContext context) {
