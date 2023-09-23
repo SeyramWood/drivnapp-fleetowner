@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../shared/utils/constants/base.url.dart';
+import '../../../driver/data/api/driver.api.service.dart';
 import '../../domain/entities/user.signup.model.dart';
 
 class APIService extends ChangeNotifier {
@@ -121,6 +122,7 @@ class APIService extends ChangeNotifier {
         //store user's id locally
         setUserId(id);
         notifyListeners();
+        DriverApiService().onInit(id);
       }
       if (response.statusCode != 201) {
         final errorMessage = jsonDecode(response.body)['error'] as String?;
@@ -150,6 +152,7 @@ class APIService extends ChangeNotifier {
       if (response.statusCode == 200) {
         String id = jsonDecode(response.body)['data']['id'].toString();
         await setUserId(id);
+        DriverApiService().onInit(id);
       }
       //store user's id locally
 

@@ -2,11 +2,14 @@ import 'package:drivn/features/driver/data/api/driver.api.service.dart';
 import 'package:drivn/features/driver/presentation/views/my.trips.dart';
 import 'package:drivn/features/driver/presentation/views/request.view.dart';
 import 'package:drivn/features/driver/presentation/views/summary.view.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../user/presentation/view/driver.profile.view.dart';
 import '../provider/index.notifier.dart';
+import '../provider/toggle.dart';
 
 class DMainPage extends StatefulWidget {
   const DMainPage({super.key});
@@ -19,10 +22,10 @@ class _DMainPageState extends State<DMainPage> {
   DriverApiService driverApiService = DriverApiService();
   @override
   void initState() {
+    GoOnline().init();
     super.initState();
   }
 
- 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
