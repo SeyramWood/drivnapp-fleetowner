@@ -17,15 +17,18 @@ class MyTrips extends StatefulWidget {
 }
 
 class _MyTripsState extends State<MyTrips> {
-  late Future<List<DTrip>> trips;
+  late List<DTrip> trips;
   final StreamController<List<DTrip>> _streamController = StreamController();
 // ignore: unused_field
   late Timer _timer;
   void fetchTrips() async {
-    trips = context.read<DriverImplProvider>().fetchTrips(context.read<APIService>().userId);
-    if (mounted) {
-      var streamData = await trips;
-      if (!_streamController.isClosed) {
+    final data = await context
+        .read<DriverImplProvider>()
+        .fetchTrips(context.read<APIService>().userId);
+
+    if (mounted && !_streamController.isClosed) {
+      if (data is List<DTrip>) {
+        var streamData = data;
         _streamController.sink.add(streamData);
       }
     }
