@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../user/presentation/view/driver.profile.view.dart';
 import '../provider/index.notifier.dart';
+import '../provider/toggle.dart';
 
 class DMainPage extends StatefulWidget {
   const DMainPage({super.key});
@@ -19,10 +20,10 @@ class _DMainPageState extends State<DMainPage> {
   DriverApiService driverApiService = DriverApiService();
   @override
   void initState() {
+    GoOnline().init();
     super.initState();
   }
 
- 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(

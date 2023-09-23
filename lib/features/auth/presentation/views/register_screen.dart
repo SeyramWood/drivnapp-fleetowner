@@ -205,11 +205,12 @@ class _RegisterViewState extends State<RegisterView> {
                                   color: yellow,
                                   fontWeight: FontWeight.w700,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
                       ),
+                      const SizedBox(height: 5),
                     ],
                   ),
                 ),

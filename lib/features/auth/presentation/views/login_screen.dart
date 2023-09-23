@@ -152,6 +152,7 @@ class _LoginViewState extends State<LoginView> {
                         )
                             .then(
                           (value) async {
+                            
                             await Future.delayed(const Duration(seconds: 2),
                                 () {
                               Navigator.of(context).pushAndRemoveUntil(

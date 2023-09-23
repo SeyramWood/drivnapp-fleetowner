@@ -3,10 +3,26 @@ import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/dimensions.dart';
+import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../widget/elevated.button.dart';
 
-class VerifyingView extends StatelessWidget {
+class VerifyingView extends StatefulWidget {
   const VerifyingView({super.key});
+
+  @override
+  State<VerifyingView> createState() => _VerifyingViewState();
+}
+
+class _VerifyingViewState extends State<VerifyingView> {
+  late String idStatus;
+  late String licenseStatus;
+  final prefs = SharedPreferencesManager.instance;
+  @override
+  initState() {
+    super.initState();
+    idStatus = prefs.getString('cardStatus', '');
+    licenseStatus = prefs.getString('licenseStatus', '');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +65,9 @@ class VerifyingView extends StatelessWidget {
             title: const Text('Verifying national id'),
             trailing: Container(
                 padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: grey,
+                  color: idStatus == 'reviewed' ? Colors.green : grey,
                 ),
                 child: const Icon(
                   Icons.done_outlined,
@@ -73,9 +89,9 @@ class VerifyingView extends StatelessWidget {
             title: const Text('Verifying driving licence'),
             trailing: Container(
                 padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: grey,
+                  color: licenseStatus == 'reviewed' ? Colors.green : grey,
                 ),
                 child: const Icon(
                   Icons.done_outlined,

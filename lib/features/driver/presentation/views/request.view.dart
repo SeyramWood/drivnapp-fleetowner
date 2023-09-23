@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:drivn/features/driver/data/api/driver.api.service.dart';
 import 'package:drivn/features/driver/domain/entities/request.model.dart';
 import 'package:drivn/features/driver/presentation/provider/driver.impl.provider.dart';
 import 'package:drivn/features/driver/presentation/provider/toggle.dart';
@@ -9,8 +8,8 @@ import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../shared/errors/error.alert.dart';
 import '../../../../shared/errors/network.error.dart';
+import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../widget/request.tile.dart';
 
 class RequestView extends StatefulWidget {
@@ -30,33 +29,52 @@ class _RequestViewState extends State<RequestView> {
   getAllRequest() async {
     //try fetch only when user is ready to work
     if (GoOnline().value == true) {
-      try {
-        request = context
-            .read<DriverImplProvider>()
-            .fetchRequest(context.read<APIService>().userId);
-      } catch (e) {
-        NetworkErrorHandler.handleNetworkError(context, e);
-      }
-      if (mounted) {
-        var streamData = await request;
+      dynamic data;
 
-        if (!_streamController.isClosed) {
+      if (mounted && !_streamController.isClosed) {
+        try {
+          data = await context
+              .read<DriverImplProvider>()
+              .fetchRequest(context.read<APIService>().userId);
+        } catch (e) {
+          print(e);
+          return NetworkErrorHandler.handleNetworkError(context, e);
+        }
+        if (data is List<DRequest>) {
+          var streamData = data;
+
           _streamController.sink.add(streamData);
         }
       }
     }
   }
 
+  void checkIfReviewed() {
+    //notify the driver when document hasn't be or fully reviewed
+    String cardStatus = prefs.getString('cardStatus', '');
+    String licenseStatus = prefs.getString('licenseStatus', '');
+
+    if (cardStatus == 'unreviewed' && licenseStatus == 'unreviewed') {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        showCloseIcon: true,
+        duration: Duration(seconds: 60),
+        content: Text('Your documents has not been fully reviewed'),
+      ));
+    }
+  }
+
   @override
   void initState() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((timeStamp) => checkIfReviewed());
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       getAllRequest();
     });
+
     super.initState();
   }
 
-  String driverStatus = 'Online';
-
+  final prefs = SharedPreferencesManager.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,6 +149,7 @@ class _RequestViewState extends State<RequestView> {
                       child: StreamBuilder<List<DRequest>>(
                     stream: _streamController.stream,
                     builder: (context, snapshot) {
+                      //notify the driver when offline
                       if (value == false) {
                         return const Align(
                           alignment: Alignment.topCenter,
@@ -138,12 +157,14 @@ class _RequestViewState extends State<RequestView> {
                             tileColor: red,
                             textColor: white,
                             leading: ImageIcon(
-                                AssetImage('assets/icons/network.png')),
+                              AssetImage('assets/icons/network.png'),
+                            ),
                             title: Text('Your are offline'),
                             subtitle: Text('Go online to see request'),
                           ),
                         );
                       }
+
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasData &&

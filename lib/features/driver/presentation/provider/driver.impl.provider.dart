@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:drivn/features/driver/domain/entities/request.model.dart';
 import 'package:drivn/features/driver/domain/usecase/cancel.request.dart';
 import 'package:drivn/features/driver/domain/usecase/fetch.requests.dart';
@@ -24,14 +22,10 @@ class DriverImplProvider extends ChangeNotifier {
     this._goOnline,
   );
 
-  Future<List<DRequest>> fetchRequest(String userID) async {
+  Future fetchRequest(String userID) async {
     final result = await _fetchRequest(Params(userID));
     return result.fold(
-      (failure) {
-        print(failure.message);
-
-        return [];
-      },
+      (failure) => failure.message,
       (success) => success,
     );
   }

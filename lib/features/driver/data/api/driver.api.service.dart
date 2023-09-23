@@ -1,11 +1,45 @@
+import 'dart:convert';
+
 import 'package:drivn/features/driver/domain/entities/trips.model.dart';
 import 'package:drivn/shared/errors/exception.dart';
 import 'package:drivn/shared/utils/constants/base.url.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../../domain/entities/request.model.dart';
 
 class DriverApiService {
+  //set driver needed variables
+  Future onInit(String userID) async {
+    final prefs = SharedPreferencesManager.instance;
+    final url = Uri.parse('$baseUrl/drivers/$userID');
+    try {
+      final response = await http.get(url);
+      final responseBody = jsonDecode(response.body);
+
+      if (response.statusCode != 200) {
+        print(response.reasonPhrase);
+      }
+      if (response.statusCode == 200) {
+        await prefs.setString(
+          'isOnline',
+          responseBody['data']['status'],
+        );
+        await prefs.setString(
+          'cardStatus',
+          responseBody['data']['document']['cardStatus'],
+        );
+        await prefs.setString(
+          'licenseStatus',
+          responseBody['data']['document']['licenseStatus'],
+        );
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   Future<List<DRequest>> fetchRequest(String userID) async {
     final uri = Uri.parse('$baseUrl/booking/requests/driver/$userID');
     try {

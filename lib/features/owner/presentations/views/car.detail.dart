@@ -94,13 +94,13 @@ class CarDetails extends StatelessWidget {
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   print(vehicle.features);
-                  if (vehicle.features == null || vehicle.features!.isEmpty) {
+                  if (vehicle.features.isEmpty) {
                     return const Center(
                       child: Text(
                           'No features available to show for this vehicle'),
                     );
                   }
-                  var feature = vehicle.features![index];
+                  var feature = vehicle.features[index];
                   return Card(
                     surfaceTintColor: white,
                     color: white,
@@ -115,7 +115,7 @@ class CarDetails extends StatelessWidget {
                     ),
                   );
                 },
-                childCount: vehicle.features?.length ?? 0,
+                childCount: vehicle.features.length ?? 0,
               ),
             ),
           ),

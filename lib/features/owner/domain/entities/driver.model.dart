@@ -55,7 +55,6 @@ class Dryver {
     String lastName;
     DateTime updatedAt;
     String username;
-
     Dryver({
         required this.createdAt,
         required this.firstName,

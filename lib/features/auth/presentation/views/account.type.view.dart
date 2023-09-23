@@ -3,6 +3,7 @@ import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../shared/utils/constants/colors.dart';
 import '../../../user/data/api/api.service.dart';
 import '../widget/elevated.button.dart';
 
@@ -46,10 +47,13 @@ class _AccountTypeViewState extends State<AccountTypeView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Continue as a',
-                style: Theme.of(context).textTheme.headlineMedium,
+                'I AM A',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineLarge!
+                    .copyWith(color: black),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 100),
               CustomElevatedButton(
                 onPressed: () {
                   setState(() {

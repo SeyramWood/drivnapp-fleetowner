@@ -64,7 +64,7 @@ class BookedVehicle {
   String tripStatus;
   DateTime updatedAt;
   Vehicle vehicle;
-  bool withDriver;
+  bool? withDriver;
 
   BookedVehicle({
     required this.bookingStatus,

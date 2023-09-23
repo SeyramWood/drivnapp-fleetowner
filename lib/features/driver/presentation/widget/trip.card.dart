@@ -1,5 +1,4 @@
 import 'package:drivn/features/driver/domain/entities/trips.model.dart';
-import 'package:drivn/features/driver/presentation/widget/request.dialog.dart';
 import 'package:drivn/shared/utils/constants/dimensions.dart';
 import 'package:flutter/material.dart';
 
@@ -100,7 +99,7 @@ class _TripCardState extends State<TripCard> {
                 space,
               ],
             ),
-            divider,
+            // divider,
             space,
             Center(
               child: Row(

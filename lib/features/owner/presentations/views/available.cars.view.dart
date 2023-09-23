@@ -20,10 +20,10 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   final StreamController<List<Vehicle>> _controller = StreamController();
   late Timer _timer;
   void fetchVehicles() async {
-    vehicles =
-        OwnerApiService().fetchVehicles(context.read<APIService>().userId);
-    var streamData = await vehicles;
     if (mounted) {
+      vehicles =
+          OwnerApiService().fetchVehicles(context.read<APIService>().userId);
+      var streamData = await vehicles;
       if (!_controller.isClosed) {
         _controller.sink.add(streamData);
       }
@@ -60,8 +60,7 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
     return StreamBuilder<List<Vehicle>>(
       stream: _controller.stream,
       builder: (context, snapshot) {
-        if (
-            snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           return ListView.builder(

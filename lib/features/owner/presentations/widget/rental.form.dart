@@ -9,7 +9,7 @@ updateRental(BuildContext context, int id) {
   final locationController = TextEditingController();
   final priceController = TextEditingController();
   final driverController = TextEditingController();
-  final _formkey = GlobalKey<FormState>();
+  final formkey = GlobalKey<FormState>();
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -17,7 +17,7 @@ updateRental(BuildContext context, int id) {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       content: SingleChildScrollView(
         child: Form(
-          key: _formkey,
+          key: formkey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -50,7 +50,7 @@ updateRental(BuildContext context, int id) {
             width: MediaQuery.sizeOf(context).width / 3,
             child: ElevatedButton(
               onPressed: () {
-                if (_formkey.currentState!.validate()) {
+                if (formkey.currentState!.validate()) {
                   OwnerApiService()
                       .updateRental(
                     '$id',
