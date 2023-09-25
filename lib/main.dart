@@ -2,6 +2,7 @@ import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
 import 'package:drivn/features/driver/presentation/dependency.injection/bindings.dart';
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
+import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/features/user/presentation/bindings/fleet.owner.bindings.dart';
 import 'package:drivn/shared/utils/shared.prefs.manager.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferencesManager.instance.init();
   setupDriverDependencies();
+  //auth dependency locator
+  setupLocator();
   runApp(const MyApp());
 }
-
-UserBindings bindings = UserBindings();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -27,13 +28,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => CarProvider()),
         ChangeNotifierProvider(create: (context) => AuthSharedProvider()),
+        ChangeNotifierProvider(create: (context) => APIService()),
         ChangeNotifierProvider(create: (context) => driverImplProvider),
-        bindings.apiService,
-        bindings.userRepo,
-        bindings.postUser,
-        bindings.verifUser,
-        bindings.submitID,
-        bindings.userAuthProvider,
+        ChangeNotifierProvider(create: (context) => userAuthProvider),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

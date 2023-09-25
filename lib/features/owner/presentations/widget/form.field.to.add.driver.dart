@@ -21,7 +21,6 @@ class _DriverFieldState extends State<DriverField> {
     for (var driver in drivers) {
       driverLists.add(driver);
     }
-    print(driverLists);
   }
 
   @override
@@ -37,6 +36,7 @@ class _DriverFieldState extends State<DriverField> {
       children: [
         const Text('Driver (Optional)'),
         Autocomplete<String>(
+          initialValue: widget.controller.value,
           onSelected: (selectedOption) {
             try {
               var selectedDriver = driverLists.firstWhere((driver) =>
@@ -58,7 +58,6 @@ class _DriverFieldState extends State<DriverField> {
               (context, textEditingController, focusNode, onFieldSubmitted) {
             return TextFormField(
               textCapitalization: TextCapitalization.sentences,
-              
               controller: textEditingController,
               focusNode: focusNode,
               onEditingComplete: onFieldSubmitted,
@@ -96,6 +95,5 @@ class _DriverFieldState extends State<DriverField> {
         ),
       ],
     );
-    
   }
 }

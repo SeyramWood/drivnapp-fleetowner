@@ -184,7 +184,7 @@ class _CarTileState extends State<CarTile> {
                                       OwnerApiService().updateAvailability(
                                           '${vehicle.id}', 'unavailable');
                                     } else if (newValue == 'rental') {
-                                      updateRental(context, vehicle.id);
+                                      updateRental(context, vehicle);
                                     }
                                   },
                                   items: const [

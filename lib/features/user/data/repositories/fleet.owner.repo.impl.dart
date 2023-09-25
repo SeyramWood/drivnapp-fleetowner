@@ -9,11 +9,10 @@ import '../../../../shared/errors/exception.dart';
 import '../../domain/repositories/fleet.owner.repo.dart';
 import '../api/api.service.dart';
 
-class FleetOwnerRepoImpl extends ChangeNotifier implements UserRepo {
+class FleetOwnerRepoImpl implements UserRepo {
   APIService api;
 
   FleetOwnerRepoImpl(this.api);
-  FleetOwnerRepoImpl.empty() : api = APIService();
 
   @override
   Future<Either<Failure, void>> create(SignUpBody fleetOwner) async {

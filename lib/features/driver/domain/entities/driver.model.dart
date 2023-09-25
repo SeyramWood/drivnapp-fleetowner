@@ -9,7 +9,7 @@ DriverMdel driverMdelFromJson(String str) => DriverMdel.fromJson(json.decode(str
 String driverMdelToJson(DriverMdel data) => json.encode(data.toJson());
 
 class DriverMdel {
-    Data data;
+    DriverObject data;
     bool status;
 
     DriverMdel({
@@ -18,7 +18,7 @@ class DriverMdel {
     });
 
     factory DriverMdel.fromJson(Map<String, dynamic> json) => DriverMdel(
-        data: Data.fromJson(json["data"]),
+        data: DriverObject.fromJson(json["data"]),
         status: json["status"],
     );
 
@@ -28,9 +28,9 @@ class DriverMdel {
     };
 }
 
-class Data {
+class DriverObject {
     DateTime createdAt;
-    DriverObject document;
+    Document document;
     String firstName;
     int id;
     String lastName;
@@ -38,7 +38,7 @@ class Data {
     DateTime updatedAt;
     String username;
 
-    Data({
+    DriverObject({
         required this.createdAt,
         required this.document,
         required this.firstName,
@@ -49,9 +49,9 @@ class Data {
         required this.username,
     });
 
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
+    factory DriverObject.fromJson(Map<String, dynamic> json) => DriverObject(
         createdAt: DateTime.parse(json["createdAt"]),
-        document: DriverObject.fromJson(json["document"]),
+        document: Document.fromJson(json["document"]),
         firstName: json["firstName"],
         id: json["id"],
         lastName: json["lastName"],
@@ -72,7 +72,7 @@ class Data {
     };
 }
 
-class DriverObject {
+class Document {
     String cardStatus;
     DateTime createdAt;
     int experience;
@@ -85,7 +85,7 @@ class DriverObject {
     int rate;
     DateTime updatedAt;
 
-    DriverObject({
+    Document({
         required this.cardStatus,
         required this.createdAt,
         required this.experience,
@@ -99,7 +99,7 @@ class DriverObject {
         required this.updatedAt,
     });
 
-    factory DriverObject.fromJson(Map<String, dynamic> json) => DriverObject(
+    factory Document.fromJson(Map<String, dynamic> json) => Document(
         cardStatus: json["cardStatus"],
         createdAt: DateTime.parse(json["createdAt"]),
         experience: json["experience"],

@@ -6,11 +6,10 @@ import '../../../../../shared/utils/usecase.dart';
 import '../../../data/repositories/fleet.owner.repo.impl.dart';
 import '../../repositories/fleet.owner.repo.dart';
 
-class VerifyUser extends ChangeNotifier
+class VerifyUser 
     implements UseCase<String, Params<String>> {
   final UserRepo repo;
   VerifyUser(this.repo);
-  VerifyUser.empty() : repo = FleetOwnerRepoImpl.empty();
 
   @override
   Future<Either<Failure, String>> call(Params<String> params) async {

@@ -3,12 +3,17 @@ import 'package:drivn/features/owner/presentations/widget/form.field.to.add.driv
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
+import '../../domain/entities/vehicle.model.dart';
 import 'availability.textfield.dart';
 
-updateRental(BuildContext context, int id) {
-  final locationController = TextEditingController();
-  final priceController = TextEditingController();
-  final driverController = TextEditingController();
+updateRental(BuildContext context, Vehicle vehicle) {
+  final locationController =
+      TextEditingController(text: vehicle.rental?.location);
+  final priceController =
+      TextEditingController(text: vehicle.rental?.price.toString());
+  final driverController = TextEditingController(
+      text:
+          '${vehicle.rental?.driver?.firstName ?? ''} ${vehicle.rental?.driver?.lastName ?? ''}');
   final formkey = GlobalKey<FormState>();
   showDialog(
     context: context,
@@ -53,7 +58,7 @@ updateRental(BuildContext context, int id) {
                 if (formkey.currentState!.validate()) {
                   OwnerApiService()
                       .updateRental(
-                    '$id',
+                    '${vehicle.id}',
                     driverController.text,
                     locationController.text,
                     priceController.text,

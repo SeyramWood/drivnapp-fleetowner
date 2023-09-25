@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
-import 'package:flutter/material.dart';
 
 import '../../../../shared/errors/failure.dart';
 
-abstract class UserRepo extends ChangeNotifier {
+abstract class UserRepo {
   Future<Either<Failure, void>> create(SignUpBody fleetOwner);
   Future<Either<Failure, SignUpBody>> read(SignUpBody fleetOwner);
   Future<Either<Failure, SignUpBody>> update(SignUpBody fleetOwner);

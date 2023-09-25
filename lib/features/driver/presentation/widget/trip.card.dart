@@ -6,6 +6,7 @@ import '../../../../shared/utils/audio.player.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../../shared/utils/constants/date_time.formatting.dart';
 import '../../../auth/presentation/widget/elevated.button.dart';
+import '../../data/api/driver.api.service.dart';
 
 class TripCard extends StatefulWidget {
   const TripCard({super.key, required this.tripInfo});
@@ -100,47 +101,77 @@ class _TripCardState extends State<TripCard> {
               ],
             ),
             // divider,
-            space,
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            Visibility(
+              visible: widget.tripInfo?.tripStatus == 'ended' ? false : true,
+              child: Column(
                 children: [
-                  SizedBox(
-                    width: 140,
-                    height: 40,
-                    child: CustomElevatedButton(
-                      backgroundColor: red,
-                      onPressed: () {},
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(Icons.call_outlined),
-                          Text('Call'),
-                        ],
-                      ),
+                  space,
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 140,
+                          height: 40,
+                          child: CustomElevatedButton(
+                            backgroundColor:
+                                widget.tripInfo?.tripStatus != 'started'
+                                    ? blue
+                                    : grey,
+                            onPressed: widget.tripInfo?.tripStatus != 'started'
+                                ? () {
+                                    var bookingID =
+                                        widget.tripInfo!.id.toString();
+                                    print(bookingID);
+                                    DriverApiService()
+                                        .updateTripStatus(bookingID, 'started');
+                                  }
+                                : null,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(Icons.start),
+                                Text('Start trip'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        SizedBox(
+                          width: 140,
+                          height: 40,
+                          child: CustomElevatedButton(
+                            backgroundColor:
+                                widget.tripInfo?.tripStatus == 'started'
+                                    ? red
+                                    : grey,
+                            onPressed: widget.tripInfo?.tripStatus == 'started'
+                                ? () {
+                                    var bookingID =
+                                        widget.tripInfo!.id.toString();
+                                    print(bookingID);
+                                    DriverApiService()
+                                        .updateTripStatus(bookingID, 'ended');
+                                  }
+                                : null,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(Icons.stop_circle_outlined),
+                                Text('End trip'),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  SizedBox(
-                    width: 140,
-                    height: 40,
-                    child: CustomElevatedButton(
-                      onPressed: () {},
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(Icons.message_outlined),
-                          Text('Message'),
-                        ],
-                      ),
-                    ),
-                  )
+                  space,
                 ],
               ),
             ),
-            space,
           ],
         ),
       ),

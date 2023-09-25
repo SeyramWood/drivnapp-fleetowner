@@ -7,35 +7,30 @@ import '../../../auth/presentation/providers/user.auth.provider.dart';
 import '../../data/repositories/fleet.owner.repo.impl.dart';
 import '../../domain/usecases/fleet.owner/submit.id.dart';
 
-class UserBindings {
-  ChangeNotifierProvider<APIService> apiService =
-      ChangeNotifierProvider<APIService>(
-    create: (context) => APIService(),
-  );
+import 'package:get_it/get_it.dart';
 
-  final userRepo = ChangeNotifierProxyProvider<APIService, UserRepo>(
-    create: (context) => FleetOwnerRepoImpl.empty(),
-    update: (context, db, previous) => FleetOwnerRepoImpl(db),
-  );
+final getIt = GetIt.instance;
 
-  final postUser = ChangeNotifierProxyProvider<UserRepo, PostUseCase>(
-    create: (context) => PostUseCase.empty(),
-    update: (context, fleetOwnerRepo, previous) => PostUseCase(fleetOwnerRepo),
+void setupLocator() {
+  // Register your dependencies here
+  getIt.registerLazySingleton<APIService>(() => APIService());
+  getIt.registerLazySingleton<UserRepo>(
+    () => FleetOwnerRepoImpl(getIt<APIService>()),
   );
-
-  final verifUser = ChangeNotifierProxyProvider<UserRepo, VerifyUser>(
-    create: (context) => VerifyUser.empty(),
-    update: (context, fleetOwnerRepo, previous) => VerifyUser(fleetOwnerRepo),
+  getIt.registerLazySingleton<PostUseCase>(
+    () => PostUseCase(getIt<UserRepo>()),
   );
-  final submitID = ChangeNotifierProxyProvider<UserRepo, SubmitID>(
-    create: (context) => SubmitID.empty(),
-    update: (context, fleetOwnerRepo, previous) => SubmitID(fleetOwnerRepo),
+  getIt.registerLazySingleton<VerifyUser>(
+    () => VerifyUser(getIt<UserRepo>()),
   );
-
-  final userAuthProvider =
-      ChangeNotifierProxyProvider<PostUseCase, UserAuthProvider>(
-    create: (context) => UserAuthProvider.empty(),
-    update: (context, postUseCase, previous) => UserAuthProvider(
-        postUseCase, context.read<VerifyUser>(), context.read<SubmitID>()),
+  getIt.registerLazySingleton<SubmitID>(
+    () => SubmitID(getIt<UserRepo>()),
   );
 }
+
+final userAuthProvider = UserAuthProvider(
+  getIt<PostUseCase>(),
+  getIt<VerifyUser>(),
+  getIt<SubmitID>(),
+);
+  

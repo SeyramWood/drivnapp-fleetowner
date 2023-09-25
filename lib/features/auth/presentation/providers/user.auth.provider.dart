@@ -20,10 +20,7 @@ class UserAuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   UserAuthProvider(this.post, this.verify, this.submitID);
-  UserAuthProvider.empty()
-      : post = PostUseCase.empty(),
-        verify = VerifyUser.empty(),
-        submitID = SubmitID.empty();
+  
   List<File>? _filesToDB;
   List<File>? get files => _filesToDB;
 
