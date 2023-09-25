@@ -200,17 +200,7 @@ class OwnerApiService {
     }
   }
 
-  Future endTrip(String bookingID) async {
-    final url = Uri.parse('$baseUrl/bookings/$bookingID/trip-status/ended');
-    try {
-      final response = await http.put(url);
-      if (response.statusCode != 200) {
-        print(response.reasonPhrase);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  
 
   Future deleteVehicle(String vehicleID) async {
     final url = Uri.parse('$baseUrl/vehicles/$vehicleID');

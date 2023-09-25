@@ -27,18 +27,12 @@ class MoreOfBookedCar extends StatelessWidget {
             info: info,
             onTap: () {},
           ),
-          ActionCard(
-            onTap: info?.bookingStatus != 'successful'
-                ? () {
-                    var bookingID = info!.id.toString();
-                    print(bookingID);
-                    OwnerApiService().endTrip(bookingID);
-                  }
-                : null,
-            info: info,
-            text: 'End Trip',
-            color: blue,
-          ),
+          // ActionCard(
+          //   onTap:(){},
+          //   info: info,
+          //   text: 'End Trip',
+          //   color: blue,
+          // ),
           ActionCard(
             color: red,
             text: 'Report issue',

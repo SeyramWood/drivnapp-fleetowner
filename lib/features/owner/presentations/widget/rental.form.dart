@@ -3,13 +3,18 @@ import 'package:drivn/features/owner/presentations/widget/form.field.to.add.driv
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
+import '../../domain/entities/vehicle.model.dart';
 import 'availability.textfield.dart';
 
-updateRental(BuildContext context, int id) {
-  final locationController = TextEditingController();
-  final priceController = TextEditingController();
-  final driverController = TextEditingController();
-  final _formkey = GlobalKey<FormState>();
+updateRental(BuildContext context, Vehicle vehicle) {
+  final locationController =
+      TextEditingController(text: vehicle.rental?.location);
+  final priceController =
+      TextEditingController(text: vehicle.rental?.price.toString());
+  final driverController = TextEditingController(
+      text:
+          '${vehicle.rental?.driver?.firstName ?? ''} ${vehicle.rental?.driver?.lastName ?? ''}');
+  final formkey = GlobalKey<FormState>();
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -17,7 +22,7 @@ updateRental(BuildContext context, int id) {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       content: SingleChildScrollView(
         child: Form(
-          key: _formkey,
+          key: formkey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -50,10 +55,10 @@ updateRental(BuildContext context, int id) {
             width: MediaQuery.sizeOf(context).width / 3,
             child: ElevatedButton(
               onPressed: () {
-                if (_formkey.currentState!.validate()) {
+                if (formkey.currentState!.validate()) {
                   OwnerApiService()
                       .updateRental(
-                    '$id',
+                    '${vehicle.id}',
                     driverController.text,
                     locationController.text,
                     priceController.text,

@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../shared/utils/constants/base.url.dart';
+import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../../../driver/data/api/driver.api.service.dart';
 import '../../domain/entities/user.signup.model.dart';
 
@@ -24,7 +25,7 @@ class APIService extends ChangeNotifier {
   }
 
   Future<void> setUserId(String id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = SharedPreferencesManager.instance;
     await prefs
         .setString(
       'userID',
@@ -32,8 +33,8 @@ class APIService extends ChangeNotifier {
     )
         .whenComplete(
       () {
-        String? storedUserID = prefs.getString('userID');
-        if (storedUserID != null) {
+        String? storedUserID = prefs.getString('userID','');
+        if (storedUserID.isNotEmpty) {
           _user = storedUserID;
           notifyListeners();
         }

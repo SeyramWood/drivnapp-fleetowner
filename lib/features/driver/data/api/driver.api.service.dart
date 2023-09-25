@@ -5,6 +5,7 @@ import 'package:drivn/shared/utils/constants/base.url.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../shared/utils/shared.prefs.manager.dart';
+import '../../domain/entities/driver.model.dart';
 import '../../domain/entities/request.model.dart';
 
 class DriverApiService {
@@ -14,25 +15,39 @@ class DriverApiService {
     final url = Uri.parse('$baseUrl/drivers/$userID');
     try {
       final response = await http.get(url);
-      final responseBody = jsonDecode(response.body);
+      final responseBody = jsonDecode(response.body)['data'];
 
       if (response.statusCode != 200) {
-        print(response.reasonPhrase);
+        print('failed with:${response.reasonPhrase}');
       }
       if (response.statusCode == 200) {
         await prefs.setString(
           'isOnline',
-          responseBody['data']['status'],
+          responseBody['status'],
         );
         await prefs.setString(
           'cardStatus',
-          responseBody['data']['document']['cardStatus'],
+          responseBody['document']['cardStatus'],
         );
         await prefs.setString(
           'licenseStatus',
-          responseBody['data']['document']['licenseStatus'],
+          responseBody['document']['licenseStatus'],
         );
       }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<DriverObject> fetchDriver(String userID) async {
+    final url = Uri.parse('$baseUrl/drivers/$userID');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        print('user fetch failed with: ${response.statusCode}');
+      }
+      return DriverObject.fromJson(json.decode(response.body));
     } catch (e) {
       print(e);
       rethrow;
@@ -96,6 +111,18 @@ class DriverApiService {
       final response = await http.put(url, body: body);
       if (response.statusCode != 200) {
         print(response.statusCode);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future updateTripStatus(String bookingID, String status) async {
+    final url = Uri.parse('$baseUrl/bookings/$bookingID/trip-status/$status');
+    try {
+      final response = await http.put(url);
+      if (response.statusCode != 200) {
+        print(response.reasonPhrase);
       }
     } catch (e) {
       print(e);
