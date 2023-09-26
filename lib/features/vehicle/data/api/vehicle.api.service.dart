@@ -1,7 +1,7 @@
-
 import 'package:drivn/features/vehicle/domain/entities/vehicle.brands.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.features.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.type.dart';
+import 'package:drivn/shared/errors/exception.dart';
 
 import '../../../../shared/utils/constants/base.url.dart';
 import 'package:http/http.dart' as http;
@@ -51,7 +51,7 @@ class VehicleApiService {
       }
     } catch (e) {
       print('Error while fetching features: $e');
-      throw Exception('Failed to fetch brands');
+      throw CustomException('Failed to fetch brands');
     }
   }
 }

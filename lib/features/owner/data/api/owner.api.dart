@@ -10,38 +10,30 @@ import 'package:http/http.dart' as http;
 
 import '../../../../shared/utils/constants/base.url.dart';
 import '../../domain/entities/driver.model.dart';
+import '../../domain/entities/update.rental.model.dart';
 
 class OwnerApiService {
   //add a vehicle
-  Future<String?> addVehicle({
-    required String userID,
-    required String carBrand,
-    required String carType,
-    required List<File> imageFiles,
-    required List<File> proofFiles,
-    required List<String> features,
-    String? moreFeatures,
-  }) async {
+  Future addVehicle({required v.VehicleToDBModel vehicle}) async {
     final uri = Uri.parse('$baseUrl/vehicles');
 
     try {
-      if (imageFiles.isNotEmpty && proofFiles.isNotEmpty) {
+      if (vehicle.images.isNotEmpty && vehicle.documents.isNotEmpty) {
         var request = http.MultipartRequest('POST', uri);
         // Add fields to the request
-        request.fields['owner'] = userID;
-        request.fields['brand'] = carBrand;
-        request.fields['type'] = carType;
-        request.fields['feature'] = features.join(',');
+        request.fields['owner'] = vehicle.userID;
+        request.fields['brand'] = vehicle.brand;
+        request.fields['type'] = vehicle.type;
+        request.fields['feature'] = vehicle.features.join(',');
+        request.fields['moreFeature'] = vehicle.moreFeatures ?? '';
 
-        request.fields['moreFeature'] = moreFeatures ?? '';
-
-        for (var file in imageFiles) {
+        for (var file in vehicle.images) {
           request.files.add(
             await http.MultipartFile.fromPath('image', file.path),
           );
         }
 
-        for (var file in proofFiles) {
+        for (var file in vehicle.documents) {
           request.files.add(
             await http.MultipartFile.fromPath('document', file.path),
           );
@@ -50,22 +42,14 @@ class OwnerApiService {
         var response = await request.send();
 
         if (response.statusCode != 201) {
-          print(response.reasonPhrase);
-          throw CustomException(
-              'Request failed with status code: ${response.statusCode}');
+          throw CustomException("Couldn't create or add vehicle");
         }
-        log(response.stream.bytesToString.toString());
       } else {
-        print('No files selected');
+        throw CustomException('No files selected');
       }
-    } on CustomException catch (failure) {
-      print('CustomException: ${failure.message}');
-      // throw CustomException(failure.message);
-    } catch (e) {
-      print('Error: $e');
-      rethrow; // Re-throw the caught exception for better error propagation
+    } catch (failure) {
+      rethrow;
     }
-    return null;
   }
 
 //http get request for vehicles belonging to a user
@@ -95,26 +79,16 @@ class OwnerApiService {
   }
 
   Future updateRental(
-    String vehicleID,
-    String? driver,
-    String location,
-    String price,
-  ) async {
+      String vehicleID, UpdateRentalModel updateRentalModel) async {
     final url = Uri.parse('$baseUrl/vehicles/rental/$vehicleID');
-    final body = {
-      "driver": driver ?? '',
-      "location": location,
-      "price": price,
-    };
+    final body = updateRentalModel.updateRentalToJson();
     try {
       final response = await http.put(url, body: body);
-
-      if (response.statusCode != 200 || response.statusCode != 202) {
-        log(response.statusCode.toString());
+      if (response.statusCode != 200) {
+        throw CustomException("Rental couldn't be updated");
       }
-      log(response.body);
     } catch (e) {
-      log('$e');
+      rethrow;
     }
   }
 
@@ -129,11 +103,10 @@ class OwnerApiService {
       final response = await http.put(url);
 
       if (response.statusCode != 200 || response.statusCode != 202) {
-        log(response.statusCode.toString());
+        throw CustomException("Availability couldn't be updated");
       }
-      log(response.body);
     } catch (e) {
-      log('$e');
+      rethrow;
     }
   }
 
@@ -144,10 +117,8 @@ class OwnerApiService {
       if (response.statusCode != 200) {
         log(response.statusCode.toString());
       }
-      log(response.body.toString());
       return DriverModel.fromJson(json.decode(response.body)).data.data;
     } catch (e) {
-      print(e);
       throw Exception('failed to get drivers');
     }
   }
@@ -183,7 +154,7 @@ class OwnerApiService {
     }
   }
 
-  Future cancelRequest(requestID, String? reason) async {
+  Future cancelRequest(String requestID, String? reason) async {
     final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
     final body = {
       "requestType": "owner",
@@ -199,8 +170,6 @@ class OwnerApiService {
       print(e);
     }
   }
-
-  
 
   Future deleteVehicle(String vehicleID) async {
     final url = Uri.parse('$baseUrl/vehicles/$vehicleID');

@@ -11,7 +11,7 @@ class GoOnline extends UseCase<void,MultiParams<String,String>>{
 
   @override
   Future<Either<Failure, void>> call(MultiParams<String,String> params) async {
-    return await repo.goOnline(params.data,params.data2);
+    return await repo.goOnline(params.data1,params.data2);
   }
 
 }

@@ -1,14 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // To parse this JSON data, do
 //
 //     final vehicles = vehiclesFromJson(jsonString);
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:drivn/features/vehicle/domain/entities/vehicle.features.dart';
 
 Vehicles vehicleFromJson(String str) => Vehicles.fromJson(json.decode(str));
 
-String vehicleToJson(Vehicles data) => json.encode(data.toJson());
 
 class Vehicles {
   Data? data;
@@ -24,10 +25,7 @@ class Vehicles {
         status: json["status"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "data": data?.toJson(),
-        "status": status,
-      };
+ 
 }
 
 class Data {
@@ -45,10 +43,7 @@ class Data {
             json["data"]?.map((x) => Vehicle.fromJson(x)) ?? []),
       );
 
-  Map<String, dynamic> toJson() => {
-        "count": count,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
-      };
+  
 }
 
 class Vehicle {
@@ -101,20 +96,7 @@ class Vehicle {
         rental: json["rental"] == null ? null : Rental.fromJson(json["rental"]),
       );
 
-  Map<String, dynamic> toJson() => {
-        "availability": availability,
-        "booked": booked,
-        "brand": brand,
-        "createdAt": createdAt.toIso8601String(),
-        "documents": List<dynamic>.from(documents.map((x) => x.toJson())),
-        "id": id,
-        "images": List<dynamic>.from(images.map((x) => x.toJson())),
-        "owner": owner.toJson(),
-        "type": type,
-        "updatedAt": updatedAt.toIso8601String(),
-        "features": List<dynamic>.from(features.map((x) => x.toJson())),
-        "rental": rental?.toJson(),
-      };
+ 
 }
 
 class Document {
@@ -205,5 +187,36 @@ class Rental {
         "driver": driver?.toJson(),
         "location": location,
         "price": price,
+      };
+}
+
+
+
+
+class VehicleToDBModel {
+  String userID;
+  String brand;
+  List<File> documents;
+  List<File> images;
+  String type;
+  List<String> features;
+  String? moreFeatures;
+  VehicleToDBModel({
+    required this.userID,
+    required this.brand,
+    required this.documents,
+    required this.images,
+    required this.type,
+    required this.features,
+    this.moreFeatures,
+  });
+   Map<String, dynamic> toJson() => {
+        "brand": brand,
+        "document": documents,
+        "image": images,
+        "owner": userID,
+        "type": type,
+        "feature": features,
+        "moreFeature":moreFeatures,
       };
 }

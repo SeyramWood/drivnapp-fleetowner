@@ -3,13 +3,13 @@ import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/views/verify.option.view.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
-import 'package:drivn/features/user/domain/usecases/fleet.owner/create.dart';
-import 'package:drivn/features/user/domain/usecases/fleet.owner/submit.id.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/usecase.dart';
-import '../../../user/domain/usecases/fleet.owner/verify.fleetOwner.dart';
+import '../../../user/domain/usecases/create.dart';
+import '../../../user/domain/usecases/submit.id.dart';
+import '../../../user/domain/usecases/verify.fleetOwner.dart';
 import '../views/otp.input.view.dart';
 
 class UserAuthProvider extends ChangeNotifier {

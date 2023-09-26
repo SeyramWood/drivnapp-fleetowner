@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
 import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/features/vehicle/data/api/vehicle.api.service.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.brands.dart';
@@ -216,20 +217,19 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   //elevated button for submission of data
                   child: CustomElevatedButton(
                     onPressed: () {
-                      apiService
-                          .addVehicle(
-                              userID: context.read<APIService>().userId,
-                              carBrand: carBrand.text,
-                              carType: carType.text,
-                              features: List.from(selectedOptions
-                                  .map(
-                                    (feature) => feature.id.toString(),
-                                  )
-                                  .toList()),
-                              imageFiles: imageFile,
-                              proofFiles: proofFile,
-                              moreFeatures: optionalFeatures.text.trim())
-                          .then((failure) {
+                      VehicleToDBModel vehicle = VehicleToDBModel(
+                          userID: context.read<APIService>().userId,
+                          brand: carBrand.text,
+                          type: carType.text,
+                          features: List.from(selectedOptions
+                              .map(
+                                (feature) => feature.id.toString(),
+                              )
+                              .toList()),
+                          images: imageFile,
+                          documents: proofFile,
+                          moreFeatures: optionalFeatures.text.trim());
+                      apiService.addVehicle(vehicle: vehicle).then((failure) {
                         if (failure != null) {
                           showErrorDialogue(
                             context,

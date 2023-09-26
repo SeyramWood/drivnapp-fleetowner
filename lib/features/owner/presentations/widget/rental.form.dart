@@ -1,4 +1,5 @@
 import 'package:drivn/features/owner/data/api/owner.api.dart';
+import 'package:drivn/features/owner/domain/entities/update.rental.model.dart';
 import 'package:drivn/features/owner/presentations/widget/form.field.to.add.driver.dart';
 import 'package:flutter/material.dart';
 
@@ -56,13 +57,13 @@ updateRental(BuildContext context, Vehicle vehicle) {
             child: ElevatedButton(
               onPressed: () {
                 if (formkey.currentState!.validate()) {
+                  UpdateRentalModel updateRentalModel = UpdateRentalModel(
+                    location: locationController.text,
+                    price: priceController.text,
+                    driver:driverController.text,
+                  );
                   OwnerApiService()
-                      .updateRental(
-                    '${vehicle.id}',
-                    driverController.text,
-                    locationController.text,
-                    priceController.text,
-                  )
+                      .updateRental('${vehicle.id}', updateRentalModel)
                       .then(
                     (value) {
                       Navigator.of(context).pop();

@@ -9,11 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'features/onboarding_screens/onboard.dart';
+import 'features/owner/presentations/dependency/owner.dependency.injection.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferencesManager.instance.init();
   setupDriverDependencies();
+  setupOwnerDependencies();
   //auth dependency locator
   setupLocator();
   runApp(const MyApp());
