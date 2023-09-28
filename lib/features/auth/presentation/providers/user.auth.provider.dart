@@ -105,12 +105,7 @@ class UserAuthProvider extends ChangeNotifier {
         await Future.delayed(const Duration(seconds: 2), () {
           _isLoading = false;
           notifyListeners();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const VerifyOptionView(),
-            ),
-          );
+          
         });
       },
     );

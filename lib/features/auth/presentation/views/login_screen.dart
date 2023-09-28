@@ -150,16 +150,14 @@ class _LoginViewState extends State<LoginView> {
                             .logIn(
                                 // context.read<APIService>().userId
                                 context.read<UserApiService>().accTypeIsOwner
-                                    ? '51539607584'
+                                    ? '51539607598'
                                     : '51539607577',
                                 '')
                             .then(
                           (value) async {
                             await Future.delayed(const Duration(seconds: 2),
                                 () {
-                              print(context
-                                  .read<UserApiService>()
-                                  .accTypeIsOwner);
+                              
                               Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (context) => context

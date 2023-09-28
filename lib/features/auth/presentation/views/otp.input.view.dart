@@ -1,5 +1,7 @@
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/auth/presentation/views/verify.option.view.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
@@ -66,21 +68,26 @@ class _OTPInputViewState extends State<OTPInputView> {
                   ),
                   child: CustomElevatedButton(
                     backgroundColor: black,
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formkey.currentState!.validate()) {
-                        context
-                            .read<UserAuthProvider>()
+                        await context
+                            .read<UserApiService>()
                             .verifyUser(
                               otpController.text,
-                              context,
+                              // context,
                             )
                             .then(
                           (failure) {
-                            if (failure != null) {
-                              showErrorDialogue(context, failure);
-                              print(failure);
-                            }
-                            otpController.clear();
+                            // if (failure != null) {
+                            //   showErrorDialogue(context, failure);
+                            // }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const VerifyOptionView(),
+                              ),
+                            );
+                            // otpController.clear();
                           },
                         );
                       }
@@ -96,7 +103,14 @@ class _OTPInputViewState extends State<OTPInputView> {
                   height: 10,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const VerifyOptionView(),
+                      ),
+                    );
+                  },
                   child: RichText(
                     text: TextSpan(
                         text: "Didn't get code? ",

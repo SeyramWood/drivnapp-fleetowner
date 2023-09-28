@@ -8,12 +8,30 @@ import 'package:provider/provider.dart';
 
 import 'driver.doc.dart';
 
-class GetVerifiedOption extends StatelessWidget {
+class GetVerifiedOption extends StatefulWidget {
   const GetVerifiedOption({super.key});
 
   @override
+  State<GetVerifiedOption> createState() => _GetVerifiedOptionState();
+}
+
+class _GetVerifiedOptionState extends State<GetVerifiedOption> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    print(Provider.of<UserApiService>(context, listen: false).userId);
+
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var provider = context.read<UserApiService>();
+    var provider = Provider.of<UserApiService>(context, listen: false);
     return Scaffold(
         backgroundColor: blue,
         body: Center(
@@ -44,8 +62,9 @@ class GetVerifiedOption extends StatelessWidget {
                 Card(
                   color: white,
                   child: ListTile(
-                    onTap: () async {
-                      provider.setDocField('idCard');
+                    onTap: () {
+                      print(provider.userId);
+
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const ProofIDView(),
                       ));
@@ -75,6 +94,7 @@ class GetVerifiedOption extends StatelessWidget {
                   color: white,
                   child: ListTile(
                     onTap: () {
+                      print(provider.userId);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const DriverDocsView(),
@@ -104,10 +124,13 @@ class GetVerifiedOption extends StatelessWidget {
                 ),
                 CustomElevatedButton(
                   backgroundColor: black,
-                  onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => const OMainPage()),
-                      (route) => false),
+                  onPressed: () {
+                    print(provider.userId);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => const OMainPage()),
+                        (route) => false);
+                  },
                   child: const Text('Done'),
                 )
               ],

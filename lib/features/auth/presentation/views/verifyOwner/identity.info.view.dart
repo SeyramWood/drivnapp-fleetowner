@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
+import 'package:drivn/shared/utils/shared.prefs.manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +18,7 @@ class ProofIDView extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
-    final provider = context.read<UserAuthProvider>();
+    final provider = context.read<UserApiService>();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: blue,
@@ -94,9 +98,12 @@ class ProofIDView extends StatelessWidget {
                 ),
                 CustomElevatedButton(
                   onPressed: () {
+                    final prefs = SharedPreferencesManager.instance;
+                    var d = prefs.getString('userID', '');
+                    log(d);
+                    log('sdggh ${context.read<UserApiService>().userId}');
                     provider
-                        .submitUserDoc(
-                            context, context.read<UserAuthProvider>().files)
+                        .submitDoc(context.read<UserAuthProvider>().files)
                         .then((value) {
                       if (value is String) {
                         return showErrorDialogue(context, value);
@@ -109,7 +116,7 @@ class ProofIDView extends StatelessWidget {
                   },
                   backgroundColor: black,
                   child: const Text('Submit for review'),
-                ).loading(provider.isLoading)
+                )
               ],
             ),
           ),

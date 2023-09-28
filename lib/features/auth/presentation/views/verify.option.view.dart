@@ -8,8 +8,21 @@ import '../../../driver/presentation/views/main.page.dart';
 import '../../../owner/presentations/views/home.dart';
 import '../../../user/data/api/user.api.service.dart';
 
-class VerifyOptionView extends StatelessWidget {
+class VerifyOptionView extends StatefulWidget {
   const VerifyOptionView({super.key});
+
+  @override
+  State<VerifyOptionView> createState() => _VerifyOptionViewState();
+}
+
+class _VerifyOptionViewState extends State<VerifyOptionView> {
+  @override
+  void didChangeDependencies() {
+    print(Provider.of<UserApiService>(context, listen: false).userId);
+
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +66,18 @@ class VerifyOptionView extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.06,
                 ),
                 ElevatedButton(
-                  onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => isDriver
-                          ? const GetVerifiedOption()
-                          : const VerifyDriverView(),
-                    ),
-                    (route) => false,
-                  ),
+                  onPressed: () {
+                    print(context.read<UserApiService>().userId);
+
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => isDriver
+                            ? const GetVerifiedOption()
+                            : const VerifyDriverView(),
+                      ),
+                      (route) => false,
+                    );
+                  },
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(white)),
                   child: const Padding(

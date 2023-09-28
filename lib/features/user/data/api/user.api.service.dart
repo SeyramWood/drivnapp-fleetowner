@@ -26,7 +26,6 @@ class UserApiService extends ChangeNotifier {
   isOwner(bool isOwner) {
     _accTypeIsOwner = isOwner;
     notifyListeners();
-    return isOwner;
   }
 
   String docField = '';
@@ -49,6 +48,7 @@ class UserApiService extends ChangeNotifier {
         if (storedUserID.isNotEmpty) {
           _user = storedUserID;
           notifyListeners();
+          print('set $_user');
         }
       },
     ); // Store the user ID in SharedPreferences
@@ -113,10 +113,10 @@ class UserApiService extends ChangeNotifier {
     }
   }
 
-  Future verifyUser(String requestBody) async {
+  Future verifyUser(String otp) async {
     try {
       final Uri url = Uri.parse(
-          '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/verify/$requestBody');
+          '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/verify/$otp');
 
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -137,9 +137,10 @@ class UserApiService extends ChangeNotifier {
       }
       if (response.statusCode == 201) {
         String id = jsonDecode(response.body)['data']['id'].toString();
-        print(id);
+        log(id);
         await setUserId(id);
         _accTypeIsOwner == false ? DriverApiService().onInit(id) : null;
+        log(userId);
       }
     } catch (e) {
       rethrow;
@@ -147,7 +148,6 @@ class UserApiService extends ChangeNotifier {
   }
 
   Future logIn(String userId, String password) async {
-    print(userId);
     var url = Uri.parse(
         '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/$userId');
     try {
@@ -160,9 +160,13 @@ class UserApiService extends ChangeNotifier {
           );
         },
       );
-      print(_accTypeIsOwner);
       if (response.statusCode != 200) {
-        throw CustomException('Signing failed');
+        final errorMessage = jsonDecode(response.body)['error'] as String?;
+        if (errorMessage != null) {
+          throw CustomException(errorMessage);
+        } else {
+          throw CustomException('An error occurred');
+        }
       }
       if (response.statusCode == 200) {
         String id = jsonDecode(response.body)['data']['id'].toString();
