@@ -14,5 +14,6 @@ abstract class UserRepo {
   Future<Either<Failure, DProfile>> fetchDriverProfile(String iD);
   Future<Either<Failure, SignUpBody>> update(SignUpBody fleetOwner);
   Future<Either<Failure, String>> verify(String otp);
-  Future<Either<Failure, List<File>>> submitID(List<File> file);
+  Future<Either<Failure, List<File>>> submitDocs(List<File> file);
+  Future<Either<Failure, List<File>>> submitId(List<File> file);
 }

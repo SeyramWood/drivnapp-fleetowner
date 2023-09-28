@@ -1,5 +1,6 @@
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
+import 'package:drivn/features/auth/presentation/views/verifyDriver.view.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
@@ -144,17 +145,21 @@ class _LoginViewState extends State<LoginView> {
                         setState(() {
                           isLoading = true;
                         });
-                        Provider.of<UserApiService>(context, listen: false)
+                        context
+                            .read<UserApiService>()
                             .logIn(
                                 // context.read<APIService>().userId
                                 context.read<UserApiService>().accTypeIsOwner
-                                    ? '51539607565'
+                                    ? '51539607584'
                                     : '51539607577',
                                 '')
                             .then(
                           (value) async {
                             await Future.delayed(const Duration(seconds: 2),
                                 () {
+                              print(context
+                                  .read<UserApiService>()
+                                  .accTypeIsOwner);
                               Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (context) => context

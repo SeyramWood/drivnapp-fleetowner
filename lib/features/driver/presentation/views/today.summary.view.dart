@@ -1,5 +1,7 @@
 import 'package:drivn/features/driver/presentation/views/ride.info.view.dart';
+import 'package:drivn/shared/utils/constants/date_time.formatting.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 import '../widget/summary.container.dart';
@@ -16,8 +18,12 @@ class TodaySummaryView extends StatelessWidget {
             height: 10,
           ),
         ),
-        const SliverToBoxAdapter(
-          child: Text('Tue, Aug 15, 2023'),
+        SliverToBoxAdapter(
+          child: Center(
+              child: Text(
+            DateFormat.yMMMMEEEEd().format(DateTime.now()),
+            style: Theme.of(context).textTheme.bodyMedium,
+          )),
         ),
         const SliverToBoxAdapter(
           child: SizedBox(

@@ -62,7 +62,10 @@ class _VerifyingViewState extends State<VerifyingView> {
                 style: TextStyle(color: white, fontSize: 15),
               ),
             ),
-            title: const Text('Verifying national id'),
+            title: Text(
+              'Verifying national ID',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             trailing: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
@@ -86,7 +89,10 @@ class _VerifyingViewState extends State<VerifyingView> {
                 style: TextStyle(color: white, fontSize: 15),
               ),
             ),
-            title: const Text('Verifying driving licence'),
+            title: Text(
+              'Verifying driving licence',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             trailing: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
+import '../../../user/domain/entities/driver.profile.model.dart';
 import '../widget/elevated.button.dart';
 
 class VerifyDriverView extends StatefulWidget {
@@ -18,7 +19,6 @@ class VerifyDriverView extends StatefulWidget {
 }
 
 class _VerifyDriverViewState extends State<VerifyDriverView> {
-  bool isLoading = false;
   Future<List<File>> selectFiles(files) async {
     final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
     if (fileResult != null) {
@@ -37,12 +37,6 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
   List<File> licenceFiles = [];
   List<String> selectedOptions = [];
 
-  List<String> allOptions = [
-    ' A',
-    ' B',
-    ' C',
-    ' D',
-  ];
   var space = const SizedBox(
     height: 10,
   );
@@ -130,7 +124,7 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                 const Text('License Type'),
                 MyFormField(
                   controller: licenceType,
-                  // suffixIcon: DropdownButton(items: [DropdownMenuItem(child: Text('A'),value: 'A',)]),
+                  keyboardType: TextInputType.name,
                 )
               ],
             ),
@@ -141,6 +135,7 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                 const Text('License Number'),
                 MyFormField(
                   controller: licenceNumber,
+                  keyboardType: TextInputType.text,
                 )
               ],
             ),
@@ -164,23 +159,17 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               width: 200,
               child: CustomElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    isLoading = true;
-                  });
-                  context
-                      .read<UserApiService>()
-                      .submitData(
-                        idCardFiles: idCardFiles,
-                        licenseFiles: licenceFiles,
-                        licenseNumber: licenceNumber.text,
-                        licenseType: licenceType.text,
-                        yearsOfExperience: 8,
-                      )
-                      .then(
+                  //initialize driver docs with data
+                  final Document docs = Document(
+                    idCard: idCardFiles,
+                    license: licenceFiles,
+                    licenseNumber: licenceNumber.text,
+                    licenseType: licenceType.text,
+                    experience: int.parse(yearsOfExperience.text),
+                    rate: 3,
+                  );
+                  context.read<UserApiService>().submitData(docs: docs).then(
                     (value) {
-                      setState(() {
-                        isLoading = false;
-                      });
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const VerifyingView(),
                       ));
@@ -188,7 +177,7 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                   );
                 },
                 child: const Text('Submit for review'),
-              ).loading(isLoading),
+              ),
             ),
           ]),
         ),
@@ -199,7 +188,11 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
 
 // ignore: must_be_immutable
 class MyFormField extends StatelessWidget {
-  MyFormField({super.key, required this.controller, this.keyboardType});
+  MyFormField({
+    super.key,
+    required this.controller,
+    this.keyboardType,
+  });
   final TextEditingController controller;
   TextInputType? keyboardType;
   @override
@@ -207,6 +200,7 @@ class MyFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      textCapitalization: TextCapitalization.sentences,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         isDense: true,

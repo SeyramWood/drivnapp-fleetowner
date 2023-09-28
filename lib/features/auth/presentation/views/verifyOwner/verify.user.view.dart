@@ -44,9 +44,8 @@ class GetVerifiedOption extends StatelessWidget {
                 Card(
                   color: white,
                   child: ListTile(
-                    onTap: () {
-                      provider.setfield('idCard');
-                      provider.setPath('proof-identity');
+                    onTap: () async {
+                      provider.setDocField('idCard');
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const ProofIDView(),
                       ));
@@ -76,8 +75,6 @@ class GetVerifiedOption extends StatelessWidget {
                   color: white,
                   child: ListTile(
                     onTap: () {
-                      provider.setfield('documents');
-                      provider.setPath('drivers-document');
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const DriverDocsView(),
@@ -101,26 +98,6 @@ class GetVerifiedOption extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Align(
-                //   alignment: Alignment.bottomRight,
-                //   child: TextButton(
-                //     onPressed: () {
-                //       Navigator.of(context).pushAndRemoveUntil(
-                //         MaterialPageRoute(
-                //           builder: (context) => const OMainPage(),
-                //         ),
-                //         (route) => false,
-                //       );
-                //     },
-                //     child: Text(
-                //       'Later',
-                //       style: Theme.of(context)
-                //           .textTheme
-                //           .bodyLarge!
-                //           .copyWith(color: white),
-                //     ),
-                //   ),
-                // ),
 
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height / 6,

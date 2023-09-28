@@ -13,6 +13,7 @@ import '../../../../shared/errors/failure.dart';
 import '../../../../shared/utils/usecase.dart';
 import '../../../user/domain/entities/owner.profile.model.dart';
 import '../../../user/domain/usecases/create.dart';
+import '../../../user/domain/usecases/submit.doc.dart';
 import '../../../user/domain/usecases/submit.id.dart';
 import '../../../user/domain/usecases/verify.fleetOwner.dart';
 import '../views/otp.input.view.dart';
@@ -20,18 +21,19 @@ import '../views/otp.input.view.dart';
 class UserAuthProvider extends ChangeNotifier {
   final PostUseCase post;
   final VerifyUser verify;
-  final SubmitID submitID;
+  final SubmitDoc submitDoc;
+  final SubmitId submitId;
   final Login login;
   final FetchOwnerProfile fetchOwner;
   final FetchDriverProfile fetchDriver;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  UserAuthProvider(
-      this.post, this.verify, this.submitID, this.login, this.fetchOwner, this.fetchDriver);
+  UserAuthProvider(this.post, this.verify, this.submitDoc, this.login,
+      this.fetchOwner, this.fetchDriver, this.submitId);
 
-  List<File>? _filesToDB;
-  List<File>? get files => _filesToDB;
+  List<File> _filesToDB = [];
+  List<File> get files => _filesToDB;
 
   Future<String?> postUser(SignUpBody fleetOwner, context) async {
     _isLoading = true;
@@ -62,7 +64,7 @@ class UserAuthProvider extends ChangeNotifier {
     );
   }
 
-  Future logIn(String username, String password) async {
+  Future<String?> logIn(String username, String password) async {
     _isLoading = true;
     final result = await login(MultiParams(username, password));
     return result.fold((failure) {
@@ -76,7 +78,7 @@ class UserAuthProvider extends ChangeNotifier {
     });
   }
 
-  Future<Either<String,Profile>> getOwnerProfile(String iD) async {
+  Future<Either<String, Profile>> getOwnerProfile(String iD) async {
     final result = await fetchOwner(Params(iD));
     return result.fold(
       (failure) {
@@ -88,7 +90,7 @@ class UserAuthProvider extends ChangeNotifier {
     );
   }
 
-  Future<String?> verifyUser(String otp, context) async {
+  Future verifyUser(String otp, context) async {
     _isLoading = true;
     notifyListeners();
     final result = await verify(Params(otp));
@@ -110,20 +112,17 @@ class UserAuthProvider extends ChangeNotifier {
             ),
           );
         });
-
-        return success;
       },
     );
   }
 
 //select files to be uploaded
-  Future<List<File>?> selectFiles({file}) async {
+  Future<List<File>> selectFiles({file}) async {
     final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
     if (fileResult != null) {
       file = _filesToDB = fileResult.files
           .map((platformFile) => File(platformFile.path.toString()))
           .toList();
-      print(file);
       notifyListeners();
       return _filesToDB;
     }
@@ -131,18 +130,20 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 //for the owner usage
-  Future submitUserID(
-    context,
-  ) async {
+  Future submitUserDoc(context, List<File> files) async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await submitID(Params(
-      _filesToDB ?? [],
+    final result = await submitDoc(Params(
+      files,
     ));
-    result.fold(
+    print(result);
+
+    return result.fold(
       (failure) {
-        log(failure.message);
+        _isLoading = false;
+        notifyListeners();
+        return failure.message;
       },
       (success) async {
         await Future.delayed(
@@ -150,10 +151,37 @@ class UserAuthProvider extends ChangeNotifier {
           () => Navigator.of(context).pop(),
         );
         _isLoading = false;
+        _filesToDB = [];
         notifyListeners();
-        return success;
+        // return _filesToDB;
       },
     );
-    _filesToDB = [];
+  }
+
+  Future submitUserId(context, List<File> files) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final result = await submitId(Params(
+      files,
+    ));
+
+    return result.fold(
+      (failure) {
+        _isLoading = false;
+        notifyListeners();
+        return failure.message;
+      },
+      (success) async {
+        await Future.delayed(
+          const Duration(seconds: 2),
+          () => Navigator.of(context).pop(),
+        );
+        _isLoading = false;
+        _filesToDB = [];
+        notifyListeners();
+        // return _filesToDB;
+      },
+    );
   }
 }

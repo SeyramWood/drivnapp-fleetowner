@@ -84,7 +84,7 @@ class Document {
     factory Document.fromJson(Map<String, dynamic> json) => Document(
         createdAt: DateTime.parse(json["createdAt"]),
         id: json["id"],
-        idCard: List<String>.from(json["idCard"].map((x) => x)),
+        idCard: List<String>.from(json["idCard"].map((x) => x)??[]),
         updatedAt: DateTime.parse(json["updatedAt"]),
     );
 

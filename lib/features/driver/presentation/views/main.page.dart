@@ -34,7 +34,7 @@ class _DMainPageState extends State<DMainPage> {
           children: const [
             RequestView(),
             MyTrips(),
-            SummaryView(),
+            // SummaryView(),
             DProfileView(),
           ],
         ),
@@ -55,9 +55,9 @@ class _DMainPageState extends State<DMainPage> {
                 label: ''),
             BottomNavigationBarItem(
                 icon: ImageIcon(AssetImage('assets/icons/car.png')), label: ''),
-            BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/icons/note.png')),
-                label: ''),
+            // BottomNavigationBarItem(
+            //     icon: ImageIcon(AssetImage('assets/icons/note.png')),
+            //     label: ''),
             BottomNavigationBarItem(
               icon: ImageIcon(
                 AssetImage('assets/icons/profile.png'),

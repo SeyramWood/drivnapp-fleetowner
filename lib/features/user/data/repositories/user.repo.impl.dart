@@ -46,11 +46,13 @@ class UserRepoImpl implements UserRepo {
   }
 
   @override
-  Future<Either<Failure, List<File>>> submitID(List<File> file) async {
+  Future<Either<Failure, List<File>>> submitDocs(List<File> file) async {
     try {
-      final result = await api.uploadFiles(
+      final result = await api.submitDoc(
         file,
       );
+      print(Right(result));
+
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
@@ -75,7 +77,7 @@ class UserRepoImpl implements UserRepo {
   @override
   Future<Either<Failure, Profile>> fetchOwnerProfile(String iD) async {
     try {
-      final result =await api.fetchOwnerProfile(iD);
+      final result = await api.fetchOwnerProfile(iD);
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
@@ -88,6 +90,22 @@ class UserRepoImpl implements UserRepo {
   Future<Either<Failure, DProfile>> fetchDriverProfile(String iD) async {
     try {
       final result = await api.fetchDriverProfile(iD);
+      return Right(result);
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<File>>> submitId(List<File> file) async{
+    try {
+      final result = await api.submitId(
+        file,
+      );
+      print(Right(result));
+
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));

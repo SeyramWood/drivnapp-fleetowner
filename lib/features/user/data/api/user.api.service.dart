@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import '../../../../shared/utils/constants/base.url.dart';
 import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../../../driver/data/api/driver.api.service.dart';
+import '../../domain/entities/driver.profile.model.dart' as driver;
 import '../../domain/entities/driver.profile.model.dart';
 import '../../domain/entities/owner.profile.model.dart';
 import '../../domain/entities/user.signup.model.dart';
@@ -26,6 +27,13 @@ class UserApiService extends ChangeNotifier {
     _accTypeIsOwner = isOwner;
     notifyListeners();
     return isOwner;
+  }
+
+  String docField = '';
+  setDocField(field) {
+    docField = field;
+    notifyListeners();
+    print(docField);
   }
 
   Future<void> setUserId(String id) async {
@@ -50,16 +58,14 @@ class UserApiService extends ChangeNotifier {
   //for the owner usage
   String _path = '';
   String get path => _path;
-  setPath(path) {
+  set path(path) {
     _path = path;
-    notifyListeners();
   }
 
   String _field = '';
   String get field => _field;
-  setfield(field) {
+  set field(field) {
     _field = field;
-    notifyListeners();
   }
 
   Future<void> postUser(SignUpBody requestBody) async {
@@ -121,21 +127,19 @@ class UserApiService extends ChangeNotifier {
         url,
         headers: headers,
       );
-      log(response.body);
-      if (response.statusCode == 201) {
-        String id = jsonDecode(response.body)['data']['id'].toString();
-        //store user's id locally
-        setUserId(id);
-        notifyListeners();
-        DriverApiService().onInit(id);
-      }
       if (response.statusCode != 201) {
         final errorMessage = jsonDecode(response.body)['error'] as String?;
         if (errorMessage != null) {
-          throw CustomException('An error occurred');
+          throw CustomException(errorMessage);
         } else {
           throw CustomException('An error occurred');
         }
+      }
+      if (response.statusCode == 201) {
+        String id = jsonDecode(response.body)['data']['id'].toString();
+        print(id);
+        await setUserId(id);
+        _accTypeIsOwner == false ? DriverApiService().onInit(id) : null;
       }
     } catch (e) {
       rethrow;
@@ -143,6 +147,7 @@ class UserApiService extends ChangeNotifier {
   }
 
   Future logIn(String userId, String password) async {
+    print(userId);
     var url = Uri.parse(
         '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/$userId');
     try {
@@ -155,13 +160,14 @@ class UserApiService extends ChangeNotifier {
           );
         },
       );
+      print(_accTypeIsOwner);
       if (response.statusCode != 200) {
         throw CustomException('Signing failed');
       }
       if (response.statusCode == 200) {
         String id = jsonDecode(response.body)['data']['id'].toString();
         await setUserId(id);
-        DriverApiService().onInit(id);
+        _accTypeIsOwner == false ? DriverApiService().onInit(id) : null;
       }
     } catch (e) {
       rethrow;
@@ -186,11 +192,16 @@ class UserApiService extends ChangeNotifier {
   }
 
   Future<DProfile> fetchDriverProfile(String iD) async {
-    final url = Uri.parse('$baseUrl/fleet-owners$iD');
+    print(iD);
+    final url = Uri.parse('$baseUrl/drivers/$iD');
     try {
       final response = await http.get(url);
       if (response.statusCode != 200) {
-        throw CustomException('Failed to get your profile');
+        print(response.reasonPhrase);
+        throw CustomException(
+          'Failed to get your profile',
+          statusCode: response.statusCode,
+        );
       }
       final jsonBody = jsonDecode(response.body);
       return DProfile.fromJson(jsonBody);
@@ -200,66 +211,99 @@ class UserApiService extends ChangeNotifier {
   }
 
   //for the fleet owner
-  Future<List<File>> uploadFiles(
+  Future submitDoc(
     List<File> files,
   ) async {
-    final uri = Uri.parse('$baseUrl/fleet-owners/$path/$_user');
+    final url = Uri.parse('$baseUrl/fleet-owners/proof-identity/$_user');
+    print(_field);
 
     try {
       if (files.isNotEmpty) {
-        var request = http.MultipartRequest('POST', uri);
+        var request = http.MultipartRequest('POST', url);
         for (var file in files) {
+          print(_field);
           request.files.add(
-            await http.MultipartFile.fromPath(field, file.path),
+            await http.MultipartFile.fromPath('idCard', file.path),
           );
         }
         var response = await request.send();
-        if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.statusCode);
+        if (response.statusCode != 201) {
           throw CustomException('Operation failed');
         }
+        return files;
+      } else {
+        throw CustomException('No file selected');
       }
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-      return files;
+  Future submitId(
+    List<File> files,
+  ) async {
+    final url = Uri.parse('$baseUrl/fleet-owners/drivers-document/$_user');
+    print(_field);
+
+    try {
+      if (files.isNotEmpty) {
+        var request = http.MultipartRequest('POST', url);
+        for (var file in files) {
+          print(_field);
+          request.files.add(
+            await http.MultipartFile.fromPath('documents', file.path),
+          );
+        }
+        var response = await request.send();
+        print(response.statusCode);
+        if (response.statusCode != 201) {
+          throw CustomException('Operation failed');
+        }
+        return files;
+      } else {
+        throw CustomException('No file selected');
+      }
     } catch (e) {
       rethrow;
     }
   }
 
   ///for the driver
-  Future<void> submitData({
-    required List<File> idCardFiles,
-    required List<File> licenseFiles,
-    required String licenseNumber,
-    required String licenseType,
-    required int yearsOfExperience,
-    // String? userID,
-    String? path,
-  }) async {
+  Future<void> submitData({required driver.Document docs
+      // required List<File> idCardFiles,
+      // required List<File> licenseFiles,
+      // required String licenseNumber,
+      // required String licenseType,
+      // required int yearsOfExperience,
+      // String? userID,
+      // String? path,
+      }) async {
     final uri = Uri.parse('$baseUrl/drivers/document/$_user');
 
     try {
-      print(_user);
-      if (idCardFiles.isNotEmpty && licenseFiles.isNotEmpty) {
+      if (docs.idCard.isNotEmpty && docs.license.isNotEmpty) {
         var request = http.MultipartRequest('POST', uri);
 
         // Add idCard files to the request
-        for (var file in idCardFiles) {
+        for (var file in docs.idCard) {
           request.files.add(
             await http.MultipartFile.fromPath('idCard', file.path),
           );
         }
 
         // Add license files to the request
-        for (var file in licenseFiles) {
+        for (var file in docs.license) {
           request.files.add(
             await http.MultipartFile.fromPath('license', file.path),
           );
         }
 
         // Add other fields to the request
-        request.fields['licenseNumber'] = licenseNumber;
-        request.fields['licenseType'] = licenseType;
-        request.fields['experience'] = '$yearsOfExperience';
+        request.fields['licenseNumber'] = docs.licenseNumber;
+        request.fields['licenseType'] = docs.licenseType;
+        request.fields['experience'] = "${docs.experience}";
+        request.fields['rate'] = "${docs.rate}";
 
         var response = await request.send();
         print(response.reasonPhrase);

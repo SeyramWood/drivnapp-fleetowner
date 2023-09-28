@@ -5,10 +5,11 @@ import '../../../auth/presentation/providers/user.auth.provider.dart';
 import '../../data/repositories/user.repo.impl.dart';
 import '../../domain/usecases/create.dart';
 import '../../domain/usecases/read.dart';
-import '../../domain/usecases/submit.id.dart';
+import '../../domain/usecases/submit.doc.dart';
 
 import 'package:get_it/get_it.dart';
 
+import '../../domain/usecases/submit.id.dart';
 import '../../domain/usecases/verify.fleetOwner.dart';
 
 final getIt = GetIt.instance;
@@ -25,24 +26,29 @@ void setupLocator() {
   getIt.registerLazySingleton<VerifyUser>(
     () => VerifyUser(getIt<UserRepo>()),
   );
-  getIt.registerLazySingleton<SubmitID>(
-    () => SubmitID(getIt<UserRepo>()),
+  getIt.registerLazySingleton<SubmitDoc>(
+    () => SubmitDoc(getIt<UserRepo>()),
   );
   getIt.registerLazySingleton<Login>(
     () => Login(repo: getIt<UserRepo>()),
   );
   getIt.registerLazySingleton<FetchOwnerProfile>(
     () => FetchOwnerProfile(repo: getIt<UserRepo>()),
-  );getIt.registerLazySingleton<FetchDriverProfile>(
+  );
+  getIt.registerLazySingleton<FetchDriverProfile>(
     () => FetchDriverProfile(repo: getIt<UserRepo>()),
+  );
+  getIt.registerLazySingleton<SubmitId>(
+    () => SubmitId(repo: getIt<UserRepo>()),
   );
 }
 
 final userAuthProvider = UserAuthProvider(
   getIt<PostUseCase>(),
   getIt<VerifyUser>(),
-  getIt<SubmitID>(),
+  getIt<SubmitDoc>(),
   getIt<Login>(),
   getIt<FetchOwnerProfile>(),
   getIt<FetchDriverProfile>(),
+  getIt<SubmitId>(),
 );
