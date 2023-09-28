@@ -1,4 +1,3 @@
-import 'package:drivn/features/driver/domain/entities/request.model.dart';
 import 'package:drivn/features/driver/domain/usecase/cancel.request.dart';
 import 'package:drivn/features/driver/domain/usecase/fetch.requests.dart';
 import 'package:drivn/features/driver/domain/usecase/fetch.trips.dart';

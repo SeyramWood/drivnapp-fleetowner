@@ -9,8 +9,8 @@ class UpdateRentalModel {
     required this.price,
   });
   Map<String, dynamic> updateRentalToJson() => {
-        'driver': driver ?? '',
-        'location': location,
+        'driver': driver,
         'price': price,
+        'location': location,
       };
 }

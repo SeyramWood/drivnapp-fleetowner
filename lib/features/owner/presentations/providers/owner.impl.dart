@@ -1,8 +1,7 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:drivn/features/owner/domain/entities/update.rental.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
-import 'package:flutter/foundation.dart';
-import 'package:dartz/dartz.dart';
-
 import 'package:drivn/shared/utils/usecase.dart';
 
 import '../../domain/usecase/accept.request.dart';
@@ -50,123 +49,109 @@ class OwnerImplProvider extends ChangeNotifier {
         _updateAvailability = updateAvailability,
         _updateRental = updateRental;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   Future acceptRequest(String userID) async {
-    try {
-      final result = await _acceptRequest(Params(userID));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed to accept request: $e');
-    }
+    final result = await _acceptRequest(Params(userID));
+    return result.fold(
+      (failure) => failure.message,
+      (success) => success,
+    );
   }
 
   Future addVehicle(VehicleToDBModel vehicle) async {
-    try {
-      final result = await _addVehicle(Params(vehicle));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed: $e');
-    }
+    _isLoading = true;
+    notifyListeners();
+    final result = await _addVehicle(Params(vehicle));
+    return result.fold(
+      (failure) {
+        _isLoading = false;
+        notifyListeners();
+        return failure.message;
+      },
+      (success) {
+        _isLoading = false;
+        notifyListeners();
+      },
+    );
   }
 
   Future cancelRequest(String requestID, String? reason) async {
-    try {
-      final result = await _cancelRequest(MultiParams(requestID, reason ?? ''));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed: $e');
-    }
+    final result = await _cancelRequest(MultiParams(requestID, reason ?? ''));
+    return result.fold(
+      (failure) => failure.message,
+      (success) {},
+    );
   }
 
   Future deleteVehicle(String vehicleID) async {
-    try {
-      final result = await _deleteVehicle(Params(vehicleID));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed: $e');
-    }
+    final result = await _deleteVehicle(Params(vehicleID));
+    return result.fold(
+      (failure) => failure.message,
+      (success) {},
+    );
   }
 
   Future fetchBookedVehicles(String userID) async {
-    try {
-      final result = await _fetchBookedVehicles(Params(userID));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed: $e');
-    }
+    final result = await _fetchBookedVehicles(Params(userID));
+    return result.fold(
+      (failure) => failure.message,
+      (success) => success,
+    );
   }
 
   Future fetchDrivers() async {
-    try {
-      final result = await _fetchDrivers(Params(NoParams));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed: $e');
-    }
+    final result = await _fetchDrivers(Params(NoParams));
+    return result.fold(
+      (failure) => failure.message,
+      (success) => success,
+    );
   }
 
   Future fetchRequests(String userID) async {
-    try {
-      final result = await _fetchRequests(Params(userID));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed: $e');
-    }
+    final result = await _fetchRequests(Params(userID));
+    return result.fold(
+      (failure) => failure.message,
+      (success) => success,
+    );
   }
 
   Future fetchVehicles(String userID) async {
-    try {
-      final result = await _fetchVehicles(Params(userID));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed: $e');
-    }
+    final result = await _fetchVehicles(Params(userID));
+    return result.fold(
+      (failure) => failure.message,
+      (success) => success,
+    );
   }
 
   Future updateAvailability(String vehicleID, String status) async {
-    try {
-      final result = await _updateAvailability(MultiParams(vehicleID,status));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed: $e');
-    }
+    final result = await _updateAvailability(MultiParams(vehicleID, status));
+    return result.fold(
+      (failure) => failure.message,
+      (success) {
+        return success;
+      },
+    );
   }
 
-  Future updateRental(String vehicleID,UpdateRentalModel updateRentalModel)async{
-    try {
-      final result = await _updateRental(MultiParams(vehicleID,updateRentalModel));
-      return result.fold(
-        (failure) => failure.message,
-        (success) => success,
-      );
-    } catch (e) {
-      return Left('Failed: $e');
-    }
+  Future updateRental(
+      String vehicleID, UpdateRentalModel updateRentalModel) async {
+    _isLoading = true;
+    notifyListeners();
+    final result =
+        await _updateRental(MultiParams(vehicleID, updateRentalModel));
+    return result.fold(
+      (failure) {
+        _isLoading = false;
+        notifyListeners();
+        return failure.message;
+      },
+      (success) {
+        _isLoading = false;
+        notifyListeners();
+        return success;
+      },
+    );
   }
 }

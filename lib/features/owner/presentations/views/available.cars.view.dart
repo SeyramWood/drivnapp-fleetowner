@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,8 +21,8 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   late Timer _timer;
   void fetchVehicles() async {
     if (mounted) {
-      vehicles =
-          OwnerApiService().fetchVehicles(context.read<APIService>().userId);
+      vehicles = OwnerApiService()
+          .fetchVehicles(context.read<UserApiService>().userId);
       var streamData = await vehicles;
       if (!_controller.isClosed) {
         _controller.sink.add(streamData);
@@ -62,7 +62,7 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData) {
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
@@ -76,7 +76,7 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
           return Center(
             child: Text('Error: ${snapshot.error}'),
           );
-        } else if (!snapshot.hasData) {
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(child: Text('No available vehicle.'));
         }
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
-import '../../../user/data/api/api.service.dart';
+import '../../../user/data/api/user.api.service.dart';
 import '../widget/elevated.button.dart';
 
 class AccountTypeView extends StatefulWidget {
@@ -19,7 +19,7 @@ class _AccountTypeViewState extends State<AccountTypeView> {
   bool _loadingDriver = false;
   Future _setFleetOwner(bool isFleetOwner) async {
     await Future.delayed(const Duration(seconds: 2), () {
-      context.read<APIService>().isOwner(isFleetOwner);
+      context.read<UserApiService>().isOwner(isFleetOwner);
       Navigator.of(context)
           .push(MaterialPageRoute(
         builder: (context) => const LoginView(),

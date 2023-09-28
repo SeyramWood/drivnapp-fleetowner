@@ -5,17 +5,18 @@ import 'dart:io';
 import 'package:drivn/shared/errors/exception.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../shared/utils/constants/base.url.dart';
 import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../../../driver/data/api/driver.api.service.dart';
+import '../../domain/entities/driver.profile.model.dart';
+import '../../domain/entities/owner.profile.model.dart';
 import '../../domain/entities/user.signup.model.dart';
 
 /*this class is specific to authenticating related APIs because I started the project initially as a single app but later I had to combine two different user app into one project leaving me to think but some of the namings I left is as it was.
 */
 
-class APIService extends ChangeNotifier {
+class UserApiService extends ChangeNotifier {
   String _user = '';
   get userId => _user;
 
@@ -141,31 +142,64 @@ class APIService extends ChangeNotifier {
     }
   }
 
-  Future logIn(String userId) async {
+  Future logIn(String userId, String password) async {
     var url = Uri.parse(
         '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/$userId');
     try {
-      final response = await http.get(url).timeout(const Duration(seconds: 60),
-          onTimeout: () {
-        return Future.delayed(const Duration(seconds: 3), () => http.get(url));
-      });
-      print(response.statusCode);
+      final response = await http.get(url).timeout(
+        const Duration(seconds: 60),
+        onTimeout: () {
+          return Future.delayed(
+            const Duration(seconds: 3),
+            () => http.get(url),
+          );
+        },
+      );
       if (response.statusCode != 200) {
-        print('logging in: ${response.statusCode}');
+        throw CustomException('Signing failed');
       }
       if (response.statusCode == 200) {
         String id = jsonDecode(response.body)['data']['id'].toString();
         await setUserId(id);
         DriverApiService().onInit(id);
       }
-      //store user's id locally
-
-      print('user1: $_user');
-    } on Exception catch (e) {
-      print(e);
+    } catch (e) {
+      rethrow;
     }
   }
 
+  Future<Profile> fetchOwnerProfile(String iD) async {
+    print(iD);
+    final url = Uri.parse('$baseUrl/fleet-owners/$iD');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        throw CustomException('Failed to get your profile');
+      }
+      print(response.body);
+
+      final jsonBody = jsonDecode(response.body);
+      return Profile.fromJson(jsonBody);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<DProfile> fetchDriverProfile(String iD) async {
+    final url = Uri.parse('$baseUrl/fleet-owners$iD');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        throw CustomException('Failed to get your profile');
+      }
+      final jsonBody = jsonDecode(response.body);
+      return DProfile.fromJson(jsonBody);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  //for the fleet owner
   Future<List<File>> uploadFiles(
     List<File> files,
   ) async {
@@ -174,29 +208,20 @@ class APIService extends ChangeNotifier {
     try {
       if (files.isNotEmpty) {
         var request = http.MultipartRequest('POST', uri);
-
         for (var file in files) {
           request.files.add(
             await http.MultipartFile.fromPath(field, file.path),
           );
         }
-
         var response = await request.send();
-
-        print(response.reasonPhrase);
         if (response.statusCode == 200 || response.statusCode == 201) {
-          // Handle success response if needed
-        } else {
-          // Handle error response if needed
+          throw CustomException('Operation failed');
         }
-      } else {
-        print('No files to upload');
       }
 
-      return files; // Return the list of files after all files are uploaded
+      return files;
     } catch (e) {
-      print('Error: $e');
-      rethrow; // Re-throw the caught exception for better error propagation
+      rethrow;
     }
   }
 

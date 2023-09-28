@@ -19,24 +19,52 @@ class OwnerRepoImpl implements OwnerRepo {
   });
   @override
   Future<Either<Failure, void>> acceptRequest(String requestID) async {
-    return await apiService.acceptRequest(requestID);
+    try {
+      await apiService.acceptRequest(requestID);
+      return const Right(null);
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure('Failed to execute: $e'));
+    }
   }
 
   @override
-  Future<Either<Failure, String?>> addVehicle(
+  Future<Either<Failure, String>> addVehicle(
       model.VehicleToDBModel vehicle) async {
-    return await apiService.addVehicle(vehicle: vehicle);
+    try {
+      await apiService.addVehicle(vehicle: vehicle);
+      return const Right('Vehicle added successfully');
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure('Failed to execute: $e'));
+    }
   }
 
   @override
   Future<Either<Failure, void>> cancelRequest(
       String requestID, String? reason) async {
-    return await apiService.cancelRequest(requestID, reason);
+    try {
+      await apiService.cancelRequest(requestID, reason);
+      return const Right(null);
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure('Failed to execute: $e'));
+    }
   }
 
   @override
   Future<Either<Failure, void>> deleteVehicle(String vehicleID) async {
-    return await apiService.deleteVehicle(vehicleID);
+    try {
+      await apiService.deleteVehicle(vehicleID);
+      return const Right(null);
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure('Failed to execute: $e'));
+    }
   }
 
   @override
@@ -54,7 +82,7 @@ class OwnerRepoImpl implements OwnerRepo {
 
   @override
   Future<Either<Failure, List<Dryver>>> fetchDrivers() async {
-   try {
+    try {
       var result = await apiService.fetchDrivers();
       return Right(result);
     } on CustomException catch (failure) {
@@ -77,7 +105,8 @@ class OwnerRepoImpl implements OwnerRepo {
   }
 
   @override
-  Future<Either<Failure, List<model.Vehicle>>> fetchVehicles(String userID) async {
+  Future<Either<Failure, List<model.Vehicle>>> fetchVehicles(
+      String userID) async {
     try {
       var result = await apiService.fetchVehicles(userID);
       return Right(result);
@@ -92,11 +121,12 @@ class OwnerRepoImpl implements OwnerRepo {
   Future<Either<Failure, void>> updateAvailability(
       String vehicleID, String status) async {
     try {
-      return await apiService.updateAvailability(vehicleID,status);
+      await apiService.updateAvailability(vehicleID, status);
+      return const Right(null);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } catch (e) {
-      return Left(Failure('Failed to update availability'));
+      return Left(Failure('$e'));
     }
   }
 
@@ -104,11 +134,12 @@ class OwnerRepoImpl implements OwnerRepo {
   Future<Either<Failure, void>> updateRental(
       String vehicleID, UpdateRentalModel updateRentalModel) async {
     try {
-     return await apiService.updateRental(vehicleID,updateRentalModel);
+      await apiService.updateRental(vehicleID, updateRentalModel);
+      return const Right(null);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } catch (e) {
-      return Left(Failure('Failed to update rental'));
+      return Left(Failure('$e'));
     }
   }
 }

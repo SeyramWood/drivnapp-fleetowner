@@ -1,4 +1,5 @@
 import 'package:drivn/features/owner/domain/usecase/update.rental.dart';
+import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../domain/usecase/accept.request.dart';
@@ -47,3 +48,15 @@ void setupOwnerDependencies() {
   getIt.registerLazySingleton<UpdateRental>(
       () => UpdateRental(repo: getIt<OwnerRepo>()));
 }
+
+final ownerImplProvider = OwnerImplProvider(
+    acceptRequest: getIt<AcceptRequest>(),
+    addVehicle: getIt<AddVehicle>(),
+    cancelRequest: getIt<CancelRequest>(),
+    deleteVehicle: getIt<DeleteVehicle>(),
+    fetchBookedVehicles: getIt<FetchBookedVehicles>(),
+    fetchDrivers: getIt<FetchDrivers>(),
+    fetchRequests: getIt<FetchRequests>(),
+    fetchVehicles: getIt<FetchVehicles>(),
+    updateAvailability: getIt<UpdateAvailability>(),
+    updateRental: getIt<UpdateRental>());

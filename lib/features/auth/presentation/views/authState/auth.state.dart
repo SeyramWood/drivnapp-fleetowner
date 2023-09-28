@@ -2,7 +2,7 @@ import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/onboarding_screens/onboard.dart';
 import 'package:drivn/features/owner/presentations/views/home.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +25,7 @@ class _AuthStateState extends State<AuthState> {
 
   @override
   void initState() {
-    userIsOwner = context.read<APIService>().accTypeIsOwner;
+    userIsOwner = context.read<UserApiService>().accTypeIsOwner;
     initUser(context);
     super.initState();
   }

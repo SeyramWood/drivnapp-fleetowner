@@ -5,7 +5,7 @@ import 'package:drivn/shared/errors/failure.dart';
 
 import '../../../../../shared/utils/usecase.dart';
 import '../entities/user.signup.model.dart';
-import '../repositories/fleet.owner.repo.dart';
+import '../repositories/user.repo.dart';
 class PostUseCase 
     implements UseCase<void, Params<SignUpBody>> {
   final UserRepo repo;

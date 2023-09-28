@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:drivn/features/owner/data/api/owner.api.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/utils/cached.network.image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,16 +21,23 @@ class RequestsView extends StatefulWidget {
 }
 
 class _RequestsViewState extends State<RequestsView> {
-  late Future<List<VRequest>> request;
+  var streamData;
 
   final StreamController<List<VRequest>> _streamController = StreamController();
   // ignore: unused_field
   late Timer _timer;
   fetchRequest() async {
     if (mounted) {
-      request =
-          OwnerApiService().allRequests(context.read<APIService>().userId);
-      var streamData = await request;
+      await context
+          .read<OwnerImplProvider>()
+          .fetchRequests(context.read<UserApiService>().userId)
+          .then(
+        (value) {
+          if (value is List<VRequest>) {
+            streamData = value;
+          }
+        },
+      );
 
       if (!_streamController.isClosed) {
         _streamController.sink.add(streamData);
@@ -228,7 +235,7 @@ class RequestInfo extends StatelessWidget {
                   ),
             ),
             subtitle: Text(
-              'GT - 3452 45',
+              request?.vehicle.id.toString() ?? '',
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
@@ -320,7 +327,8 @@ class RequestInfo extends StatelessWidget {
                               TextButton(
                                 onPressed: () {
                                   print(requestID);
-                                  OwnerApiService()
+                                  context
+                                      .read<OwnerImplProvider>()
                                       .cancelRequest(requestID, controller.text)
                                       .then(
                                     (value) {
@@ -347,42 +355,45 @@ class RequestInfo extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     var requestID = request!.id.toString();
-                    OwnerApiService().acceptRequest(requestID).then(
+                    context
+                        .read<OwnerImplProvider>()
+                        .acceptRequest(requestID)
+                        .then(
                       (value) {
                         Navigator.of(context).pop();
 
-                        showDialog(
-                            context: context,
-                            builder: (context) => BottomSheet(
-                                  builder: (context) => SizedBox(
-                                    height: 100,
-                                    child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: 100,
-                                            height: 40,
-                                            child: CustomElevatedButton(
-                                              backgroundColor: red,
-                                              onPressed: () {},
-                                              child: const Text('call'),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {},
-                                            child: const Text('Message'),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  onClosing: () {},
-                                ));
+                        // showDialog(
+                        //     context: context,
+                        //     builder: (context) => BottomSheet(
+                        //           builder: (context) => SizedBox(
+                        //             height: 100,
+                        //             child: Center(
+                        //               child: Row(
+                        //                 mainAxisAlignment:
+                        //                     MainAxisAlignment.center,
+                        //                 children: [
+                        //                   SizedBox(
+                        //                     width: 100,
+                        //                     height: 40,
+                        //                     child: CustomElevatedButton(
+                        //                       backgroundColor: red,
+                        //                       onPressed: () {},
+                        //                       child: const Text('call'),
+                        //                     ),
+                        //                   ),
+                        //                   const SizedBox(
+                        //                     width: 20,
+                        //                   ),
+                        //                   ElevatedButton(
+                        //                     onPressed: () {},
+                        //                     child: const Text('Message'),
+                        //                   )
+                        //                 ],
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           onClosing: () {},
+                        //         ));
                       },
                     );
                   },

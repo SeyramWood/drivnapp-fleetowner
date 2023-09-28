@@ -38,13 +38,9 @@ class _DriverFieldState extends State<DriverField> {
         Autocomplete<String>(
           initialValue: widget.controller.value,
           onSelected: (selectedOption) {
-            try {
-              var selectedDriver = driverLists.firstWhere((driver) =>
-                  '${driver.firstName} ${driver.lastName}' == selectedOption);
-              widget.controller.text = selectedDriver.id.toString();
-            } catch (e) {
-              print('Error: No matching driver found');
-            }
+            var selectedDriver = driverLists.firstWhere((driver) =>
+                '${driver.firstName} ${driver.lastName}' == selectedOption);
+            widget.controller.text = selectedDriver.id.toString();
           },
           optionsBuilder: (textEditingValue) {
             if (textEditingValue.text.isEmpty) {

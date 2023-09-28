@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:drivn/features/driver/domain/entities/request.model.dart';
 import 'package:drivn/features/driver/presentation/provider/driver.impl.provider.dart';
 import 'package:drivn/features/driver/presentation/provider/toggle.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +35,7 @@ class _RequestViewState extends State<RequestView> {
         try {
           data = await context
               .read<DriverImplProvider>()
-              .fetchRequest(context.read<APIService>().userId);
+              .fetchRequest(context.read<UserApiService>().userId);
         } catch (e) {
           print(e);
           return NetworkErrorHandler.handleNetworkError(context, e);
@@ -137,7 +137,7 @@ class _RequestViewState extends State<RequestView> {
                           onChanged: (newValue) async {
                             GoOnline().goOnline(newValue);
                             await context.read<DriverImplProvider>().goOnline(
-                                context.read<APIService>().userId,
+                                context.read<UserApiService>().userId,
                                 value ? 'offline' : 'online');
                           },
                           value: value,

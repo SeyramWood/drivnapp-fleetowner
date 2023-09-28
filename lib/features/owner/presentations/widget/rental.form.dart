@@ -1,10 +1,14 @@
-import 'package:drivn/features/owner/data/api/owner.api.dart';
+import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/owner/domain/entities/update.rental.model.dart';
 import 'package:drivn/features/owner/presentations/widget/form.field.to.add.driver.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 import '../../domain/entities/vehicle.model.dart';
+import '../providers/owner.impl.dart';
 import 'availability.textfield.dart';
 
 updateRental(BuildContext context, Vehicle vehicle) {
@@ -13,8 +17,9 @@ updateRental(BuildContext context, Vehicle vehicle) {
   final priceController =
       TextEditingController(text: vehicle.rental?.price.toString());
   final driverController = TextEditingController(
-      text:
-          '${vehicle.rental?.driver?.firstName ?? ''} ${vehicle.rental?.driver?.lastName ?? ''}');
+      // text:
+      //     '${vehicle.rental?.driver?.firstName ?? ''} ${vehicle.rental?.driver?.lastName ?? ''}'
+      );
   final formkey = GlobalKey<FormState>();
   showDialog(
     context: context,
@@ -54,30 +59,36 @@ updateRental(BuildContext context, Vehicle vehicle) {
         Center(
           child: SizedBox(
             width: MediaQuery.sizeOf(context).width / 3,
-            child: ElevatedButton(
+            child: CustomElevatedButton(
               onPressed: () {
                 if (formkey.currentState!.validate()) {
                   UpdateRentalModel updateRentalModel = UpdateRentalModel(
                     location: locationController.text,
                     price: priceController.text,
-                    driver:driverController.text,
+                    driver: driverController.text,
                   );
-                  OwnerApiService()
+
+                  context
+                      .read<OwnerImplProvider>()
                       .updateRental('${vehicle.id}', updateRentalModel)
                       .then(
-                    (value) {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Rental updated successfully'),
-                        ),
-                      );
+                    (failure) {
+                      if (failure is String && failure.isNotEmpty) {
+                        showErrorDialogue(context, failure);
+                      } else {
+                        Navigator.of(context).pop(vehicle.availability);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Rental updated successfully'),
+                          ),
+                        );
+                      }
                     },
                   );
                 }
               },
               child: const Text('Update'),
-            ),
+            ).loading(context.watch<OwnerImplProvider>().isLoading),
           ),
         )
       ],

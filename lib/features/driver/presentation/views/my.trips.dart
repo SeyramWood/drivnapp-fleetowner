@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:drivn/features/driver/presentation/provider/driver.impl.provider.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,7 @@ class _MyTripsState extends State<MyTrips> {
     if (mounted && !_streamController.isClosed) {
       final data = await context
           .read<DriverImplProvider>()
-          .fetchTrips(context.read<APIService>().userId);
+          .fetchTrips(context.read<UserApiService>().userId);
 
       if (data is List<DTrip>) {
         var streamData = data;

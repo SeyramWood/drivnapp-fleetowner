@@ -2,18 +2,19 @@ import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/vehicle/data/api/vehicle.api.service.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.brands.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.type.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../vehicle/domain/entities/vehicle.features.dart' as sym;
-import '../../data/api/owner.api.dart';
 import '../widget/form.field.with.option.dart';
 import '../widget/multi.selection.dialog.dart';
 
@@ -44,7 +45,6 @@ class _AddFleetFormState extends State<AddFleetForm> {
   List<File> imageFile = [];
   List<File> proofFile = [];
 
-  OwnerApiService apiService = OwnerApiService();
   //this method fetch the needed data asyncronosly and iterate into another local list variable for easy access at the init state
 
   Future getVehicleInfo() async {
@@ -218,7 +218,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   child: CustomElevatedButton(
                     onPressed: () {
                       VehicleToDBModel vehicle = VehicleToDBModel(
-                          userID: context.read<APIService>().userId,
+                          userID: context.read<UserApiService>().userId,
                           brand: carBrand.text,
                           type: carType.text,
                           features: List.from(selectedOptions
@@ -229,8 +229,11 @@ class _AddFleetFormState extends State<AddFleetForm> {
                           images: imageFile,
                           documents: proofFile,
                           moreFeatures: optionalFeatures.text.trim());
-                      apiService.addVehicle(vehicle: vehicle).then((failure) {
-                        if (failure != null) {
+                      context
+                          .read<OwnerImplProvider>()
+                          .addVehicle(vehicle)
+                          .then((failure) {
+                        if (failure is String && failure.isNotEmpty) {
                           showErrorDialogue(
                             context,
                             failure,
@@ -248,7 +251,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                     },
                     backgroundColor: blue,
                     child: const Text('Done'),
-                  ),
+                  ).loading(context.watch<OwnerImplProvider>().isLoading),
                 ),
                 space
               ],

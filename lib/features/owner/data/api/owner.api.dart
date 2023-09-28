@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
 import 'package:drivn/features/owner/domain/entities/v.request.model.dart';
@@ -55,13 +54,15 @@ class OwnerApiService {
 //http get request for vehicles belonging to a user
   Future<List<v.Vehicle>> fetchVehicles(String userID) async {
     final uri = Uri.parse('$baseUrl/vehicles/owner/$userID');
-    final response = await http.get(uri);
-    if (response.statusCode != 200) {
-      print(
-        '${response.statusCode}\n${response.reasonPhrase}\n${response.body}',
-      );
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode != 200) {
+        throw CustomException('Request  failed');
+      }
+      return v.vehicleFromJson(response.body).data!.data;
+    } catch (e) {
+      rethrow;
     }
-    return v.vehicleFromJson(response.body).data!.data;
   }
 
   Future<List<BookedVehicle>> fetchBookedVehicles(String userID) async {
@@ -69,12 +70,11 @@ class OwnerApiService {
     try {
       final response = await http.get(uri);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        throw CustomException("couldn't fetch vehicles");
       }
       return bookedVehicleModelFromJson(response.body).data!.data;
     } catch (e) {
-      print(e);
-      throw Exception("couldn't fetch vehicles");
+      rethrow;
     }
   }
 
@@ -83,8 +83,15 @@ class OwnerApiService {
     final url = Uri.parse('$baseUrl/vehicles/rental/$vehicleID');
     final body = updateRentalModel.updateRentalToJson();
     try {
-      final response = await http.put(url, body: body);
+      final response = await http.put(
+        url,
+        body: body,
+      );
+      log(response.statusCode.toString());
+
       if (response.statusCode != 200) {
+        log(response.reasonPhrase.toString());
+
         throw CustomException("Rental couldn't be updated");
       }
     } catch (e) {
@@ -101,10 +108,10 @@ class OwnerApiService {
 
     try {
       final response = await http.put(url);
-
-      if (response.statusCode != 200 || response.statusCode != 202) {
+      print(response.reasonPhrase);
+      if (response.statusCode != 200) {
         throw CustomException("Availability couldn't be updated");
-      }
+      } 
     } catch (e) {
       rethrow;
     }
@@ -115,11 +122,11 @@ class OwnerApiService {
     try {
       final response = await http.get(url);
       if (response.statusCode != 200) {
-        log(response.statusCode.toString());
+        throw CustomException('failed to get drivers');
       }
-      return DriverModel.fromJson(json.decode(response.body)).data.data;
+      return DriverModel.fromJson(json.decode(response.body)).data?.data ?? [];
     } catch (e) {
-      throw Exception('failed to get drivers');
+      rethrow;
     }
   }
 
@@ -129,12 +136,11 @@ class OwnerApiService {
       final response = await http.get(url);
 
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        throw CustomException("couldn't fetch request");
       }
       return vehicleRequestModelFromJson(response.body).data!.data;
     } catch (e) {
-      print(e);
-      throw Exception("couldn't fetch request");
+      rethrow;
     }
   }
 
@@ -146,11 +152,11 @@ class OwnerApiService {
         "status": "accepted",
       };
       final response = await http.put(url, body: body);
-      if (response.statusCode != 200 || response.statusCode == 202) {
-        print(response.statusCode);
+      if (response.statusCode != 200) {
+        throw CustomException('Request failed');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
@@ -164,10 +170,10 @@ class OwnerApiService {
     try {
       final response = await http.put(url, body: body);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        throw CustomException('Operation failed');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
@@ -176,10 +182,10 @@ class OwnerApiService {
     try {
       final response = await http.delete(url);
       if (response.statusCode != 200) {
-        print(response.reasonPhrase);
+        throw CustomException('Operation failed');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 }

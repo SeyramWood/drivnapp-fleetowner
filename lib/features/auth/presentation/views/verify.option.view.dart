@@ -6,14 +6,14 @@ import 'package:provider/provider.dart';
 
 import '../../../driver/presentation/views/main.page.dart';
 import '../../../owner/presentations/views/home.dart';
-import '../../../user/data/api/api.service.dart';
+import '../../../user/data/api/user.api.service.dart';
 
 class VerifyOptionView extends StatelessWidget {
   const VerifyOptionView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var isDriver = context.read<APIService>().accTypeIsOwner;
+    var isDriver = context.read<UserApiService>().accTypeIsOwner;
     return Scaffold(
       backgroundColor: blue,
       body: Center(

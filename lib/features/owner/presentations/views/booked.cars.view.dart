@@ -1,6 +1,6 @@
 import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:drivn/features/owner/presentations/widget/booked.vehicle.info.card.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +18,7 @@ class _BookedCarsBuilderState extends State<BookedCarsBuilder> {
   @override
   void initState() {
     bookedCars = OwnerApiService()
-        .fetchBookedVehicles(context.read<APIService>().userId);
+        .fetchBookedVehicles(context.read<UserApiService>().userId);
     super.initState();
   }
 
