@@ -65,6 +65,12 @@ class _DriverFieldState extends State<DriverField> {
               },
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
+                suffix: GestureDetector(
+                    onTap: () {
+                      textEditingController.clear();
+                      widget.controller.clear();
+                    },
+                    child: Icon(Icons.cancel)),
                 isDense: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),

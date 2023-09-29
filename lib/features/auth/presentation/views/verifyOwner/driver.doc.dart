@@ -1,4 +1,5 @@
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
@@ -14,7 +15,7 @@ class DriverDocsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
-    final provider = context.read<UserAuthProvider>();
+    final provider = context.read<UserApiService>();
 
     return Scaffold(
       appBar: AppBar(
@@ -93,15 +94,17 @@ class DriverDocsView extends StatelessWidget {
                         )
                       : null),
               CustomElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  LoadingDialog.showLoadingDialog(context);
                   // if (provider.files == null) return;
-                  provider
-                      .submitUserId(
-                          context, context.read<UserAuthProvider>().files)
+                await  provider
+                      .submitId(context.read<UserAuthProvider>().files)
                       .then((value) {
+                        LoadingDialog.hideLoadingDialog(context);
                     if (value is String) {
                       return showErrorDialogue(context, value);
                     }
+                    context.read<UserAuthProvider>().emptyFiles();
                     return ScaffoldMessenger.of(context)
                         .showSnackBar(const SnackBar(
                       content: Text('Added successfully'),

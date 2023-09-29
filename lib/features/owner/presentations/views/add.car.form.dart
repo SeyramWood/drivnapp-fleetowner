@@ -110,6 +110,9 @@ class _AddFleetFormState extends State<AddFleetForm> {
                               (brand) => brand.contains(text),
                             ));
                   },
+                  onSubmitted: (p0) {
+                    carBrand.clear();
+                  },
                 ),
                 space,
                 FormWithOption(
@@ -125,8 +128,11 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   //displays list items(vehicle types) as a dropdown for easy selection
                   customOptionsBuilder: (String text) async {
                     return List.from(vtypeList.map((vType) => vType.name).where(
-                          (type) => type.contains(text),
+                          (type) => type.isNotEmpty,
                         ));
+                  },
+                  onSubmitted: (p0) {
+                    carBrand.clear();
                   },
                 ),
                 space,
@@ -217,6 +223,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   //elevated button for submission of data
                   child: CustomElevatedButton(
                     onPressed: () {
+                      LoadingDialog.showLoadingDialog(context);
                       VehicleToDBModel vehicle = VehicleToDBModel(
                           userID: context.read<UserApiService>().userId,
                           brand: carBrand.text,
@@ -233,6 +240,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                           .read<OwnerImplProvider>()
                           .addVehicle(vehicle)
                           .then((failure) {
+                            LoadingDialog.hideLoadingDialog(context);
                         if (failure is String && failure.isNotEmpty) {
                           showErrorDialogue(
                             context,
@@ -328,7 +336,6 @@ class _AddFleetFormState extends State<AddFleetForm> {
               onPressed: () {
                 // Use the enteredValue as needed
                 optionalFeatures.text = enteredValue;
-                print('Entered Value: $enteredValue');
                 Navigator.of(context).pop(enteredValue); // Close the dialog
               },
               child: const Text('Submit'),

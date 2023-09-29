@@ -145,19 +145,21 @@ class _LoginViewState extends State<LoginView> {
                         setState(() {
                           isLoading = true;
                         });
+                        LoadingDialog.showLoadingDialog(context);
+
                         context
                             .read<UserApiService>()
                             .logIn(
                                 // context.read<APIService>().userId
                                 context.read<UserApiService>().accTypeIsOwner
-                                    ? '51539607598'
+                                    ? '51539607565'
                                     : '51539607577',
                                 '')
                             .then(
                           (value) async {
                             await Future.delayed(const Duration(seconds: 2),
                                 () {
-                              
+                              LoadingDialog.hideLoadingDialog(context);
                               Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (context) => context

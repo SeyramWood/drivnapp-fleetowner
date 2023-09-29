@@ -18,6 +18,8 @@ import '../../domain/entities/user.signup.model.dart';
 */
 
 class UserApiService extends ChangeNotifier {
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
   String _user = '';
   get userId => _user;
 
@@ -219,28 +221,30 @@ class UserApiService extends ChangeNotifier {
     List<File> files,
   ) async {
     final url = Uri.parse('$baseUrl/fleet-owners/proof-identity/$_user');
-    print(_field);
 
     try {
+      _isLoading = true;
+      notifyListeners();
       if (files.isNotEmpty) {
         var request = http.MultipartRequest('POST', url);
         for (var file in files) {
-          print(_field);
           request.files.add(
             await http.MultipartFile.fromPath('idCard', file.path),
           );
         }
         var response = await request.send();
-        print(response.statusCode);
         if (response.statusCode != 201) {
+          _isLoading = false;
+          notifyListeners();
           throw CustomException('Operation failed');
         }
-        return files;
       } else {
+        _isLoading = false;
+        notifyListeners();
         throw CustomException('No file selected');
       }
     } catch (e) {
-      rethrow;
+      return;
     }
   }
 
@@ -251,25 +255,28 @@ class UserApiService extends ChangeNotifier {
     print(_field);
 
     try {
+      _isLoading = true;
+      notifyListeners();
       if (files.isNotEmpty) {
         var request = http.MultipartRequest('POST', url);
         for (var file in files) {
-          print(_field);
           request.files.add(
             await http.MultipartFile.fromPath('documents', file.path),
           );
         }
         var response = await request.send();
-        print(response.statusCode);
         if (response.statusCode != 201) {
-          throw CustomException('Operation failed');
+          _isLoading = false;
+          notifyListeners();
+          return CustomException('Operation failed');
         }
-        return files;
       } else {
-        throw CustomException('No file selected');
+        _isLoading = false;
+        notifyListeners();
+        return CustomException('No file selected');
       }
     } catch (e) {
-      rethrow;
+      return;
     }
   }
 
@@ -340,25 +347,21 @@ class UserApiService extends ChangeNotifier {
     }
   }
 
-  Future<void> updateFleetOwner(String id, String requestBody) async {
+  Future<void> updateUser(String id, String requestBody) async {
     final Uri uri = Uri.parse(
-        'https://example.com/fleet-owners/$id'); // Replace with your actual API URL
+        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/$id'); // Replace with your actual API URL
 
-    final Map<String, String> headers = {
-      'User-Agent': 'Apidog/1.0.0 (https://apidog.com)',
-      'Content-Type': 'application/json',
+    var body = {
+      "lastName": requestBody.split('/')[1],
+      "firstName": requestBody.split('/')[0]
     };
-
-    final http.Request request = http.Request('PUT', uri);
-    request.headers.addAll(headers);
-    request.body = requestBody;
-
-    final http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
+    try {
+      final response = await http.put(uri, body: body);
+      if (response.statusCode != 200) {
+        throw CustomException('Failed to update');
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

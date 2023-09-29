@@ -70,6 +70,7 @@ class _OTPInputViewState extends State<OTPInputView> {
                     backgroundColor: black,
                     onPressed: () async {
                       if (_formkey.currentState!.validate()) {
+                        LoadingDialog.showLoadingDialog(context);
                         await context
                             .read<UserApiService>()
                             .verifyUser(
@@ -78,6 +79,7 @@ class _OTPInputViewState extends State<OTPInputView> {
                             )
                             .then(
                           (failure) {
+                            LoadingDialog.hideLoadingDialog(context);
                             // if (failure != null) {
                             //   showErrorDialogue(context, failure);
                             // }

@@ -28,12 +28,19 @@ class UserAuthProvider extends ChangeNotifier {
   final FetchDriverProfile fetchDriver;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  set isLoading(loading) {
+    _isLoading = loading;
+  }
 
   UserAuthProvider(this.post, this.verify, this.submitDoc, this.login,
       this.fetchOwner, this.fetchDriver, this.submitId);
 
   List<File> _filesToDB = [];
   List<File> get files => _filesToDB;
+  emptyFiles() {
+    _filesToDB = [];
+    notifyListeners();
+  }
 
   Future<String?> postUser(SignUpBody fleetOwner, context) async {
     _isLoading = true;
@@ -105,7 +112,6 @@ class UserAuthProvider extends ChangeNotifier {
         await Future.delayed(const Duration(seconds: 2), () {
           _isLoading = false;
           notifyListeners();
-          
         });
       },
     );

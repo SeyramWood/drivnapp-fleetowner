@@ -17,10 +17,14 @@ updateRental(BuildContext context, Vehicle vehicle) {
   final priceController =
       TextEditingController(text: vehicle.rental?.price.toString());
   final driverController = TextEditingController(
-      // text:
-      //     '${vehicle.rental?.driver?.firstName ?? ''} ${vehicle.rental?.driver?.lastName ?? ''}'
-      );
+      text:
+          '${vehicle.rental?.driver?.firstName ?? ''} ${vehicle.rental?.driver?.lastName ?? ''}');
   final formkey = GlobalKey<FormState>();
+
+  if (vehicle.rental?.driver?.firstName == null) {
+    driverController.clear();
+  }
+
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -65,7 +69,9 @@ updateRental(BuildContext context, Vehicle vehicle) {
                   UpdateRentalModel updateRentalModel = UpdateRentalModel(
                     location: locationController.text,
                     price: priceController.text,
-                    driver: driverController.text,
+                    driver: driverController.text.contains(RegExp('[a-zA-Z]'))
+                        ? '${vehicle.rental?.driver?.id}'
+                        : driverController.text,
                   );
 
                   context

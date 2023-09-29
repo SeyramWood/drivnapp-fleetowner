@@ -175,7 +175,6 @@ class _CarTileState extends State<CarTile> {
                                     setState(() {
                                       newValue = value!;
                                     });
-                                    // Check the selected value and take appropriate actions
                                     // if (newValue == 2) {
                                     //   rideSharing(
                                     //     context,
@@ -197,7 +196,6 @@ class _CarTileState extends State<CarTile> {
                                         },
                                       );
                                     } else if (newValue == 'rental') {
-                                      newValue = widget.vehicle.availability;
                                       await updateRental(context, vehicle);
                                     }
                                   },

@@ -66,6 +66,7 @@ class _AccountTypeViewState extends State<AccountTypeView> {
               const SizedBox(height: 20),
               CustomElevatedButton(
                 onPressed: () {
+
                   setState(() {
                     _loadingDriver = true;
                   });

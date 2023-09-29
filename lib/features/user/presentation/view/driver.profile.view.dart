@@ -2,7 +2,6 @@ import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/entities/driver.profile.model.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
@@ -17,11 +16,14 @@ class DProfileView extends StatefulWidget {
 }
 
 class _DProfileViewState extends State<DProfileView> {
-  late Future<DProfile> profile;
+  late Future<DProfile> profileData;
   getProfile() {
-    profile = context
-        .read<UserApiService>()
-        .fetchDriverProfile(context.read<UserApiService>().userId);
+    final userId = context.read<UserApiService>().userId;
+
+    final data = context.read<UserApiService>().fetchDriverProfile(userId);
+    setState(() {
+      profileData = data;
+    });
   }
 
   @override
@@ -30,10 +32,78 @@ class _DProfileViewState extends State<DProfileView> {
     super.initState();
   }
 
+  void showEditProfileDialog(DProfile profile) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        TextEditingController firstNameController =
+            TextEditingController(text: profile.data.firstName);
+        TextEditingController lastNameController =
+            TextEditingController(text: profile.data.lastName);
+
+        return AlertDialog(
+          title: Center(
+            child: Text(
+              'Edit Profile',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: firstNameController,
+                decoration: const InputDecoration(labelText: 'First Name'),
+              ),
+              TextField(
+                controller: lastNameController,
+                decoration: const InputDecoration(labelText: 'Last Name'),
+              ),
+            ],
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width / 4,
+              child: ElevatedButton(
+                onPressed: () async {
+                  // Handle save button press and update profil4
+                  final updatedFirstName = firstNameController.text;
+                  final updatedLastName = lastNameController.text;
+                  // Perform the update operation with the new data
+                  await context
+                      .read<UserApiService>()
+                      .updateUser(context.read<UserApiService>().userId,
+                          '$updatedFirstName/$updatedLastName')
+                      .then(
+                    (value) {
+                      Navigator.pop(context);
+                      getProfile();
+                    },
+                  );
+                  // Close the dialog
+                },
+                child: const Text('Save'),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Close the dialog without saving changes
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DProfile>(
-        future: profile,
+        future: profileData,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -45,12 +115,16 @@ class _DProfileViewState extends State<DProfileView> {
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
-                actions: const [
-                  Padding(
-                    padding: EdgeInsets.only(right: 16.0),
-                    child: Text(
-                      'Edit',
-                      style: TextStyle(color: yellow),
+                actions: [
+                  IconButton(
+                    onPressed: () async {
+                      // Show the edit profile dialog when the edit icon is pressed
+
+                      showEditProfileDialog(await profileData);
+                    },
+                    icon: const ImageIcon(
+                      AssetImage('assets/icons/edit.png'),
+                      color: blue,
                     ),
                   ),
                 ],

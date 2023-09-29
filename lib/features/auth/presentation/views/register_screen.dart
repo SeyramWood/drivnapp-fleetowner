@@ -145,6 +145,7 @@ class _RegisterViewState extends State<RegisterView> {
                           backgroundColor: black,
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
+                              LoadingDialog.showLoadingDialog(context);
                               //fleetOwner object
                               final fleetOwner = SignUpBody(
                                 lastName: _lastNameController.text.trim(),
@@ -163,6 +164,7 @@ class _RegisterViewState extends State<RegisterView> {
                                   .postUser(fleetOwner, context)
                                   .then(
                                 (failure) {
+                                  LoadingDialog.hideLoadingDialog(context);
                                   if (failure != null) {
                                     showErrorDialogue(
                                       context,

@@ -97,17 +97,17 @@ class ProofIDView extends StatelessWidget {
                       : null,
                 ),
                 CustomElevatedButton(
-                  onPressed: () {
-                    final prefs = SharedPreferencesManager.instance;
-                    var d = prefs.getString('userID', '');
-                    log(d);
-                    log('sdggh ${context.read<UserApiService>().userId}');
-                    provider
+                  onPressed: () async {
+                    LoadingDialog.showLoadingDialog(context);
+                    await provider
                         .submitDoc(context.read<UserAuthProvider>().files)
                         .then((value) {
+                      LoadingDialog.hideLoadingDialog(context);
                       if (value is String) {
                         return showErrorDialogue(context, value);
                       }
+
+                      context.read<UserAuthProvider>().emptyFiles();
                       return ScaffoldMessenger.of(context)
                           .showSnackBar(const SnackBar(
                         content: Text('Added successfully'),
@@ -116,7 +116,7 @@ class ProofIDView extends StatelessWidget {
                   },
                   backgroundColor: black,
                   child: const Text('Submit for review'),
-                )
+                ).loading(provider.isLoading)
               ],
             ),
           ),
