@@ -111,11 +111,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   TextButton(
                     onPressed: () {
-                      print(
-                        Provider.of<UserApiService>(context, listen: false)
-                            .accTypeIsOwner,
-                      );
-
                       Navigator.push(
                         context,
                         PageTransition(
@@ -153,7 +148,7 @@ class _LoginViewState extends State<LoginView> {
                                 // context.read<APIService>().userId
                                 context.read<UserApiService>().accTypeIsOwner
                                     ? '51539607565'
-                                    : '51539607577',
+                                    : '51539607575',
                                 '')
                             .then(
                           (value) async {
@@ -179,7 +174,7 @@ class _LoginViewState extends State<LoginView> {
                       child: const Text('Login'),
                     ).loading(isLoading),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 25),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(

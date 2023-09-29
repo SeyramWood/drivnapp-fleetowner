@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
+import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:file_picker/file_picker.dart';
@@ -158,7 +159,7 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
             SizedBox(
               width: 200,
               child: CustomElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   //initialize driver docs with data
                   final Document docs = Document(
                     idCard: idCardFiles,
@@ -168,11 +169,19 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                     experience: int.parse(yearsOfExperience.text),
                     rate: 3,
                   );
-                  context.read<UserApiService>().submitData(docs: docs).then(
+                  LoadingDialog.showLoadingDialog(context);
+                  await context
+                      .read<UserApiService>()
+                      .submitData(docs: docs)
+                      .then(
                     (value) {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const VerifyingView(),
-                      ));
+                      LoadingDialog.hideLoadingDialog(context);
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => const DMainPage(),
+                        ),
+                        (route) => false,
+                      );
                     },
                   );
                 },

@@ -64,8 +64,9 @@ updateRental(BuildContext context, Vehicle vehicle) {
           child: SizedBox(
             width: MediaQuery.sizeOf(context).width / 3,
             child: CustomElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (formkey.currentState!.validate()) {
+                  LoadingDialog.showLoadingDialog(context);
                   UpdateRentalModel updateRentalModel = UpdateRentalModel(
                     location: locationController.text,
                     price: priceController.text,
@@ -74,11 +75,13 @@ updateRental(BuildContext context, Vehicle vehicle) {
                         : driverController.text,
                   );
 
-                  context
+                  await context
                       .read<OwnerImplProvider>()
                       .updateRental('${vehicle.id}', updateRentalModel)
                       .then(
                     (failure) {
+                      LoadingDialog.hideLoadingDialog(context);
+
                       if (failure is String && failure.isNotEmpty) {
                         showErrorDialogue(context, failure);
                       } else {

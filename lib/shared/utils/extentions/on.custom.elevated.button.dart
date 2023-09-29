@@ -11,9 +11,9 @@ extension CustomExtention on CustomElevatedButton {
             onPressed: null,
             child: SizedBox.square(
               dimension: 20,
-              child: CircularProgressIndicator.adaptive(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
+              // child: CircularProgressIndicator.adaptive(
+              //   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              // ),
             ))
         : this;
   }

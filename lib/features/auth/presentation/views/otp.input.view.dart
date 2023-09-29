@@ -102,17 +102,10 @@ class _OTPInputViewState extends State<OTPInputView> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const VerifyOptionView(),
-                      ),
-                    );
-                  },
+                  onTap: () {},
                   child: RichText(
                     text: TextSpan(
                         text: "Didn't get code? ",

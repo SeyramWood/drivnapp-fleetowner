@@ -102,7 +102,8 @@ class ProofIDView extends StatelessWidget {
                     await provider
                         .submitDoc(context.read<UserAuthProvider>().files)
                         .then((value) {
-                      LoadingDialog.hideLoadingDialog(context);
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
                       if (value is String) {
                         return showErrorDialogue(context, value);
                       }
@@ -116,7 +117,7 @@ class ProofIDView extends StatelessWidget {
                   },
                   backgroundColor: black,
                   child: const Text('Submit for review'),
-                ).loading(provider.isLoading)
+                )
               ],
             ),
           ),

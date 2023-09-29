@@ -4,6 +4,7 @@ import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
+import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
@@ -14,6 +15,7 @@ import 'package:provider/provider.dart';
 import '../../../../shared/utils/validators.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
+import 'otp.input.view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -144,6 +146,8 @@ class _RegisterViewState extends State<RegisterView> {
                         child: CustomElevatedButton(
                           backgroundColor: black,
                           onPressed: () async {
+                            print(
+                                context.read<UserApiService>().accTypeIsOwner);
                             if (_formKey.currentState!.validate()) {
                               LoadingDialog.showLoadingDialog(context);
                               //fleetOwner object
@@ -159,21 +163,25 @@ class _RegisterViewState extends State<RegisterView> {
                                     _repeatPasswordController.text.trim(),
                               );
                               //method to create a fleetowner account
-                              context
+                              print(context
+                                  .read<UserApiService>()
+                                  .accTypeIsOwner);
+                              await context
                                   .read<UserAuthProvider>()
                                   .postUser(fleetOwner, context)
                                   .then(
                                 (failure) {
-                                  LoadingDialog.hideLoadingDialog(context);
                                   if (failure != null) {
+                                    LoadingDialog.hideLoadingDialog(context);
+
                                     showErrorDialogue(
                                       context,
                                       failure,
                                     );
                                   }
-                                  // if (failure == null) {
-                                  //   clearControllers();
-                                  // }
+                                  if (failure == null) {
+                                    // clearControllers();
+                                  }
                                 },
                               );
                             }
@@ -183,7 +191,7 @@ class _RegisterViewState extends State<RegisterView> {
                           context.watch<UserAuthProvider>().isLoading,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pushAndRemoveUntil(
                           PageTransition(

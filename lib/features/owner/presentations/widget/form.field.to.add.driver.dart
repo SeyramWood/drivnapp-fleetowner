@@ -70,7 +70,7 @@ class _DriverFieldState extends State<DriverField> {
                       textEditingController.clear();
                       widget.controller.clear();
                     },
-                    child: Icon(Icons.cancel)),
+                    child: const Icon(Icons.cancel)),
                 isDense: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),

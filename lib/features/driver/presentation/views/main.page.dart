@@ -20,7 +20,11 @@ class _DMainPageState extends State<DMainPage> {
   DriverApiService driverApiService = DriverApiService();
   @override
   void initState() {
-    GoOnline().init();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        GoOnline().init();
+      },
+    );
     super.initState();
   }
 

@@ -32,6 +32,7 @@ class _AccountTypeViewState extends State<AccountTypeView> {
           });
         },
       );
+      print(isFleetOwner);
     });
   }
 
@@ -55,25 +56,29 @@ class _AccountTypeViewState extends State<AccountTypeView> {
               ),
               const SizedBox(height: 100),
               CustomElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _loadingOwner = true;
-                  });
-                  _setFleetOwner(true);
+                onPressed: () async {
+                  LoadingDialog.showLoadingDialog(context);
+                  await Future.delayed(
+                    const Duration(seconds: 2),
+                    () {
+                      LoadingDialog.hideLoadingDialog(context);
+                      _setFleetOwner(true);
+                    },
+                  );
                 },
                 child: const Text('Fleet Owner'),
               ).loading(_loadingOwner),
               const SizedBox(height: 20),
               CustomElevatedButton(
-                onPressed: () {
-
-                  setState(() {
-                    _loadingDriver = true;
-                  });
-                  _setFleetOwner(false);
-                  // setState(() {
-                  //   _loadingDriver = false;
-                  // });
+                onPressed: () async {
+                  LoadingDialog.showLoadingDialog(context);
+                  await Future.delayed(
+                    const Duration(seconds: 2),
+                    () {
+                      LoadingDialog.hideLoadingDialog(context);
+                      _setFleetOwner(false);
+                    },
+                  );
                 },
                 child: const Text('Driver'),
               ).loading(_loadingDriver)

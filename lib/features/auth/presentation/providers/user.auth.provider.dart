@@ -56,6 +56,7 @@ class UserAuthProvider extends ChangeNotifier {
       },
       (success) async {
         await Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pop(context);
           Navigator.push(
             context,
             MaterialPageRoute(

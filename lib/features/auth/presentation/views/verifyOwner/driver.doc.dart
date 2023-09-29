@@ -97,10 +97,12 @@ class DriverDocsView extends StatelessWidget {
                 onPressed: () async {
                   LoadingDialog.showLoadingDialog(context);
                   // if (provider.files == null) return;
-                await  provider
+                  await provider
                       .submitId(context.read<UserAuthProvider>().files)
                       .then((value) {
-                        LoadingDialog.hideLoadingDialog(context);
+                    LoadingDialog.hideLoadingDialog(context);
+                    Navigator.of(context).pop();
+
                     if (value is String) {
                       return showErrorDialogue(context, value);
                     }
@@ -113,7 +115,7 @@ class DriverDocsView extends StatelessWidget {
                 },
                 backgroundColor: black,
                 child: const Text('Submit for review'),
-              ).loading(provider.isLoading)
+              )
             ],
           ),
         ),
