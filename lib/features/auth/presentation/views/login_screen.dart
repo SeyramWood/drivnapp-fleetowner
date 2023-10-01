@@ -137,19 +137,16 @@ class _LoginViewState extends State<LoginView> {
                     child: CustomElevatedButton(
                       backgroundColor: black,
                       onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
                         LoadingDialog.showLoadingDialog(context);
 
-                        context
-                            .read<UserApiService>()
+                       UserApiService()
                             .logIn(
-                                // context.read<APIService>().userId
-                                context.read<UserApiService>().accTypeIsOwner
+                                // context.read<UserAuthProvider>().userID
+                                context.read<UserAuthProvider>().accountType ==
+                                        'fleet-owners'
                                     ? '51539607565'
                                     : '51539607575',
-                                '')
+                                '',context.read<UserAuthProvider>().accountType)
                             .then(
                           (value) async {
                             await Future.delayed(const Duration(seconds: 2),
@@ -158,21 +155,19 @@ class _LoginViewState extends State<LoginView> {
                               Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (context) => context
-                                            .read<UserApiService>()
-                                            .accTypeIsOwner
+                                                .read<UserAuthProvider>()
+                                                .accountType ==
+                                            'fleet-owners'
                                         ? const OMainPage()
                                         : const DMainPage()),
                                 (route) => false,
                               );
-                              setState(() {
-                                isLoading = false;
-                              });
                             });
                           },
                         );
                       },
                       child: const Text('Login'),
-                    ).loading(isLoading),
+                    ),
                   ),
                   const SizedBox(height: 25),
                   GestureDetector(

@@ -146,12 +146,10 @@ class _RegisterViewState extends State<RegisterView> {
                         child: CustomElevatedButton(
                           backgroundColor: black,
                           onPressed: () async {
-                            print(
-                                context.read<UserApiService>().accTypeIsOwner);
                             if (_formKey.currentState!.validate()) {
                               LoadingDialog.showLoadingDialog(context);
                               //fleetOwner object
-                              final fleetOwner = SignUpBody(
+                              final signUpBody = SignUpBody(
                                 lastName: _lastNameController.text.trim(),
                                 firstName: _firstNameController.text.trim(),
                                 username: context
@@ -163,12 +161,14 @@ class _RegisterViewState extends State<RegisterView> {
                                     _repeatPasswordController.text.trim(),
                               );
                               //method to create a fleetowner account
-                              print(context
-                                  .read<UserApiService>()
-                                  .accTypeIsOwner);
+
                               await context
                                   .read<UserAuthProvider>()
-                                  .postUser(fleetOwner, context)
+                                  .postUser(
+                                      signUpBody,
+                                      context
+                                          .read<UserAuthProvider>()
+                                          .accountType)
                                   .then(
                                 (failure) {
                                   if (failure != null) {
@@ -178,9 +178,14 @@ class _RegisterViewState extends State<RegisterView> {
                                       context,
                                       failure,
                                     );
-                                  }
-                                  if (failure == null) {
+                                  } else if (failure == null) {
                                     // clearControllers();
+                                    LoadingDialog.hideLoadingDialog(context);
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          const OTPInputView(),
+                                    ));
                                   }
                                 },
                               );

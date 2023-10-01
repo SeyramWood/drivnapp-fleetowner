@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
@@ -225,7 +226,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                     onPressed: () {
                       LoadingDialog.showLoadingDialog(context);
                       VehicleToDBModel vehicle = VehicleToDBModel(
-                          userID: context.read<UserApiService>().userId,
+                          userID: context.read<UserAuthProvider>().userID,
                           brand: carBrand.text,
                           type: carType.text,
                           features: List.from(selectedOptions

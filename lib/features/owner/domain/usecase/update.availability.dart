@@ -6,13 +6,13 @@ import 'package:drivn/shared/errors/failure.dart';
 import '../../../../shared/utils/usecase.dart';
 import '../repository/owner.repo.dart';
 
-class UpdateAvailability extends UseCase<void,MultiParams<String,String>> {
+class UpdateAvailability extends UseCase<void,MultiParams<String,String,void>> {
   OwnerRepo repo;
   UpdateAvailability({
     required this.repo,
   });
   @override
-  Future<Either<Failure, void>> call(MultiParams<String, String> params) async {
+  Future<Either<Failure, void>> call(MultiParams<String, String,void> params) async {
     return await repo.updateAvailability(params.data1,params.data2);
   }
 }

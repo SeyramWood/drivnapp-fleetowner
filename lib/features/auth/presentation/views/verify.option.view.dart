@@ -1,3 +1,4 @@
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/verifyDriver.view.dart';
 import 'package:drivn/features/auth/presentation/views/verifyOwner/verify.user.view.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
@@ -16,17 +17,10 @@ class VerifyOptionView extends StatefulWidget {
 }
 
 class _VerifyOptionViewState extends State<VerifyOptionView> {
-  @override
-  void didChangeDependencies() {
-    print(Provider.of<UserApiService>(context, listen: false).userId);
-
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
-    var isDriver = context.read<UserApiService>().accTypeIsOwner;
+    var isDriver = context.read<UserAuthProvider>().accountType;
     return Scaffold(
       backgroundColor: blue,
       body: Center(
@@ -51,7 +45,7 @@ class _VerifyOptionViewState extends State<VerifyOptionView> {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                           builder: (context) =>
-                              isDriver ? const OMainPage() : const DMainPage()),
+                              isDriver=='fleet-owners' ? const OMainPage() : const DMainPage()),
                       (route) => false,
                     );
                   },
@@ -67,11 +61,10 @@ class _VerifyOptionViewState extends State<VerifyOptionView> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    print(context.read<UserApiService>().userId);
 
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                        builder: (context) => isDriver
+                        builder: (context) => isDriver=='fleet-owners' 
                             ? const GetVerifiedOption()
                             : const VerifyDriverView(),
                       ),

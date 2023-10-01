@@ -1,3 +1,4 @@
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
@@ -15,25 +16,11 @@ class AccountTypeView extends StatefulWidget {
 }
 
 class _AccountTypeViewState extends State<AccountTypeView> {
-  bool _loadingOwner = false;
-  bool _loadingDriver = false;
-  Future _setFleetOwner(bool isFleetOwner) async {
-    await Future.delayed(const Duration(seconds: 2), () {
-      context.read<UserApiService>().isOwner(isFleetOwner);
-      Navigator.of(context)
-          .push(MaterialPageRoute(
-        builder: (context) => const LoginView(),
-      ))
-          .then(
-        (value) {
-          setState(() {
-            _loadingDriver = false;
-            _loadingOwner = false;
-          });
-        },
-      );
-      print(isFleetOwner);
-    });
+ 
+   _setAccountType(String isFleetOwner) async {
+      context.read<UserAuthProvider>().isOwner(isFleetOwner);
+      print(context.read<UserAuthProvider>().accountType);
+    
   }
 
   @override
@@ -58,30 +45,33 @@ class _AccountTypeViewState extends State<AccountTypeView> {
               CustomElevatedButton(
                 onPressed: () async {
                   LoadingDialog.showLoadingDialog(context);
-                  await Future.delayed(
-                    const Duration(seconds: 2),
-                    () {
+
+                  await _setAccountType('fleet-owners').then(
+                    (value) {
                       LoadingDialog.hideLoadingDialog(context);
-                      _setFleetOwner(true);
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const LoginView(),
+                      ));
                     },
                   );
                 },
                 child: const Text('Fleet Owner'),
-              ).loading(_loadingOwner),
+              ),
               const SizedBox(height: 20),
               CustomElevatedButton(
                 onPressed: () async {
                   LoadingDialog.showLoadingDialog(context);
-                  await Future.delayed(
-                    const Duration(seconds: 2),
-                    () {
+                  await _setAccountType('drivers').then(
+                    (value) {
                       LoadingDialog.hideLoadingDialog(context);
-                      _setFleetOwner(false);
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const LoginView(),
+                      ));
                     },
                   );
                 },
                 child: const Text('Driver'),
-              ).loading(_loadingDriver)
+              )
             ],
           ),
         ),

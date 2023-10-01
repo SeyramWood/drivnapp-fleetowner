@@ -15,7 +15,7 @@ class DriverDocsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
-    final provider = context.read<UserApiService>();
+    final provider = context.read<UserAuthProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +32,7 @@ class DriverDocsView extends StatelessWidget {
             children: [
               Text('Driving document',
                   style: Theme.of(context).textTheme.headlineLarge),
-              Text('Upload your official driving license',
+              Text("Upload your official driver's license",
                   style: Theme.of(context).textTheme.headlineSmall),
               SizedBox(
                 height: height * .1,
@@ -95,10 +95,11 @@ class DriverDocsView extends StatelessWidget {
                       : null),
               CustomElevatedButton(
                 onPressed: () async {
+                  var files = context.read<UserAuthProvider>().files;
                   LoadingDialog.showLoadingDialog(context);
                   // if (provider.files == null) return;
                   await provider
-                      .submitId(context.read<UserAuthProvider>().files)
+                      .submitUserDoc(context,files,provider.userID)
                       .then((value) {
                     LoadingDialog.hideLoadingDialog(context);
                     Navigator.of(context).pop();

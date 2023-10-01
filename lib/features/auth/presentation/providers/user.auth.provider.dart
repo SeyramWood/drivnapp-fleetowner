@@ -10,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/errors/failure.dart';
+import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../../../../shared/utils/usecase.dart';
 import '../../../user/domain/entities/owner.profile.model.dart';
 import '../../../user/domain/usecases/create.dart';
@@ -26,14 +27,33 @@ class UserAuthProvider extends ChangeNotifier {
   final Login login;
   final FetchOwnerProfile fetchOwner;
   final FetchDriverProfile fetchDriver;
+
+  UserAuthProvider(
+    this.post,
+    this.verify,
+    this.submitDoc,
+    this.login,
+    this.fetchOwner,
+    this.fetchDriver,
+    this.submitId,
+  );
+
+  final String _userID =
+      SharedPreferencesManager.instance.getString('userID', '');
+  String get userID => _userID;
+
+  String _accountType = '';
+  String get accountType => _accountType;
+  isOwner(String thisAccount) {
+    _accountType = thisAccount;
+    notifyListeners();
+  }
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   set isLoading(loading) {
     _isLoading = loading;
   }
-
-  UserAuthProvider(this.post, this.verify, this.submitDoc, this.login,
-      this.fetchOwner, this.fetchDriver, this.submitId);
 
   List<File> _filesToDB = [];
   List<File> get files => _filesToDB;
@@ -42,32 +62,20 @@ class UserAuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String?> postUser(SignUpBody fleetOwner, context) async {
+  Future postUser(SignUpBody fleetOwner, context) async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await post(Params(fleetOwner));
+    final result = await post(MultiParams(fleetOwner, _accountType));
     return result.fold(
       (failure) async {
-        await Future.delayed(const Duration(seconds: 2));
         _isLoading = false;
         notifyListeners();
         return failure.message;
       },
       (success) async {
-        await Future.delayed(const Duration(seconds: 2), () {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const OTPInputView(),
-            ),
-          );
-        });
-
         _isLoading = false;
         notifyListeners();
-        return null;
       },
     );
   }
@@ -101,7 +109,7 @@ class UserAuthProvider extends ChangeNotifier {
   Future verifyUser(String otp, context) async {
     _isLoading = true;
     notifyListeners();
-    final result = await verify(Params(otp));
+    final result = await verify(MultiParams(otp,_accountType));
     return result.fold(
       (failure) async {
         await Future.delayed(const Duration(seconds: 2));
@@ -132,13 +140,11 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 //for the owner usage
-  Future submitUserDoc(context, List<File> files) async {
+  Future submitUserDoc(context, List<File> files, String userID) async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await submitDoc(Params(
-      files,
-    ));
+    final result = await submitDoc(MultiParams(files, userID));
     print(result);
 
     return result.fold(
@@ -160,13 +166,11 @@ class UserAuthProvider extends ChangeNotifier {
     );
   }
 
-  Future submitUserId(context, List<File> files) async {
+  Future submitUserId(context, List<File> files, String userID) async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await submitId(Params(
-      files,
-    ));
+    final result = await submitId(MultiParams(files, userID));
 
     return result.fold(
       (failure) {

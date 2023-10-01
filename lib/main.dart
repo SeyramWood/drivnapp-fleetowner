@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => CarProvider()),
         ChangeNotifierProvider(create: (context) => AuthSharedProvider()),
-        ChangeNotifierProvider(create: (context) => UserApiService()),
         ChangeNotifierProvider(create: (context) => driverImplProvider),
         ChangeNotifierProvider(create: (context) => userAuthProvider),
         ChangeNotifierProvider(create: (context) => ownerImplProvider),

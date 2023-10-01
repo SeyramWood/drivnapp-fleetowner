@@ -1,2 +1,2 @@
-const String baseUrl = 'https://devapi.drivnapp.net/api';
+const baseUrl = 'https://devapi.drivnapp.net/api';
 

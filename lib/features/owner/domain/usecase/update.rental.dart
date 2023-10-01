@@ -8,14 +8,14 @@ import '../../../../shared/utils/usecase.dart';
 import '../repository/owner.repo.dart';
 
 class UpdateRental
-    extends UseCase<void, MultiParams<String, UpdateRentalModel>> {
+    extends UseCase<void, MultiParams<String, UpdateRentalModel,void>> {
   OwnerRepo repo;
   UpdateRental({
     required this.repo,
   });
   @override
   Future<Either<Failure, void>> call(
-      MultiParams<String, UpdateRentalModel> params) async {
+      MultiParams<String, UpdateRentalModel,void> params) async {
     return await repo.updateRental(
       params.data1,
       params.data2,

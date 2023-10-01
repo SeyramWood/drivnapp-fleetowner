@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/utils/cached.network.image.dart';
@@ -30,7 +31,7 @@ class _RequestsViewState extends State<RequestsView> {
     if (mounted) {
       await context
           .read<OwnerImplProvider>()
-          .fetchRequests(context.read<UserApiService>().userId)
+          .fetchRequests(context.read<UserAuthProvider>().userID)
           .then(
         (value) {
           if (value is List<VRequest>) {

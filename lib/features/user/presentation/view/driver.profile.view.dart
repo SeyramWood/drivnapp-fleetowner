@@ -1,3 +1,4 @@
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/entities/driver.profile.model.dart';
@@ -19,9 +20,9 @@ class DProfileView extends StatefulWidget {
 class _DProfileViewState extends State<DProfileView> {
   late Future<DProfile> profileData;
   getProfile() {
-    final userId = context.read<UserApiService>().userId;
+    final userId = context.read<UserAuthProvider>().userID;
 
-    final data = context.read<UserApiService>().fetchDriverProfile(userId);
+    final data = UserApiService().fetchDriverProfile(userId);
     profileData = data;
   }
 
@@ -68,15 +69,15 @@ class _DProfileViewState extends State<DProfileView> {
               width: MediaQuery.sizeOf(context).width / 4,
               child: ElevatedButton(
                 onPressed: () async {
+                  var provider = context.read<UserAuthProvider>();
                   LoadingDialog.showLoadingDialog(context);
                   // Handle save button press and update profil4
                   final updatedFirstName = firstNameController.text;
                   final updatedLastName = lastNameController.text;
                   // Perform the update operation with the new data
-                  await context
-                      .read<UserApiService>()
-                      .updateUser(context.read<UserApiService>().userId,
-                          '$updatedFirstName/$updatedLastName')
+                  await UserApiService()
+                      .updateUser(provider.userID,
+                          '$updatedFirstName/$updatedLastName',provider.accountType)
                       .then(
                     (value) {
                       LoadingDialog.hideLoadingDialog(context);

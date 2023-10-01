@@ -6,14 +6,15 @@ import 'package:drivn/shared/utils/usecase.dart';
 
 import '../repositories/user.repo.dart';
 
-class Login extends UseCase<dynamic,MultiParams<String,String>> {
+class Login extends UseCase<dynamic, MultiParams<String, String, String>> {
   final UserRepo repo;
   Login({
     required this.repo,
   });
 
   @override
-  Future<Either<Failure, dynamic>> call(MultiParams<String, String> params) async {
-    return await repo.login(params.data1,params.data2);
+  Future<Either<Failure, dynamic>> call(
+      MultiParams<String, String, String> params) async {
+    return await repo.login(params.data1, params.data2,params.data3!);
   }
 }

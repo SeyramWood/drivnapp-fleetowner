@@ -18,7 +18,7 @@ class ProofIDView extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final height = MediaQuery.sizeOf(context).height;
-    final provider = context.read<UserApiService>();
+    final provider = context.read<UserAuthProvider>();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: blue,
@@ -100,12 +100,16 @@ class ProofIDView extends StatelessWidget {
                   onPressed: () async {
                     LoadingDialog.showLoadingDialog(context);
                     await provider
-                        .submitDoc(context.read<UserAuthProvider>().files)
+                        .submitUserId(
+                      context,
+                      context.read<UserAuthProvider>().files,
+                      provider.userID,
+                    )
                         .then((value) {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                       if (value is String) {
-                        return showErrorDialogue(context, value);
+                        showErrorDialogue(context, value);
                       }
 
                       context.read<UserAuthProvider>().emptyFiles();

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   void fetchVehicles() async {
     if (mounted) {
       vehicles = OwnerApiService()
-          .fetchVehicles(context.read<UserApiService>().userId);
+          .fetchVehicles(context.read<UserAuthProvider>().userID);
       var streamData = await vehicles;
       if (!_controller.isClosed) {
         _controller.sink.add(streamData);

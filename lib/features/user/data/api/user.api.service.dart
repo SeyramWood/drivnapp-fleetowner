@@ -17,71 +17,27 @@ import '../../domain/entities/user.signup.model.dart';
 /*this class is specific to authenticating related APIs because I started the project initially as a single app but later I had to combine two different user app into one project leaving me to think but some of the namings I left is as it was.
 */
 
-class UserApiService extends ChangeNotifier {
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-  String _user = '';
-  get userId => _user;
-
-  bool _accTypeIsOwner = true;
-  bool get accTypeIsOwner => _accTypeIsOwner;
-  isOwner(bool isOwner) {
-    _accTypeIsOwner = isOwner;
-    notifyListeners();
-  }
-
-  String docField = '';
-  setDocField(field) {
-    docField = field;
-    notifyListeners();
-    print(docField);
-  }
-
+class UserApiService {
   Future<void> setUserId(String id) async {
     final prefs = SharedPreferencesManager.instance;
-    await prefs
-        .setString(
+    await prefs.setString(
       'userID',
       id,
-    )
-        .whenComplete(
-      () {
-        String? storedUserID = prefs.getString('userID', '');
-        if (storedUserID.isNotEmpty) {
-          _user = storedUserID;
-          notifyListeners();
-          print('set $_user');
-        }
-      },
-    ); // Store the user ID in SharedPreferences
-    notifyListeners();
+    );
   }
 
-  //for the owner usage
-  String _path = '';
-  String get path => _path;
-  set path(path) {
-    _path = path;
-  }
-
-  String _field = '';
-  String get field => _field;
-  set field(field) {
-    _field = field;
-  }
-
-  Future<void> postUser(SignUpBody requestBody) async {
+  Future<void> postUser(SignUpBody requestBody, String accountType) async {
     try {
       Uri url = Uri.parse(
-        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}',
+        '$baseUrl/$accountType',
       );
+      print(url);
 
       Map<String, String> headers = {
         'content-type': 'application/json',
       };
 
-      http.Response? response;
-      response = await http.post(
+     final response = await http.post(
         url,
         headers: headers,
         body: requestBody.toJson(),
@@ -115,10 +71,10 @@ class UserApiService extends ChangeNotifier {
     }
   }
 
-  Future verifyUser(String otp) async {
+  Future verifyUser(String otp,String accountType)async {
     try {
       final Uri url = Uri.parse(
-          '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/verify/$otp');
+          '$baseUrl/$accountType/verify/$otp');
 
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -141,17 +97,16 @@ class UserApiService extends ChangeNotifier {
         String id = jsonDecode(response.body)['data']['id'].toString();
         log(id);
         await setUserId(id);
-        _accTypeIsOwner == false ? DriverApiService().onInit(id) : null;
-        log(userId);
+        accountType == 'drivers' ? DriverApiService().onInit(id) : null;
       }
     } catch (e) {
       rethrow;
     }
   }
 
-  Future logIn(String userId, String password) async {
+  Future logIn(String userId, String password,String accountType) async {
     var url = Uri.parse(
-        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/$userId');
+        '$baseUrl/$accountType/$userId');
     try {
       final response = await http.get(url).timeout(
         const Duration(seconds: 60),
@@ -173,7 +128,7 @@ class UserApiService extends ChangeNotifier {
       if (response.statusCode == 200) {
         String id = jsonDecode(response.body)['data']['id'].toString();
         await setUserId(id);
-        _accTypeIsOwner == false ? DriverApiService().onInit(id) : null;
+        accountType == 'drivers' ? DriverApiService().onInit(id) : null;
       }
     } catch (e) {
       rethrow;
@@ -181,15 +136,12 @@ class UserApiService extends ChangeNotifier {
   }
 
   Future<Profile> fetchOwnerProfile(String iD) async {
-    print(iD);
     final url = Uri.parse('$baseUrl/fleet-owners/$iD');
     try {
       final response = await http.get(url);
       if (response.statusCode != 200) {
         throw CustomException('Failed to get your profile');
       }
-      print(response.body);
-
       final jsonBody = jsonDecode(response.body);
       return Profile.fromJson(jsonBody);
     } catch (e) {
@@ -198,12 +150,10 @@ class UserApiService extends ChangeNotifier {
   }
 
   Future<DProfile> fetchDriverProfile(String iD) async {
-    print(iD);
     final url = Uri.parse('$baseUrl/drivers/$iD');
     try {
       final response = await http.get(url);
       if (response.statusCode != 200) {
-        print(response.reasonPhrase);
         throw CustomException(
           'Failed to get your profile',
           statusCode: response.statusCode,
@@ -219,12 +169,11 @@ class UserApiService extends ChangeNotifier {
   //for the fleet owner
   Future submitDoc(
     List<File> files,
+    String userID,
   ) async {
-    final url = Uri.parse('$baseUrl/fleet-owners/proof-identity/$_user');
+    final url = Uri.parse('$baseUrl/fleet-owners/proof-identity/$userID');
 
     try {
-      _isLoading = true;
-      notifyListeners();
       if (files.isNotEmpty) {
         var request = http.MultipartRequest('POST', url);
         for (var file in files) {
@@ -234,13 +183,9 @@ class UserApiService extends ChangeNotifier {
         }
         var response = await request.send();
         if (response.statusCode != 201) {
-          _isLoading = false;
-          notifyListeners();
           throw CustomException('Operation failed');
         }
       } else {
-        _isLoading = false;
-        notifyListeners();
         throw CustomException('No file selected');
       }
     } catch (e) {
@@ -250,13 +195,11 @@ class UserApiService extends ChangeNotifier {
 
   Future submitId(
     List<File> files,
+    String userID,
   ) async {
-    final url = Uri.parse('$baseUrl/fleet-owners/drivers-document/$_user');
-    print(_field);
+    final url = Uri.parse('$baseUrl/fleet-owners/drivers-document/$userID');
 
     try {
-      _isLoading = true;
-      notifyListeners();
       if (files.isNotEmpty) {
         var request = http.MultipartRequest('POST', url);
         for (var file in files) {
@@ -266,31 +209,19 @@ class UserApiService extends ChangeNotifier {
         }
         var response = await request.send();
         if (response.statusCode != 201) {
-          _isLoading = false;
-          notifyListeners();
-          return CustomException('Operation failed');
+          throw CustomException('Operation failed');
         }
       } else {
-        _isLoading = false;
-        notifyListeners();
-        return CustomException('No file selected');
+        throw CustomException('No file selected');
       }
     } catch (e) {
-      return;
+      rethrow;
     }
   }
 
   ///for the driver
-  Future<void> submitData({required driver.Document docs
-      // required List<File> idCardFiles,
-      // required List<File> licenseFiles,
-      // required String licenseNumber,
-      // required String licenseType,
-      // required int yearsOfExperience,
-      // String? userID,
-      // String? path,
-      }) async {
-    final uri = Uri.parse('$baseUrl/drivers/document/$_user');
+  Future<void> submitData(String userID, driver.Document docs) async {
+    final uri = Uri.parse('$baseUrl/drivers/document/$userID');
 
     try {
       if (docs.idCard.isNotEmpty && docs.license.isNotEmpty) {
@@ -317,39 +248,34 @@ class UserApiService extends ChangeNotifier {
         request.fields['rate'] = "${docs.rate}";
 
         var response = await request.send();
-        print(response.reasonPhrase);
+        if (response.statusCode != 200) {
+          throw CustomException('Failed to submit');
+        }
       } else {
-        print('no files selected');
+        throw CustomException('no files selected');
       }
     } catch (e) {
-      print('Error: $e');
-      rethrow; // Re-throw the caught exception for better error propagation
+      rethrow;
     }
   }
 
   Future<void> getFleetOwner(String id) async {
-    final Uri uri = Uri.parse(
-        'https://example.com/fleet-owners/$id'); // Replace with your actual API URL
+    final Uri url = Uri.parse('https://example.com/fleet-owners/$id');
 
-    final Map<String, String> headers = {
-      'User-Agent': 'Apidog/1.0.0 (https://apidog.com)',
-    };
+    try {
+      final response = await http.get(url);
 
-    final http.Request request = http.Request('GET', uri);
-    request.headers.addAll(headers);
-
-    final http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
+      if (response.statusCode != 200) {
+        throw CustomException('Something went wrong');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<void> updateUser(String id, String requestBody) async {
-    final Uri uri = Uri.parse(
-        '$baseUrl/${_accTypeIsOwner ? 'fleet-owners' : 'drivers'}/$id'); // Replace with your actual API URL
+  Future<void> updateUser(
+      String id, String requestBody, String accountType) async {
+    final Uri uri = Uri.parse('$baseUrl/$accountType/$id');
 
     var body = {
       "lastName": requestBody.split('/')[1],
@@ -361,7 +287,7 @@ class UserApiService extends ChangeNotifier {
         throw CustomException('Failed to update');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 }

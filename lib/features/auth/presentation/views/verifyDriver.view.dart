@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
@@ -170,9 +171,8 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                     rate: 3,
                   );
                   LoadingDialog.showLoadingDialog(context);
-                  await context
-                      .read<UserApiService>()
-                      .submitData(docs: docs)
+                  await UserApiService()
+                      .submitData(context.read<UserAuthProvider>().userID,docs)
                       .then(
                     (value) {
                       LoadingDialog.hideLoadingDialog(context);

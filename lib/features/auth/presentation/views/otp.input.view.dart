@@ -71,11 +71,12 @@ class _OTPInputViewState extends State<OTPInputView> {
                     onPressed: () async {
                       if (_formkey.currentState!.validate()) {
                         LoadingDialog.showLoadingDialog(context);
+                        print(context.read<UserAuthProvider>().accountType);
                         await context
-                            .read<UserApiService>()
+                            .read<UserAuthProvider>()
                             .verifyUser(
                               otpController.text,
-                              // context,
+                              context,
                             )
                             .then(
                           (failure) {

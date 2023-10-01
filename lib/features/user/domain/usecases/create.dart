@@ -7,12 +7,12 @@ import '../../../../../shared/utils/usecase.dart';
 import '../entities/user.signup.model.dart';
 import '../repositories/user.repo.dart';
 class PostUseCase 
-    implements UseCase<void, Params<SignUpBody>> {
+    implements UseCase<void, MultiParams<SignUpBody,String,void>> {
   final UserRepo repo;
   PostUseCase(this.repo);
 
   @override
-  Future<Either<Failure, void>> call(Params<SignUpBody> params) async {
-    return await repo.create(params.data);
+  Future<Either<Failure, void>> call(MultiParams<SignUpBody,String,void> params) async {
+    return await repo.create(params.data1,params.data2);
   }
 }

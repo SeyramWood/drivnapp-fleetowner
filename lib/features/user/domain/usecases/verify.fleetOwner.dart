@@ -5,12 +5,12 @@ import '../../../../../shared/utils/usecase.dart';
 import '../repositories/user.repo.dart';
 
 class VerifyUser 
-    implements UseCase<String, Params<String>> {
+    implements UseCase<String, MultiParams<String,String,void>> {
   final UserRepo repo;
   VerifyUser(this.repo);
 
   @override
-  Future<Either<Failure, String>> call(Params<String> params) async {
-    return await repo.verify(params.data);
+  Future<Either<Failure, String>> call(MultiParams<String,String,void> params) async {
+    return await repo.verify(params.data1,params.data2);
   }
 }

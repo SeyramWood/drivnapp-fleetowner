@@ -4,13 +4,13 @@ import 'package:drivn/shared/utils/usecase.dart';
 
 import '../repositories/driver.repo.dart';
 
-class GoOnline extends UseCase<void,MultiParams<String,String>>{
+class GoOnline extends UseCase<void,MultiParams<String,String,void>>{
     final DriverRepo repo;
 
   GoOnline(this.repo);
 
   @override
-  Future<Either<Failure, void>> call(MultiParams<String,String> params) async {
+  Future<Either<Failure, void>> call(MultiParams<String,String,void> params) async {
     return await repo.goOnline(params.data1,params.data2);
   }
 

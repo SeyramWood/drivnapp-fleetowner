@@ -1,3 +1,4 @@
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
@@ -26,9 +27,9 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   void getProfile() async {
-    final userId = context.read<UserApiService>().userId;
+    final userId = context.read<UserAuthProvider>().userID;
     final userProfile =
-        context.read<UserApiService>().fetchOwnerProfile(userId);
+        UserApiService().fetchOwnerProfile(userId);
     setState(() {
       profile = userProfile;
     });
@@ -71,15 +72,17 @@ class _ProfileViewState extends State<ProfileView> {
               width: MediaQuery.sizeOf(context).width / 4,
               child: ElevatedButton(
                 onPressed: () async {
+                  var provider = context.read<UserAuthProvider>();
                   // Handle save button press and update profil4
                   final updatedFirstName = firstNameController.text;
                   final updatedLastName = lastNameController.text;
                   // Perform the update operation with the new data
                   LoadingDialog.showLoadingDialog(context);
-                  await context
-                      .read<UserApiService>()
-                      .updateUser(context.read<UserApiService>().userId,
-                          '$updatedFirstName/$updatedLastName')
+                  await UserApiService()
+                      .updateUser(
+                          provider.userID,
+                          '$updatedFirstName/$updatedLastName',
+                          provider.accountType)
                       .then(
                     (value) {
                       LoadingDialog.hideLoadingDialog(context);

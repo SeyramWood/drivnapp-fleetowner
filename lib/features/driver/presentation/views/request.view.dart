@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/driver/domain/entities/request.model.dart';
 import 'package:drivn/features/driver/presentation/provider/driver.impl.provider.dart';
 import 'package:drivn/features/driver/presentation/provider/toggle.dart';
@@ -35,7 +36,7 @@ class _RequestViewState extends State<RequestView> {
         try {
           data = await context
               .read<DriverImplProvider>()
-              .fetchRequest(context.read<UserApiService>().userId);
+              .fetchRequest(context.read<UserAuthProvider>().userID);
         } catch (e) {
           print(e);
           return NetworkErrorHandler.handleNetworkError(context, e);
@@ -143,7 +144,7 @@ class _RequestViewState extends State<RequestView> {
                           onChanged: (newValue) async {
                             GoOnline().goOnline(newValue);
                             await context.read<DriverImplProvider>().goOnline(
-                                context.read<UserApiService>().userId,
+                                context.read<UserAuthProvider>().userID,
                                 value ? 'offline' : 'online');
                           },
                           value: value,
