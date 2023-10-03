@@ -1,0 +1,38 @@
+name: Build and Release
+on:
+  push:
+    branches:
+      - new
+
+jobs:
+  build-and-release-artifacts:
+    if: ${{github.ref == 'refs/heads/new'}}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3.1.0
+      - name: "Setup JAVA environment"
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: "Building for android"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.7'
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build apk --debug --split-per-abi
+      - name: "Building for IOS"
+      - run: |
+          flutter build ios --no-codesign
+          cd builds/ios/iphonesos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
+      - name: "Push to Release"
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/debug/*, build/ios/iphoneos/app.ipa"
+          tag: v1.0.${{github.run_number}}
