@@ -24,7 +24,7 @@ jobs:
       - run: flutter build apk --debug --split-per-abi
       - run: |
           flutter build ios --no-codesign
-          cd builds/ios/iphonesos
+          cd build/ios/iphonesos
           mkdir Payload
           cd Payload
           ln -s ../Runner.app
