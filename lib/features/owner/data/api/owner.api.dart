@@ -5,20 +5,27 @@ import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
 import 'package:drivn/features/owner/domain/entities/v.request.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
 import 'package:drivn/shared/errors/exception.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../shared/interceptor/http.client.interceptor.dart';
 import '../../../../shared/utils/constants/base.url.dart';
+import '../../../driver/presentation/dependency.injection/bindings.dart';
 import '../../domain/entities/driver.model.dart';
 import '../../domain/entities/update.rental.model.dart';
 
+final httpClient = http.Client();
+
 class OwnerApiService {
+  final storage = getIt<FlutterSecureStorage>();
+  final customClient = HttpClientWithInterceptor(httpClient);
   //add a vehicle
   Future addVehicle({required v.VehicleToDBModel vehicle}) async {
-    final uri = Uri.parse('$baseUrl/vehicles');
+    const url = '$baseUrl/vehicles';
 
     try {
       if (vehicle.images.isNotEmpty && vehicle.documents.isNotEmpty) {
-        var request = http.MultipartRequest('POST', uri);
+        var request = http.MultipartRequest('POST', Uri.parse(url));
         // Add fields to the request
         request.fields['owner'] = vehicle.userID;
         request.fields['brand'] = vehicle.brand;
@@ -38,9 +45,11 @@ class OwnerApiService {
           );
         }
 
-        var response = await request.send();
+        var response = await customClient.sendMultipartRequest(url,
+            files: request.files, fields: request.fields);
 
         if (response.statusCode != 201) {
+          print(response.reasonPhrase);
           throw CustomException("Couldn't create or add vehicle");
         }
       } else {
@@ -53,9 +62,9 @@ class OwnerApiService {
 
 //http get request for vehicles belonging to a user
   Future<List<v.Vehicle>> fetchVehicles(String userID) async {
-    final uri = Uri.parse('$baseUrl/vehicles/owner/$userID');
+    final url = '$baseUrl/vehicles/owner/$userID';
     try {
-      final response = await http.get(uri);
+      final response = await customClient.get(url);
       if (response.statusCode != 200) {
         throw CustomException('Request  failed');
       }
@@ -66,9 +75,9 @@ class OwnerApiService {
   }
 
   Future<List<BookedVehicle>> fetchBookedVehicles(String userID) async {
-    final uri = Uri.parse('$baseUrl/bookings/owner/$userID');
+    final url = '$baseUrl/bookings/owner/$userID';
     try {
-      final response = await http.get(uri);
+      final response = await customClient.get(url);
       if (response.statusCode != 200) {
         throw CustomException("couldn't fetch vehicles");
       }
@@ -80,10 +89,10 @@ class OwnerApiService {
 
   Future updateRental(
       String vehicleID, UpdateRentalModel updateRentalModel) async {
-    final url = Uri.parse('$baseUrl/vehicles/rental/$vehicleID');
+    final url = '$baseUrl/vehicles/rental/$vehicleID';
     final body = updateRentalModel.updateRentalToJson();
     try {
-      final response = await http.put(
+      final response = await customClient.put(
         url,
         body: body,
       );
@@ -103,24 +112,23 @@ class OwnerApiService {
     String vehicleID,
     String status,
   ) async {
-    final url =
-        Uri.parse('$baseUrl/vehicles/availability/$vehicleID?status=$status');
+    final url = '$baseUrl/vehicles/availability/$vehicleID?status=$status';
 
     try {
-      final response = await http.put(url);
+      final response = await customClient.put(url);
       print(response.reasonPhrase);
       if (response.statusCode != 200) {
         throw CustomException("Availability couldn't be updated");
-      } 
+      }
     } catch (e) {
       rethrow;
     }
   }
 
   Future<List<Dryver>> fetchDrivers() async {
-    final url = Uri.parse('$baseUrl/drivers?approved=true&assigned=false');
+    const url = '$baseUrl/drivers?approved=true&assigned=false';
     try {
-      final response = await http.get(url);
+      final response = await customClient.get(url);
       if (response.statusCode != 200) {
         throw CustomException('failed to get drivers');
       }
@@ -131,9 +139,9 @@ class OwnerApiService {
   }
 
   Future<List<VRequest>> allRequests(String userID) async {
-    final url = Uri.parse('$baseUrl/booking/requests/owner/$userID');
+    final url = '$baseUrl/booking/requests/owner/$userID';
     try {
-      final response = await http.get(url);
+      final response = await customClient.get(url);
 
       if (response.statusCode != 200) {
         throw CustomException("couldn't fetch request");
@@ -145,13 +153,13 @@ class OwnerApiService {
   }
 
   Future acceptRequest(String requestID) async {
-    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+    final url = '$baseUrl/booking/requests/accept/$requestID';
     try {
       final body = {
         "requestType": "owner",
         "status": "accepted",
       };
-      final response = await http.put(url, body: body);
+      final response = await customClient.put(url, body: body);
       if (response.statusCode != 200) {
         throw CustomException('Request failed');
       }
@@ -161,14 +169,14 @@ class OwnerApiService {
   }
 
   Future cancelRequest(String requestID, String? reason) async {
-    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+    final url = '$baseUrl/booking/requests/accept/$requestID';
     final body = {
       "requestType": "owner",
       "status": "declined",
       'reason': reason
     };
     try {
-      final response = await http.put(url, body: body);
+      final response = await customClient.put(url, body: body);
       if (response.statusCode != 200) {
         throw CustomException('Operation failed');
       }
@@ -178,9 +186,9 @@ class OwnerApiService {
   }
 
   Future deleteVehicle(String vehicleID) async {
-    final url = Uri.parse('$baseUrl/vehicles/$vehicleID');
+    final url = '$baseUrl/vehicles/$vehicleID';
     try {
-      final response = await http.delete(url);
+      final response = await customClient.delete(url);
       if (response.statusCode != 200) {
         throw CustomException('Operation failed');
       }

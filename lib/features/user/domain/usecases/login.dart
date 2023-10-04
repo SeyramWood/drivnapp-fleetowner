@@ -15,6 +15,6 @@ class Login extends UseCase<dynamic, MultiParams<String, String, String>> {
   @override
   Future<Either<Failure, dynamic>> call(
       MultiParams<String, String, String> params) async {
-    return await repo.login(params.data1, params.data2,params.data3!);
+    return await repo.login(params.data1, params.data2);
   }
 }

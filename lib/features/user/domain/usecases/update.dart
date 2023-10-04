@@ -5,16 +5,19 @@ import 'package:drivn/shared/utils/usecase.dart';
 
 import '../repositories/user.repo.dart';
 
-class UpdateUser extends UseCase<void,MultiParams<String,String,String>> {
-UserRepo repo;
+class UpdateUser extends UseCase<void, MultiParams<String, String, String>> {
+  UserRepo repo;
   UpdateUser({
     required this.repo,
   });
 
   @override
-  Future<Either<Failure, void>> call(MultiParams<String, String, String> params) {
-    // TODO: implement call
-    throw UnimplementedError();
+  Future<Either<Failure, void>> call(
+      MultiParams<String, String, String> params) async {
+    return await repo.updateUser(
+      params.data1,
+      params.data2,
+      params.data3 ?? '',
+    );
   }
-
 }

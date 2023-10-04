@@ -11,7 +11,10 @@ import 'package:provider/provider.dart';
 import '../../../../shared/errors/error.alert.dart';
 
 class OTPInputView extends StatefulWidget {
-  const OTPInputView({Key? key}) : super(key: key);
+  final String? phoneNumber;
+  final String? password;
+  const OTPInputView({Key? key, this.phoneNumber, this.password})
+      : super(key: key);
 
   @override
   State<OTPInputView> createState() => _OTPInputViewState();
@@ -71,7 +74,6 @@ class _OTPInputViewState extends State<OTPInputView> {
                     onPressed: () async {
                       if (_formkey.currentState!.validate()) {
                         LoadingDialog.showLoadingDialog(context);
-                        print(context.read<UserAuthProvider>().accountType);
                         await context
                             .read<UserAuthProvider>()
                             .verifyUser(
@@ -80,10 +82,15 @@ class _OTPInputViewState extends State<OTPInputView> {
                             )
                             .then(
                           (failure) {
+                            if (failure == null) {
+                              context
+                                  .read<UserAuthProvider>()
+                                  .logIn(widget.phoneNumber!, widget.password!);
+                            }
                             LoadingDialog.hideLoadingDialog(context);
-                            // if (failure != null) {
-                            //   showErrorDialogue(context, failure);
-                            // }
+                            if (failure != null) {
+                              return showErrorDialogue(context, failure);
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(

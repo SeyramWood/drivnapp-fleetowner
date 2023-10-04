@@ -9,6 +9,7 @@ import '../../domain/entities/driver.profile.model.dart';
 import '../../domain/entities/owner.profile.model.dart';
 import '../../domain/repositories/user.repo.dart';
 import '../api/user.api.service.dart';
+import '../../domain/entities/driver.profile.model.dart' as driver;
 
 class UserRepoImpl implements UserRepo {
   UserApiService api;
@@ -29,16 +30,23 @@ class UserRepoImpl implements UserRepo {
   }
 
   @override
-  Future<Either<Failure, SignUpBody>> update(SignUpBody fleetOwner) {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<Either<Failure, String>> updateUser(
+      String id, String requestBody, String accountType) async {
+    try {
+      await api.updateUser(id,requestBody,accountType); 
+      return Right(id);
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, String>> verify(String otp, String accountType) async {
     try {
-      await api.verifyUser(otp, accountType);
-      return const Right('');
+      final result = await api.verifyUser(otp, accountType);
+      return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
@@ -47,7 +55,7 @@ class UserRepoImpl implements UserRepo {
   }
 
   @override
-  Future<Either<Failure, List<File>>> submitDocs(
+  Future<Either<Failure, String>> submitDocs(
       List<File> file, String userID) async {
     try {
       final result = await api.submitDoc(file, userID);
@@ -60,8 +68,6 @@ class UserRepoImpl implements UserRepo {
       return Left(Failure(e.toString()));
     }
   }
-
-  
 
   @override
   Future<Either<Failure, Profile>> fetchOwnerProfile(String iD) async {
@@ -99,11 +105,12 @@ class UserRepoImpl implements UserRepo {
       return Left(Failure(e.toString()));
     }
   }
-  
+
   @override
-  Future<Either<Failure, String>> login(String username, String password,String accountType)async {
+  Future<Either<Failure, String>> login(
+      String phoneNumber, String password) async {
     try {
-      final result = await api.logIn(username, password, accountType);
+      final result = await api.logIn(phoneNumber, password);
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
@@ -112,5 +119,28 @@ class UserRepoImpl implements UserRepo {
     }
   }
 
+  @override
+  Future<Either<Failure, String>> submitData(
+      String userID, driver.Document docs) async {
+    try {
+      final result = await api.submitData(userID, docs);
+      return Right(result);
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
 
+  @override
+  Future<Either<Failure, String>> refreshAccessToken(String token) async {
+    try {
+      final result = await api.refreshAccessToken(token);
+      return Right(result);
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure('$e'));
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'package:drivn/features/auth/presentation/providers/user.auth.provider.da
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/entities/driver.profile.model.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -75,14 +76,25 @@ class _DProfileViewState extends State<DProfileView> {
                   final updatedFirstName = firstNameController.text;
                   final updatedLastName = lastNameController.text;
                   // Perform the update operation with the new data
-                  await UserApiService()
-                      .updateUser(provider.userID,
-                          '$updatedFirstName/$updatedLastName',provider.accountType)
+                  await provider
+                      .updateUser(
+                    provider.userID,
+                    '$updatedFirstName/$updatedLastName',
+                    provider.accountType,
+                  )
                       .then(
-                    (value) {
+                    (failure) {
+                      if (failure == null) {
+                        setState(() {
+                          getProfile();
+                        });
+                      }
                       LoadingDialog.hideLoadingDialog(context);
+                      if (failure != null) {
+                        return showErrorDialogue(context, failure);
+                      }
+
                       Navigator.pop(context);
-                      getProfile();
                     },
                   );
                   // Close the dialog

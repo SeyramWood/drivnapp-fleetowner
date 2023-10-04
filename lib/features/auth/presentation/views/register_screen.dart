@@ -183,8 +183,14 @@ class _RegisterViewState extends State<RegisterView> {
                                     LoadingDialog.hideLoadingDialog(context);
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          const OTPInputView(),
+                                      builder: (context) => OTPInputView(
+                                        phoneNumber: context
+                                            .read<AuthSharedProvider>()
+                                            .phone
+                                            .trim(),
+                                        password:
+                                            _passwordController.text.trim(),
+                                      ),
                                     ));
                                   }
                                 },

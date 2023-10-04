@@ -12,6 +12,6 @@ class SubmitId implements UseCase<List<File>, MultiParams<List<File>,String,void
 
   @override
   Future<Either<Failure, List<File>>> call(MultiParams<List<File>,String,void> params) async {
-    return await repo.submitDocs(params.data1,params.data2);
+    return await repo.submitId(params.data1,params.data2);
   }
 }

@@ -2,12 +2,17 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:drivn/features/driver/presentation/dependency.injection/bindings.dart';
 import 'package:drivn/shared/errors/exception.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
+import '../../../../shared/interceptor/http.client.interceptor.dart';
 import '../../../../shared/utils/constants/base.url.dart';
 import '../../../../shared/utils/shared.prefs.manager.dart';
+import '../../../auth/presentation/providers/user.auth.provider.dart';
 import '../../../driver/data/api/driver.api.service.dart';
 import '../../domain/entities/driver.profile.model.dart' as driver;
 import '../../domain/entities/driver.profile.model.dart';
@@ -16,28 +21,22 @@ import '../../domain/entities/user.signup.model.dart';
 
 /*this class is specific to authenticating related APIs because I started the project initially as a single app but later I had to combine two different user app into one project leaving me to think but some of the namings I left is as it was.
 */
+final httpClient = http.Client();
 
 class UserApiService {
-  Future<void> setUserId(String id) async {
-    final prefs = SharedPreferencesManager.instance;
-    await prefs.setString(
-      'userID',
-      id,
-    );
-  }
+  final storage = getIt<FlutterSecureStorage>();
+  final customClient = HttpClientWithInterceptor(httpClient);
 
   Future<void> postUser(SignUpBody requestBody, String accountType) async {
     try {
-      Uri url = Uri.parse(
-        '$baseUrl/$accountType',
-      );
+      final url = Uri.parse('$baseUrl/$accountType');
       print(url);
 
       Map<String, String> headers = {
         'content-type': 'application/json',
       };
 
-     final response = await http.post(
+      final response = await http.post(
         url,
         headers: headers,
         body: requestBody.toJson(),
@@ -71,10 +70,9 @@ class UserApiService {
     }
   }
 
-  Future verifyUser(String otp,String accountType)async {
+  Future verifyUser(String otp, String accountType) async {
     try {
-      final Uri url = Uri.parse(
-          '$baseUrl/$accountType/verify/$otp');
+      final url = Uri.parse('$baseUrl/$accountType/verify/$otp');
 
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -94,29 +92,48 @@ class UserApiService {
         }
       }
       if (response.statusCode == 201) {
+        print(jsonDecode(response.body));
         String id = jsonDecode(response.body)['data']['id'].toString();
-        log(id);
-        await setUserId(id);
         accountType == 'drivers' ? DriverApiService().onInit(id) : null;
+        return id;
       }
     } catch (e) {
       rethrow;
     }
   }
 
-  Future logIn(String userId, String password,String accountType) async {
-    var url = Uri.parse(
-        '$baseUrl/$accountType/$userId');
+  Future fetchSession() async {
     try {
-      final response = await http.get(url).timeout(
-        const Duration(seconds: 60),
-        onTimeout: () {
-          return Future.delayed(
-            const Duration(seconds: 3),
-            () => http.get(url),
-          );
-        },
+      const url = '$baseUrl/auth/session';
+      final response = await customClient.get(url);
+      if (response.statusCode != 200) {
+        print('failed to get session');
+      }
+      print(response.body);
+      // SharedPreferencesManager.instance
+      //     .setString('userID', jsonDecode(response.body)['data']['id']);
+      final jsonID = jsonDecode(response.body)['data']['id'];
+      return jsonID;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future logIn(String phoneNumber, String password) async {
+    var url = Uri.parse('$baseUrl/auth/login');
+    try {
+      final body = {"username": phoneNumber, "password": password};
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      final response = await http.post(
+        url,
+        body: jsonEncode(body),
+        headers: headers,
       );
+
       if (response.statusCode != 200) {
         final errorMessage = jsonDecode(response.body)['error'] as String?;
         if (errorMessage != null) {
@@ -125,20 +142,51 @@ class UserApiService {
           throw CustomException('An error occurred');
         }
       }
+
       if (response.statusCode == 200) {
-        String id = jsonDecode(response.body)['data']['id'].toString();
-        await setUserId(id);
-        accountType == 'drivers' ? DriverApiService().onInit(id) : null;
+        final jsonData = jsonDecode(response.body);
+
+        await storage.write(key: 'accessToken', value: jsonData['accessToken']);
+        await storage.write(
+            key: 'refreshToken', value: jsonData['refreshToken']);
+        //fetch user session after successfull login
+        final user = await fetchSession();
+        return user.toString();
       }
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<Profile> fetchOwnerProfile(String iD) async {
-    final url = Uri.parse('$baseUrl/fleet-owners/$iD');
+////not in use at the moment
+  Future refreshAccessToken(String token) async {
+    const url = '$baseUrl/auth/refresh';
     try {
-      final response = await http.get(url);
+      final response = await customClient.post(
+        url,
+        headers: {'X-Refresh-Token': token},
+      );
+      if (response.statusCode != 200) {
+        throw CustomException('Couldn\'t refresh token');
+      }
+      final accessToken = jsonDecode(response.body)['accessToken'];
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        final accessToken = jsonData['accessToken'];
+        final refreshToken = jsonData['refreshToken'];
+        return '$accessToken/$refreshToken';
+      }
+
+      return accessToken;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Profile> fetchOwnerProfile(String iD) async {
+    final url = '$baseUrl/fleet-owners/$iD';
+    try {
+      final response = await customClient.get(url);
       if (response.statusCode != 200) {
         throw CustomException('Failed to get your profile');
       }
@@ -150,9 +198,10 @@ class UserApiService {
   }
 
   Future<DProfile> fetchDriverProfile(String iD) async {
-    final url = Uri.parse('$baseUrl/drivers/$iD');
+    print(iD);
+    final url = '$baseUrl/drivers/$iD';
     try {
-      final response = await http.get(url);
+      final response = await customClient.get(url);
       if (response.statusCode != 200) {
         throw CustomException(
           'Failed to get your profile',
@@ -171,20 +220,23 @@ class UserApiService {
     List<File> files,
     String userID,
   ) async {
-    final url = Uri.parse('$baseUrl/fleet-owners/proof-identity/$userID');
+    final url = '$baseUrl/fleet-owners/proof-identity/$userID';
 
     try {
       if (files.isNotEmpty) {
-        var request = http.MultipartRequest('POST', url);
+        var request = http.MultipartRequest('POST', Uri.parse(url));
         for (var file in files) {
           request.files.add(
             await http.MultipartFile.fromPath('idCard', file.path),
           );
         }
-        var response = await request.send();
+        var response =
+            await customClient.sendMultipartRequest(url, files: request.files);
         if (response.statusCode != 201) {
+          print(response.reasonPhrase);
           throw CustomException('Operation failed');
         }
+        return response.reasonPhrase;
       } else {
         throw CustomException('No file selected');
       }
@@ -197,18 +249,20 @@ class UserApiService {
     List<File> files,
     String userID,
   ) async {
-    final url = Uri.parse('$baseUrl/fleet-owners/drivers-document/$userID');
+    final url = '$baseUrl/fleet-owners/drivers-document/$userID';
 
     try {
       if (files.isNotEmpty) {
-        var request = http.MultipartRequest('POST', url);
+        var request = http.MultipartRequest('POST', Uri.parse(url));
         for (var file in files) {
           request.files.add(
             await http.MultipartFile.fromPath('documents', file.path),
           );
         }
-        var response = await request.send();
+        var response =
+            await customClient.sendMultipartRequest(url, files: request.files);
         if (response.statusCode != 201) {
+          print(response.reasonPhrase);
           throw CustomException('Operation failed');
         }
       } else {
@@ -220,12 +274,12 @@ class UserApiService {
   }
 
   ///for the driver
-  Future<void> submitData(String userID, driver.Document docs) async {
-    final uri = Uri.parse('$baseUrl/drivers/document/$userID');
+  Future submitData(String userID, driver.Document docs) async {
+    final url = '$baseUrl/drivers/document/$userID';
 
     try {
       if (docs.idCard.isNotEmpty && docs.license.isNotEmpty) {
-        var request = http.MultipartRequest('POST', uri);
+        var request = http.MultipartRequest('POST', Uri.parse(url));
 
         // Add idCard files to the request
         for (var file in docs.idCard) {
@@ -246,9 +300,15 @@ class UserApiService {
         request.fields['licenseType'] = docs.licenseType;
         request.fields['experience'] = "${docs.experience}";
         request.fields['rate'] = "${docs.rate}";
+        
 
-        var response = await request.send();
+        var response = await customClient.sendMultipartRequest(
+          url,
+          files: request.files,
+          fields: request.fields,
+        );
         if (response.statusCode != 200) {
+          print(response.statusCode);
           throw CustomException('Failed to submit');
         }
       } else {
@@ -259,11 +319,11 @@ class UserApiService {
     }
   }
 
-  Future<void> getFleetOwner(String id) async {
-    final Uri url = Uri.parse('https://example.com/fleet-owners/$id');
+  Future<void> fetchFleetOwner(String id) async {
+    final url = 'https://example.com/fleet-owners/$id';
 
     try {
-      final response = await http.get(url);
+      final response = await customClient.get(url);
 
       if (response.statusCode != 200) {
         throw CustomException('Something went wrong');
@@ -273,16 +333,22 @@ class UserApiService {
     }
   }
 
-  Future<void> updateUser(
-      String id, String requestBody, String accountType) async {
-    final Uri uri = Uri.parse('$baseUrl/$accountType/$id');
+  Future updateUser(
+    String id,
+    String requestBody,
+    String accountType,
+  ) async {
+    final url = '$baseUrl/$accountType/$id';
 
     var body = {
       "lastName": requestBody.split('/')[1],
       "firstName": requestBody.split('/')[0]
     };
+    print(body);
     try {
-      final response = await http.put(uri, body: body);
+      final response = await customClient.put(url, body: body);
+      print(response.body);
+
       if (response.statusCode != 200) {
         throw CustomException('Failed to update');
       }

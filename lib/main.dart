@@ -4,6 +4,7 @@ import 'package:drivn/features/driver/presentation/dependency.injection/bindings
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/presentation/dependency/user.dependency.injection.dart';
+import 'package:drivn/shared/interceptor/http.client.interceptor.dart';
 import 'package:drivn/shared/utils/shared.prefs.manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,8 @@ void main() {
   setupDriverDependencies();
   setupOwnerDependencies();
   //auth dependency locator
-  setupLocator();
+  setupUserDependencies();
+setStorageLocator();
   runApp(const MyApp());
 }
 

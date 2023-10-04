@@ -1,6 +1,7 @@
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/repositories/user.repo.dart';
 import 'package:drivn/features/user/domain/usecases/login.dart';
+import 'package:drivn/features/user/domain/usecases/submit.data.dart';
 import '../../../auth/presentation/providers/user.auth.provider.dart';
 import '../../data/repositories/user.repo.impl.dart';
 import '../../domain/usecases/create.dart';
@@ -10,25 +11,22 @@ import '../../domain/usecases/submit.doc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../domain/usecases/submit.id.dart';
+import '../../domain/usecases/update.dart';
 import '../../domain/usecases/verify.fleetOwner.dart';
 
 final getIt = GetIt.instance;
 
-void setupLocator() {
+void setupUserDependencies() {
   // Register your dependencies here
   getIt.registerLazySingleton<UserApiService>(() => UserApiService());
   getIt.registerLazySingleton<UserRepo>(
-    () => UserRepoImpl(getIt<UserApiService>()),
-  );
-  getIt.registerLazySingleton<PostUseCase>(
-    () => PostUseCase(getIt<UserRepo>()),
-  );
+      () => UserRepoImpl(getIt<UserApiService>()));
+  getIt
+      .registerLazySingleton<PostUseCase>(() => PostUseCase(getIt<UserRepo>()));
   getIt.registerLazySingleton<VerifyUser>(
     () => VerifyUser(getIt<UserRepo>()),
   );
-  getIt.registerLazySingleton<SubmitDoc>(
-    () => SubmitDoc(getIt<UserRepo>()),
-  );
+  getIt.registerLazySingleton<SubmitDoc>(() => SubmitDoc(getIt<UserRepo>()));
   getIt.registerLazySingleton<Login>(
     () => Login(repo: getIt<UserRepo>()),
   );
@@ -41,6 +39,13 @@ void setupLocator() {
   getIt.registerLazySingleton<SubmitId>(
     () => SubmitId(repo: getIt<UserRepo>()),
   );
+  getIt.registerLazySingleton<SubmitData>(
+    () => SubmitData(repo: getIt<UserRepo>()),
+  );
+  getIt.registerLazySingleton<UserAuthProvider>(() => userAuthProvider);
+  getIt.registerLazySingleton<UpdateUser>(
+    () => UpdateUser(repo: getIt<UserRepo>()),
+  );
 }
 
 final userAuthProvider = UserAuthProvider(
@@ -51,4 +56,6 @@ final userAuthProvider = UserAuthProvider(
   getIt<FetchOwnerProfile>(),
   getIt<FetchDriverProfile>(),
   getIt<SubmitId>(),
+  getIt<SubmitData>(),
+  getIt<UpdateUser>(),
 );

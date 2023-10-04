@@ -241,9 +241,9 @@ class _AddFleetFormState extends State<AddFleetForm> {
                           .read<OwnerImplProvider>()
                           .addVehicle(vehicle)
                           .then((failure) {
-                            LoadingDialog.hideLoadingDialog(context);
-                        if (failure is String && failure.isNotEmpty) {
-                          showErrorDialogue(
+                        LoadingDialog.hideLoadingDialog(context);
+                        if (failure != null) {
+                           showErrorDialogue(
                             context,
                             failure,
                           );

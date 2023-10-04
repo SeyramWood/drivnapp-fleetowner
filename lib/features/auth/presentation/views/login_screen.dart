@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/auth/presentation/views/verifyDriver.view.dart';
@@ -5,6 +7,7 @@ import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
@@ -13,7 +16,9 @@ import 'package:provider/provider.dart';
 
 import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
+import '../providers/auth.shared.provider.dart';
 import '../widget/formfield.dart';
+import 'package:http/http.dart' as http;
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -139,30 +144,28 @@ class _LoginViewState extends State<LoginView> {
                       onPressed: () async {
                         LoadingDialog.showLoadingDialog(context);
 
-                       UserApiService()
+                        context
+                            .read<UserAuthProvider>()
                             .logIn(
-                                // context.read<UserAuthProvider>().userID
-                                context.read<UserAuthProvider>().accountType ==
-                                        'fleet-owners'
-                                    ? '51539607565'
-                                    : '51539607575',
-                                '',context.read<UserAuthProvider>().accountType)
+                              context.read<AuthSharedProvider>().phone.trim(),
+                              _passwordController.text.trim(),
+                            )
                             .then(
-                          (value) async {
-                            await Future.delayed(const Duration(seconds: 2),
-                                () {
-                              LoadingDialog.hideLoadingDialog(context);
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => context
-                                                .read<UserAuthProvider>()
-                                                .accountType ==
-                                            'fleet-owners'
-                                        ? const OMainPage()
-                                        : const DMainPage()),
-                                (route) => false,
-                              );
-                            });
+                          (failure) async {
+                            LoadingDialog.hideLoadingDialog(context);
+                            if (failure != null) {
+                              return showErrorDialogue(context, failure);
+                            }
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => context
+                                              .read<UserAuthProvider>()
+                                              .accountType ==
+                                          'fleet-owners'
+                                      ? const OMainPage()
+                                      : const DMainPage()),
+                              (route) => false,
+                            );
                           },
                         );
                       },

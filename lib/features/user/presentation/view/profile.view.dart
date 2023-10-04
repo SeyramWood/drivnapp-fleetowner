@@ -28,8 +28,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   void getProfile() async {
     final userId = context.read<UserAuthProvider>().userID;
-    final userProfile =
-        UserApiService().fetchOwnerProfile(userId);
+    final userProfile = UserApiService().fetchOwnerProfile(userId);
     setState(() {
       profile = userProfile;
     });
@@ -78,7 +77,7 @@ class _ProfileViewState extends State<ProfileView> {
                   final updatedLastName = lastNameController.text;
                   // Perform the update operation with the new data
                   LoadingDialog.showLoadingDialog(context);
-                  await UserApiService()
+                  await provider
                       .updateUser(
                           provider.userID,
                           '$updatedFirstName/$updatedLastName',

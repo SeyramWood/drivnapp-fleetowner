@@ -4,6 +4,7 @@ import 'package:drivn/features/auth/presentation/providers/user.auth.provider.da
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,13 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
   final licenceType = TextEditingController();
   final licenceNumber = TextEditingController();
   final yearsOfExperience = TextEditingController();
+  @override
+  void initState() {
+    print(context.read<UserAuthProvider>().userID);
+
+    super.initState();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -161,6 +169,8 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               width: 200,
               child: CustomElevatedButton(
                 onPressed: () async {
+                  print(context.read<UserAuthProvider>().userID);
+
                   //initialize driver docs with data
                   final Document docs = Document(
                     idCard: idCardFiles,
@@ -171,11 +181,16 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
                     rate: 3,
                   );
                   LoadingDialog.showLoadingDialog(context);
-                  await UserApiService()
-                      .submitData(context.read<UserAuthProvider>().userID,docs)
+                  await context
+                      .read<UserAuthProvider>()
+                      .submitDriverDoc(
+                          context.read<UserAuthProvider>().userID, docs)
                       .then(
-                    (value) {
+                    (failure) {
                       LoadingDialog.hideLoadingDialog(context);
+                      if (failure != null) {
+                      return  showErrorDialogue(context, failure);
+                      }
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => const DMainPage(),

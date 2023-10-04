@@ -31,6 +31,7 @@ class DProfile {
 
 class Data {
   DateTime createdAt;
+  String? avatar;
   Document? document;
   String firstName;
   int id;
@@ -41,6 +42,7 @@ class Data {
 
   Data({
     required this.createdAt,
+this.avatar,
     this.document,
     required this.firstName,
     required this.id,
@@ -52,6 +54,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         createdAt: DateTime.parse(json["createdAt"]),
+        avatar: json['avatar']??'',
         document: Document.fromJson(json["document"] ?? {}),
         firstName: json["firstName"],
         id: json["id"],
