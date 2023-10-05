@@ -42,7 +42,7 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
               ignoreBlank: true,
               initialValue: number,
               autoValidateMode: AutovalidateMode.disabled,
-              selectorTextStyle: const TextStyle(color: white),
+              selectorTextStyle: const TextStyle(color: white, fontSize: 17),
               textFieldController: widget.controller,
               formatInput: true,
               keyboardAction: TextInputAction.next,

@@ -31,19 +31,28 @@ class CarDetails extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Car ID:idhiei53i  ',
-                          style: Theme.of(context).textTheme.headlineMedium,
+                          'Car ID: ${vehicle.id}  ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .copyWith(fontSize: 20),
                         ),
                         const Icon(Icons.copy)
                       ],
                     ),
                     Text(
-                      vehicle.type,
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      'Type: ${vehicle.type}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontSize: 20),
                     ),
                     Text(
-                      vehicle.brand,
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      'Brand: ${vehicle.brand}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontSize: 20),
                     ),
                     Row(
                       children: [
@@ -55,14 +64,19 @@ class CarDetails extends StatelessWidget {
                           text: TextSpan(children: [
                             TextSpan(
                               text: '4.8',
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium!
+                                  .copyWith(fontSize: 20),
                             ),
                             TextSpan(
                               text: '  (200+ review)',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall!
-                                  .copyWith(color: black.withOpacity(.4)),
+                                  .copyWith(
+                                      fontSize: 15,
+                                      color: black.withOpacity(.4)),
                             )
                           ]),
                         )
@@ -75,7 +89,7 @@ class CarDetails extends StatelessWidget {
                           Theme.of(context).textTheme.headlineLarge!.copyWith(
                                 color: black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 25,
+                                fontSize: 22,
                               ),
                     ),
                   ],
@@ -93,14 +107,13 @@ class CarDetails extends StatelessWidget {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  print(vehicle.features);
-                  if (vehicle.features == null || vehicle.features!.isEmpty) {
+                  if (vehicle.features.isEmpty) {
                     return const Center(
                       child: Text(
                           'No features available to show for this vehicle'),
                     );
                   }
-                  var feature = vehicle.features![index];
+                  var feature = vehicle.features[index];
                   return Card(
                     surfaceTintColor: white,
                     color: white,
@@ -115,7 +128,7 @@ class CarDetails extends StatelessWidget {
                     ),
                   );
                 },
-                childCount: vehicle.features?.length ?? 0,
+                childCount: vehicle.features.length ?? 0,
               ),
             ),
           ),

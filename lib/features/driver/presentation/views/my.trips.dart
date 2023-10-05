@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:drivn/features/driver/data/api/driver.api.service.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/driver/presentation/provider/driver.impl.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,15 +16,18 @@ class MyTrips extends StatefulWidget {
 }
 
 class _MyTripsState extends State<MyTrips> {
-  late Future<List<DTrip>> trips;
+  late List<DTrip> trips;
   final StreamController<List<DTrip>> _streamController = StreamController();
 // ignore: unused_field
   late Timer _timer;
   void fetchTrips() async {
-    if (mounted) {
-      trips = DriverApiService().fetchTrips(context.read<APIService>().userId);
-      var streamData = await trips;
-      if (!_streamController.isClosed) {
+    if (mounted && !_streamController.isClosed) {
+      final data = await context
+          .read<DriverImplProvider>()
+          .fetchTrips(context.read<UserAuthProvider>().userID);
+
+      if (data is List<DTrip>) {
+        var streamData = data;
         _streamController.sink.add(streamData);
       }
     }

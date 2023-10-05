@@ -14,7 +14,7 @@ showErrorDialogue(BuildContext context, String message) {
             Text(message),
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('ok'),
+              child: const Text('close'),
             )
           ],
         ),

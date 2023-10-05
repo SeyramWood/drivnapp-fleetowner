@@ -9,11 +9,13 @@ class FormWithOption extends StatefulWidget {
     required this.controller,
     required this.labelText,
     required this.onSelected,
+    required this.onSubmitted,
     required this.customOptionsBuilder,
   });
   TextEditingController controller;
   String labelText;
   void Function(String) onSelected;
+  void Function(String) onSubmitted;
   final CustomOptionsBuilder<String> customOptionsBuilder;
 
   @override
@@ -51,7 +53,9 @@ class _FormWithOptionState extends State<FormWithOption> {
                 const PointerDownEvent(obscured: true);
               },
               onFieldSubmitted: (value) {
-                // widget.controller.clear();
+                widget.onSubmitted(value);
+                textEditingController.clear();
+                widget.controller.clear();
               },
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
@@ -81,6 +85,5 @@ class _FormWithOptionState extends State<FormWithOption> {
         ),
       ],
     );
- 
   }
 }

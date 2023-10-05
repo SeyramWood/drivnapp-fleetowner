@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../../../../shared/utils/validators.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
+import 'otp.input.view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -145,8 +146,9 @@ class _RegisterViewState extends State<RegisterView> {
                           backgroundColor: black,
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
+                              LoadingDialog.showLoadingDialog(context);
                               //fleetOwner object
-                              final fleetOwner = SignUpBody(
+                              final signUpBody = SignUpBody(
                                 lastName: _lastNameController.text.trim(),
                                 firstName: _firstNameController.text.trim(),
                                 username: context
@@ -158,20 +160,38 @@ class _RegisterViewState extends State<RegisterView> {
                                     _repeatPasswordController.text.trim(),
                               );
                               //method to create a fleetowner account
-                              context
+
+                              await context
                                   .read<UserAuthProvider>()
-                                  .postUser(fleetOwner, context)
+                                  .postUser(
+                                      signUpBody,
+                                      context
+                                          .read<UserAuthProvider>()
+                                          .accountType)
                                   .then(
                                 (failure) {
                                   if (failure != null) {
+                                    LoadingDialog.hideLoadingDialog(context);
+
                                     showErrorDialogue(
                                       context,
                                       failure,
                                     );
+                                  } else if (failure == null) {
+                                    // clearControllers();
+                                    LoadingDialog.hideLoadingDialog(context);
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => OTPInputView(
+                                        phoneNumber: context
+                                            .read<AuthSharedProvider>()
+                                            .phone
+                                            .trim(),
+                                        password:
+                                            _passwordController.text.trim(),
+                                      ),
+                                    ));
                                   }
-                                  // if (failure == null) {
-                                  //   clearControllers();
-                                  // }
                                 },
                               );
                             }
@@ -181,7 +201,7 @@ class _RegisterViewState extends State<RegisterView> {
                           context.watch<UserAuthProvider>().isLoading,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () => Navigator.of(context).pushAndRemoveUntil(
                           PageTransition(

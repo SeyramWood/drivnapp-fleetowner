@@ -1,31 +1,41 @@
-import 'package:drivn/features/owner/data/api/owner.api.dart';
-import 'package:drivn/features/owner/presentations/widget/booked.vehicle.info.card.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import '../../domain/entities/booked.vehicle.model.dart';
+import '../widget/booked.vehicle.info.card.dart';
 
 class BookedCarsBuilder extends StatefulWidget {
-  const BookedCarsBuilder({super.key});
+  const BookedCarsBuilder({Key? key}) : super(key: key);
 
   @override
   State<BookedCarsBuilder> createState() => _BookedCarsBuilderState();
 }
 
 class _BookedCarsBuilderState extends State<BookedCarsBuilder> {
-  late Future<List<BookedVehicle>> bookedCars;
+  Future<List<BookedVehicle>>? bookedVehicles;
+
   @override
   void initState() {
-    bookedCars = OwnerApiService()
-        .fetchBookedVehicles(context.read<APIService>().userId);
     super.initState();
+    fetchVehicles();
+  }
+
+  void fetchVehicles() async {
+    final userID = context.read<UserAuthProvider>().userID;
+    final futureData =
+        await context.read<OwnerImplProvider>().fetchBookedVehicles(userID);
+    if (futureData is List<BookedVehicle>) {
+      setState(() {
+        bookedVehicles = Future.value(futureData);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: bookedCars,
+    return FutureBuilder<List<BookedVehicle>>(
+      future: bookedVehicles,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

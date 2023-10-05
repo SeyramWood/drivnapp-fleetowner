@@ -2,7 +2,6 @@ import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
-import '../../data/api/owner.api.dart';
 
 class MoreOfBookedCar extends StatelessWidget {
   const MoreOfBookedCar({super.key, required this.info});

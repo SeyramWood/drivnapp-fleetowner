@@ -1,4 +1,4 @@
 import 'package:intl/intl.dart';
 
-final date = DateFormat('h MMMM');
+var date = DateFormat.MMMEd();
 final time = DateFormat('hh:mm a');

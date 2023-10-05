@@ -1,5 +1,5 @@
-import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:drivn/features/owner/presentations/widget/rental.form.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/cached.network.image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,9 @@ import 'package:drivn/features/owner/presentations/switch_icon_icons.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import '../../domain/entities/vehicle.model.dart' as data;
+import '../providers/owner.impl.dart';
 import '../views/car.detail.dart';
 
 class CarTile extends StatefulWidget {
@@ -72,7 +74,9 @@ class _CarTileState extends State<CarTile> {
           children: [
             SlidableAction(
               onPressed: (context) {
-                OwnerApiService().deleteVehicle('${vehicle.id}');
+                context
+                    .read<OwnerImplProvider>()
+                    .deleteVehicle('${vehicle.id}');
               },
               backgroundColor: red,
               foregroundColor: white,
@@ -167,11 +171,10 @@ class _CarTileState extends State<CarTile> {
                                   iconSize: 25,
                                   underline: Container(),
                                   value: newValue,
-                                  onChanged: (value) {
+                                  onChanged: (value) async {
                                     setState(() {
                                       newValue = value!;
                                     });
-                                    // Check the selected value and take appropriate actions
                                     // if (newValue == 2) {
                                     //   rideSharing(
                                     //     context,
@@ -181,10 +184,19 @@ class _CarTileState extends State<CarTile> {
                                     // }
                                     // else
                                     if (newValue == 'unavailable') {
-                                      OwnerApiService().updateAvailability(
-                                          '${vehicle.id}', 'unavailable');
+                                      context
+                                          .read<OwnerImplProvider>()
+                                          .updateAvailability(
+                                              '${vehicle.id}', 'unavailable')
+                                          .then(
+                                        (failure) {
+                                          if (failure != null) {
+                                            showErrorDialogue(context, failure);
+                                          }
+                                        },
+                                      );
                                     } else if (newValue == 'rental') {
-                                      updateRental(context, vehicle);
+                                      await updateRental(context, vehicle);
                                     }
                                   },
                                   items: const [

@@ -1,8 +1,10 @@
+
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:drivn/features/auth/presentation/views/request.password.reset.view.dart';
@@ -11,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
+import '../providers/auth.shared.provider.dart';
 import '../widget/formfield.dart';
 
 class LoginView extends StatefulWidget {
@@ -96,6 +99,8 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   CustomFormField(
                     controller: _passwordController,
+                    obscureText: _obscurePassword,
+                    textInputAction: TextInputAction.done,
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.password_outlined),
                     suffixIcon: GestureDetector(
@@ -109,11 +114,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   TextButton(
                     onPressed: () {
-                      print(
-                        Provider.of<APIService>(context, listen: false)
-                            .accTypeIsOwner,
-                      );
-
                       Navigator.push(
                         context,
                         PageTransition(
@@ -140,40 +140,37 @@ class _LoginViewState extends State<LoginView> {
                     child: CustomElevatedButton(
                       backgroundColor: black,
                       onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        Provider.of<APIService>(context, listen: false)
+                        LoadingDialog.showLoadingDialog(context);
+
+                        context
+                            .read<UserAuthProvider>()
                             .logIn(
-                          // context.read<APIService>().userId
-                          context.read<APIService>().accTypeIsOwner
-                              ? '51539607565'
-                              : '51539607554',
-                        )
+                              context.read<AuthSharedProvider>().phone.trim(),
+                              _passwordController.text.trim(),
+                            )
                             .then(
-                          (value) async {
-                            await Future.delayed(const Duration(seconds: 2),
-                                () {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => context
-                                            .read<APIService>()
-                                            .accTypeIsOwner
-                                        ? const OMainPage()
-                                        : const DMainPage()),
-                                (route) => false,
-                              );
-                              setState(() {
-                                isLoading = false;
-                              });
-                            });
+                          (failure) async {
+                            LoadingDialog.hideLoadingDialog(context);
+                            if (failure != null) {
+                              return showErrorDialogue(context, failure);
+                            }
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => context
+                                              .read<UserAuthProvider>()
+                                              .accountType ==
+                                          'fleet-owners'
+                                      ? const OMainPage()
+                                      : const DMainPage()),
+                              (route) => false,
+                            );
                           },
                         );
                       },
                       child: const Text('Login'),
-                    ).loading(isLoading),
+                    ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 25),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(

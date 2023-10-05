@@ -1,120 +1,112 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
 import 'package:drivn/features/owner/domain/entities/v.request.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
 import 'package:drivn/shared/errors/exception.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../shared/interceptor/http.client.interceptor.dart';
 import '../../../../shared/utils/constants/base.url.dart';
+import '../../../driver/presentation/dependency.injection/bindings.dart';
 import '../../domain/entities/driver.model.dart';
+import '../../domain/entities/update.rental.model.dart';
+
+final httpClient = http.Client();
 
 class OwnerApiService {
+  final storage = getIt<FlutterSecureStorage>();
+  final customClient = HttpClientWithInterceptor(httpClient);
   //add a vehicle
-  Future<String?> addVehicle({
-    required String userID,
-    required String carBrand,
-    required String carType,
-    required List<File> imageFiles,
-    required List<File> proofFiles,
-    required List<String> features,
-    String? moreFeatures,
-  }) async {
-    final uri = Uri.parse('$baseUrl/vehicles');
+  Future addVehicle({required v.VehicleToDBModel vehicle}) async {
+    const url = '$baseUrl/vehicles';
 
     try {
-      if (imageFiles.isNotEmpty && proofFiles.isNotEmpty) {
-        var request = http.MultipartRequest('POST', uri);
+      if (vehicle.images.isNotEmpty && vehicle.documents.isNotEmpty) {
+        var request = http.MultipartRequest('POST', Uri.parse(url));
         // Add fields to the request
-        request.fields['owner'] = userID;
-        request.fields['brand'] = carBrand;
-        request.fields['type'] = carType;
-        request.fields['feature'] = features.join(',');
+        request.fields['owner'] = vehicle.userID;
+        request.fields['brand'] = vehicle.brand;
+        request.fields['type'] = vehicle.type;
+        request.fields['feature'] = vehicle.features.join(',');
+        request.fields['moreFeature'] = vehicle.moreFeatures ?? '';
 
-        request.fields['moreFeature'] = moreFeatures ?? '';
-
-        for (var file in imageFiles) {
+        for (var file in vehicle.images) {
           request.files.add(
             await http.MultipartFile.fromPath('image', file.path),
           );
         }
 
-        for (var file in proofFiles) {
+        for (var file in vehicle.documents) {
           request.files.add(
             await http.MultipartFile.fromPath('document', file.path),
           );
         }
+        // final response = await request.send();
 
-        var response = await request.send();
+        var response = await customClient.sendMultipartRequest(url,
+            files: request.files, fields: request.fields, request: request);
 
         if (response.statusCode != 201) {
           print(response.reasonPhrase);
-          throw CustomException(
-              'Request failed with status code: ${response.statusCode}');
+          throw CustomException("Couldn't create or add vehicle");
         }
-        log(response.stream.bytesToString.toString());
       } else {
-        print('No files selected');
+        throw CustomException('No files selected');
       }
-    } on CustomException catch (failure) {
-      print('CustomException: ${failure.message}');
-      // throw CustomException(failure.message);
-    } catch (e) {
-      print('Error: $e');
-      rethrow; // Re-throw the caught exception for better error propagation
+    } catch (failure) {
+      rethrow;
     }
-    return null;
   }
 
 //http get request for vehicles belonging to a user
   Future<List<v.Vehicle>> fetchVehicles(String userID) async {
-    final uri = Uri.parse('$baseUrl/vehicles/owner/$userID');
-    final response = await http.get(uri);
-    if (response.statusCode != 200) {
-      print(
-        '${response.statusCode}\n${response.reasonPhrase}\n${response.body}',
-      );
+    final url = '$baseUrl/vehicles/owner/$userID';
+    try {
+      final response = await customClient.get(url);
+      if (response.statusCode != 200) {
+        throw CustomException('Request  failed');
+      }
+      return v.vehicleFromJson(response.body).data!.data;
+    } catch (e) {
+      rethrow;
     }
-    return v.vehicleFromJson(response.body).data!.data;
   }
 
   Future<List<BookedVehicle>> fetchBookedVehicles(String userID) async {
-    final uri = Uri.parse('$baseUrl/bookings/owner/$userID');
+    final url = '$baseUrl/bookings/owner/$userID';
     try {
-      final response = await http.get(uri);
+      final response = await customClient.get(url);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        print(response.body);
+        throw CustomException("couldn't fetch vehicles");
       }
       return bookedVehicleModelFromJson(response.body).data!.data;
     } catch (e) {
-      print(e);
-      throw Exception("couldn't fetch vehicles");
+      rethrow;
     }
   }
 
   Future updateRental(
-    String vehicleID,
-    String? driver,
-    String location,
-    String price,
-  ) async {
-    final url = Uri.parse('$baseUrl/vehicles/rental/$vehicleID');
-    final body = {
-      "driver": driver ?? '',
-      "location": location,
-      "price": price,
-    };
+      String vehicleID, UpdateRentalModel updateRentalModel) async {
+    final url = '$baseUrl/vehicles/rental/$vehicleID';
+    final body = updateRentalModel.updateRentalToJson();
     try {
-      final response = await http.put(url, body: body);
+      final response = await customClient.put(
+        url,
+        body: body,
+      );
+      log(response.statusCode.toString());
 
-      if (response.statusCode != 200 || response.statusCode != 202) {
-        log(response.statusCode.toString());
+      if (response.statusCode != 200) {
+        log(response.reasonPhrase.toString());
+
+        throw CustomException("Rental couldn't be updated");
       }
-      log(response.body);
     } catch (e) {
-      log('$e');
+      rethrow;
     }
   }
 
@@ -122,95 +114,89 @@ class OwnerApiService {
     String vehicleID,
     String status,
   ) async {
-    final url =
-        Uri.parse('$baseUrl/vehicles/availability/$vehicleID?status=$status');
+    final url = '$baseUrl/vehicles/availability/$vehicleID?status=$status';
 
     try {
-      final response = await http.put(url);
-
-      if (response.statusCode != 200 || response.statusCode != 202) {
-        log(response.statusCode.toString());
+      final response = await customClient.put(url);
+      print(response.reasonPhrase);
+      if (response.statusCode != 200) {
+        throw CustomException("Availability couldn't be updated");
       }
-      log(response.body);
     } catch (e) {
-      log('$e');
+      rethrow;
     }
   }
 
   Future<List<Dryver>> fetchDrivers() async {
-    final url = Uri.parse('$baseUrl/drivers?approved=true&assigned=false');
+    const url = '$baseUrl/drivers?approved=true&assigned=false';
     try {
-      final response = await http.get(url);
+      final response = await customClient.get(url);
       if (response.statusCode != 200) {
-        log(response.statusCode.toString());
+        throw CustomException('failed to get drivers');
       }
-      log(response.body.toString());
-      return DriverModel.fromJson(json.decode(response.body)).data.data;
+      return DriverModel.fromJson(json.decode(response.body)).data?.data ?? [];
     } catch (e) {
-      print(e);
-      throw Exception('failed to get drivers');
+      rethrow;
     }
   }
 
   Future<List<VRequest>> allRequests(String userID) async {
-    final url = Uri.parse('$baseUrl/booking/requests/owner/$userID');
+    final url = '$baseUrl/booking/requests/owner/$userID';
     try {
-      final response = await http.get(url);
+      final response = await customClient.get(url);
 
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        throw CustomException("couldn't fetch request");
       }
+      print(response.body);
       return vehicleRequestModelFromJson(response.body).data!.data;
     } catch (e) {
-      print(e);
-      throw Exception("couldn't fetch request");
+      rethrow;
     }
   }
 
   Future acceptRequest(String requestID) async {
-    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+    final url = '$baseUrl/booking/requests/accept/$requestID';
     try {
       final body = {
         "requestType": "owner",
         "status": "accepted",
       };
-      final response = await http.put(url, body: body);
-      if (response.statusCode != 200 || response.statusCode == 202) {
-        print(response.statusCode);
+      final response = await customClient.put(url, body: body);
+      if (response.statusCode != 200) {
+        throw CustomException('Request failed');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
-  Future cancelRequest(requestID, String? reason) async {
-    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+  Future cancelRequest(String requestID, String? reason) async {
+    final url = '$baseUrl/booking/requests/accept/$requestID';
     final body = {
       "requestType": "owner",
       "status": "declined",
       'reason': reason
     };
     try {
-      final response = await http.put(url, body: body);
+      final response = await customClient.put(url, body: body);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        throw CustomException('Operation failed');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
-  
-
   Future deleteVehicle(String vehicleID) async {
-    final url = Uri.parse('$baseUrl/vehicles/$vehicleID');
+    final url = '$baseUrl/vehicles/$vehicleID';
     try {
-      final response = await http.delete(url);
+      final response = await customClient.delete(url);
       if (response.statusCode != 200) {
-        print(response.reasonPhrase);
+        throw CustomException('Operation failed');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:drivn/features/driver/domain/entities/trips.model.dart';
-import 'package:drivn/features/driver/presentation/widget/request.dialog.dart';
 import 'package:drivn/shared/utils/constants/dimensions.dart';
 import 'package:flutter/material.dart';
 
@@ -72,7 +71,7 @@ class _TripCardState extends State<TripCard> {
                           .copyWith(fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      '20 hours',
+                      '${widget.tripInfo!.rental.returnDate.difference(widget.tripInfo!.rental.pickupDate).inHours.toString()} hour(s)',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
@@ -91,7 +90,8 @@ class _TripCardState extends State<TripCard> {
                           .bodyMedium!
                           .copyWith(fontWeight: FontWeight.w600),
                     ),
-                    Text('GHC200',
+                    Text(
+                        'GHC ${widget.tripInfo!.rental.driverAmount.toString()}',
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium!
@@ -123,7 +123,6 @@ class _TripCardState extends State<TripCard> {
                                 ? () {
                                     var bookingID =
                                         widget.tripInfo!.id.toString();
-                                    print(bookingID);
                                     DriverApiService()
                                         .updateTripStatus(bookingID, 'started');
                                   }
@@ -152,7 +151,6 @@ class _TripCardState extends State<TripCard> {
                                 ? () {
                                     var bookingID =
                                         widget.tripInfo!.id.toString();
-                                    print(bookingID);
                                     DriverApiService()
                                         .updateTripStatus(bookingID, 'ended');
                                   }
