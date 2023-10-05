@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../../../../shared/utils/validators.dart';
 import '../widget/elevated.button.dart';
 import '../widget/formfield.dart';
+import '../widget/google.button.dart';
 import 'otp.input.view.dart';
 
 class RegisterView extends StatefulWidget {
@@ -234,6 +235,10 @@ class _RegisterViewState extends State<RegisterView> {
                     ],
                   ),
                 ),
+                GoogleButton(
+                  title: 'SignUp',
+                  onTap: () {},
+                )
               ],
             ),
           ),

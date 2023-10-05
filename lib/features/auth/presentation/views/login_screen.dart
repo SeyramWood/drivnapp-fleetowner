@@ -15,6 +15,7 @@ import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../providers/auth.shared.provider.dart';
 import '../widget/formfield.dart';
+import '../widget/google.button.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -202,6 +203,10 @@ class _LoginViewState extends State<LoginView> {
                 ],
               ),
             ),
+            GoogleButton(
+                  title: 'SignIn',
+                  onTap: () {},
+                )
           ],
         ),
       ),

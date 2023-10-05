@@ -18,7 +18,7 @@ void main() {
   setupOwnerDependencies();
   //auth dependency locator
   setupUserDependencies();
-setStorageLocator();
+  setStorageLocator();
   runApp(const MyApp());
 }
 
@@ -44,3 +44,20 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+// keytool -list -v -keystore c/Users/kojomensah.android\debug.keystore -alias androiddebugkey
+
+// keytool -list -v -keystore ~/Users/kojomensah/.android/debug.keystore -alias androiddebugkey
+
+// keytool -exportcert -alias androiddebugkey -keystore "C:\Users\kojomensah\.android\debug.keystore" -list -v
+
+// keytool -list -v -keystore C:\Users\kojomensah\.android\debug.keystore -alias androiddebugkey
+
+// -keystore C:\Users\kojomensah\.android\debug.keystore -alias androiddebugkey
+
+
+
+
+
+//ios client id //707888038435-h1jtdkqat3punrqqpcv39vbltr9ai2rj.apps.googleusercontent.com
+
+//android client id //707888038435-9vuvrq33uammvdvjq62fa8jk7bjc5bh5.apps.googleusercontent.com
