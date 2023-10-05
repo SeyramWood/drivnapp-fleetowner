@@ -4,7 +4,6 @@ import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';

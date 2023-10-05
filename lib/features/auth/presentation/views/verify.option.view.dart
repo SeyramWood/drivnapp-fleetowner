@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 
 import '../../../driver/presentation/views/main.page.dart';
 import '../../../owner/presentations/views/home.dart';
-import '../../../user/data/api/user.api.service.dart';
 
 class VerifyOptionView extends StatefulWidget {
   const VerifyOptionView({super.key});

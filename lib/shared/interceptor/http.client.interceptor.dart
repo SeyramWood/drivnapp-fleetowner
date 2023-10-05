@@ -118,32 +118,31 @@ class HttpClientWithInterceptor {
     return response;
   }
 
-  Future<http.Response> sendMultipartRequest(
-    String url, {
-    Map<String, String>? headers,
-    Map<String, String>? fields,
-    List<http.MultipartFile>? files,
-  }) async {
+  Future<http.Response> sendMultipartRequest(String url,
+      {Map<String, String>? headers,
+      Map<String, String>? fields,
+      List<http.MultipartFile>? files,
+      required MultipartRequest request,
+      re}) async {
     try {
-      final request = http.MultipartRequest('POST', Uri.parse(url));
+      // final request = http.MultipartRequest('POST', Uri.parse(url));
 
       // Set the authorization header with the current access token (if available)
       headers ??= {};
       headers['Authorization'] = 'Bearer $_accessToken';
+      request.headers.addAll(headers);
 
-      // Add text fields to the request (if provided)
-      if (fields != null) {
-        request.fields.addAll(fields);
-      }
+      // // Add text fields to the request (if provided)
+      // if (fields != null) {
+      //   request.fields.addAll(fields);
+      // }
 
-      // Add files to the request (if provided)
-      if (files != null) {
-        for (var file in files) {
-          request.files.add(file);
-        }
-      }
-      print(files);
-      final streamedResponse = await _inner.send(request);
+      // // Add files to the request (if provided)
+      // if (files != null) {
+      //     request.files.addAll(files);
+
+      // }
+      final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 401) {
@@ -152,21 +151,20 @@ class HttpClientWithInterceptor {
           // Retry the original request with the new token
 
           // Create a new request with the updated headers
-          final newRequest = http.MultipartRequest('POST', Uri.parse(url));
-          newRequest.headers['Authorization'] = 'Bearer $_accessToken';
+          request.headers['Authorization'] = 'Bearer $_accessToken';
+          request.headers.addAll(headers);
 
           // Add the fields and files to the new request
-          if (fields != null) {
-            newRequest.fields.addAll(fields);
-          }
-          if (files != null) {
-            for (var file in files) {
-              newRequest.files.add(file);
-            }
-          }
+          // if (fields != null) {
+          //   newRequest.fields.addAll(fields);
+          // }
+          // if (files != null) {
+          //     newRequest.files.addAll(files);
+
+          // }
 
           // Send the new request
-          final newStreamedResponse = await _inner.send(newRequest);
+          final newStreamedResponse = await request.send();
           return await http.Response.fromStream(newStreamedResponse);
         } catch (e) {
           rethrow; // Rethrow if token refresh fails

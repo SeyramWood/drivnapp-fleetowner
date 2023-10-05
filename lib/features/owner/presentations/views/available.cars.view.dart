@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
+import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/api/owner.api.dart';
 import '../../domain/entities/vehicle.model.dart';
 import '../widget/available.car.tile.dart';
 
@@ -17,16 +16,19 @@ class CarsAvailableBuilder extends StatefulWidget {
 }
 
 class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
-  late Future<List<Vehicle>> vehicles;
+  late List<Vehicle> vehicles;
   final StreamController<List<Vehicle>> _controller = StreamController();
   late Timer _timer;
   void fetchVehicles() async {
     if (mounted) {
-      vehicles = OwnerApiService()
+      var futureData = await context
+          .read<OwnerImplProvider>()
           .fetchVehicles(context.read<UserAuthProvider>().userID);
-      var streamData = await vehicles;
-      if (!_controller.isClosed) {
-        _controller.sink.add(streamData);
+      if (futureData is List<Vehicle>) {
+        var streamData = futureData;
+        if (!_controller.isClosed) {
+          _controller.sink.add(streamData);
+        }
       }
     }
   }
@@ -49,12 +51,7 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
     super.dispose();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   vehicles =
-  //       OwnerApiService().fetchVehicles(context.read<APIService>().userId);
-  //   super.didChangeDependencies();
-  // }
+  
 
   @override
   Widget build(BuildContext context) {

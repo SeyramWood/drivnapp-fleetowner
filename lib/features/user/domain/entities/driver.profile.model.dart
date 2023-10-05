@@ -3,7 +3,6 @@
 //     final dProfile = dProfileFromJson(jsonString);
 
 import 'dart:convert';
-import 'dart:io';
 
 DProfile dProfileFromJson(String str) => DProfile.fromJson(json.decode(str));
 

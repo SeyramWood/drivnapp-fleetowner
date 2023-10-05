@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
-import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:file_picker/file_picker.dart';

@@ -4,7 +4,6 @@ import 'package:drivn/features/auth/presentation/providers/user.auth.provider.da
 import 'package:drivn/features/driver/domain/entities/request.model.dart';
 import 'package:drivn/features/driver/presentation/provider/driver.impl.provider.dart';
 import 'package:drivn/features/driver/presentation/provider/toggle.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +21,7 @@ class RequestView extends StatefulWidget {
 
 class _RequestViewState extends State<RequestView> {
   bool isOnline = true;
-  int _selectedDropdownValue = 1;
+  final int _selectedDropdownValue = 1;
   late Future<List<DRequest>> request;
   final StreamController<List<DRequest>> _streamController = StreamController();
   // ignore: unused_field

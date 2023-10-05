@@ -1,20 +1,16 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:drivn/features/auth/presentation/views/verify.option.view.dart';
 import 'package:drivn/features/user/domain/entities/user.signup.model.dart';
 import 'package:drivn/features/user/domain/usecases/login.dart';
 import 'package:drivn/features/user/domain/usecases/read.dart';
-import 'package:drivn/features/user/domain/usecases/refresh.token.dart';
 import 'package:drivn/features/user/domain/usecases/submit.data.dart';
 import 'package:drivn/features/user/domain/usecases/update.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../../../../shared/errors/failure.dart';
 import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../../../../shared/utils/usecase.dart';
 import '../../../user/domain/entities/owner.profile.model.dart';

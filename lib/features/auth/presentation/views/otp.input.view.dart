@@ -1,7 +1,6 @@
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/verify.option.view.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';

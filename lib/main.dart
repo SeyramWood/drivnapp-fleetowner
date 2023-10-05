@@ -2,7 +2,6 @@ import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
 import 'package:drivn/features/driver/presentation/dependency.injection/bindings.dart';
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/presentation/dependency/user.dependency.injection.dart';
 import 'package:drivn/shared/interceptor/http.client.interceptor.dart';
 import 'package:drivn/shared/utils/shared.prefs.manager.dart';

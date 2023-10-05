@@ -53,6 +53,7 @@ class _FormWithOptionState extends State<FormWithOption> {
                 const PointerDownEvent(obscured: true);
               },
               onFieldSubmitted: (value) {
+                widget.onSubmitted(value);
                 textEditingController.clear();
                 widget.controller.clear();
               },

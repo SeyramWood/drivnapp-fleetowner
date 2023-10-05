@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 
 import 'package:drivn/features/owner/domain/entities/update.rental.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
 import 'package:drivn/shared/utils/usecase.dart';
+import 'package:flutter/material.dart';
 
 import '../../domain/usecase/accept.request.dart';
 import '../../domain/usecase/add.vehicle.dart';
@@ -60,7 +60,7 @@ class OwnerImplProvider extends ChangeNotifier {
     );
   }
 
-  Future addVehicle(VehicleToDBModel vehicle) async {
+  Future addVehicle(VehicleToDBModel vehicle,BuildContext context) async {
     _isLoading = true;
     notifyListeners();
     final result = await _addVehicle(Params(vehicle));
@@ -73,6 +73,11 @@ class OwnerImplProvider extends ChangeNotifier {
       (success) {
         _isLoading = false;
         notifyListeners();
+        ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            duration: Duration(seconds: 3),
+                            content: Text('Vehicle added successfully'),
+                          ));
       },
     );
   }

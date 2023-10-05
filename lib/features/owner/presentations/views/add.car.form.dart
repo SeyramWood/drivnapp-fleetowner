@@ -4,7 +4,6 @@ import 'package:drivn/features/auth/presentation/providers/user.auth.provider.da
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/vehicle/data/api/vehicle.api.service.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.brands.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.type.dart';
@@ -239,22 +238,17 @@ class _AddFleetFormState extends State<AddFleetForm> {
                           moreFeatures: optionalFeatures.text.trim());
                       context
                           .read<OwnerImplProvider>()
-                          .addVehicle(vehicle)
+                          .addVehicle(vehicle, context)
                           .then((failure) {
                         LoadingDialog.hideLoadingDialog(context);
                         if (failure != null) {
-                           showErrorDialogue(
+                          showErrorDialogue(
                             context,
                             failure,
                           );
                         } else {
                           clearFields();
                           setState(() {});
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            duration: Duration(seconds: 3),
-                            content: Text('Vehicle added successfully'),
-                          ));
                         }
                       });
                     },

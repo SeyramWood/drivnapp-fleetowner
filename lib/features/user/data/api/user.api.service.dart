@@ -1,18 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:drivn/features/driver/presentation/dependency.injection/bindings.dart';
 import 'package:drivn/shared/errors/exception.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 import '../../../../shared/interceptor/http.client.interceptor.dart';
 import '../../../../shared/utils/constants/base.url.dart';
-import '../../../../shared/utils/shared.prefs.manager.dart';
-import '../../../auth/presentation/providers/user.auth.provider.dart';
 import '../../../driver/data/api/driver.api.service.dart';
 import '../../domain/entities/driver.profile.model.dart' as driver;
 import '../../domain/entities/driver.profile.model.dart';
@@ -230,8 +225,8 @@ class UserApiService {
             await http.MultipartFile.fromPath('idCard', file.path),
           );
         }
-        var response =
-            await customClient.sendMultipartRequest(url, files: request.files);
+        var response = await customClient.sendMultipartRequest(url,
+            files: request.files, request: request);
         if (response.statusCode != 201) {
           print(response.reasonPhrase);
           throw CustomException('Operation failed');
@@ -259,8 +254,8 @@ class UserApiService {
             await http.MultipartFile.fromPath('documents', file.path),
           );
         }
-        var response =
-            await customClient.sendMultipartRequest(url, files: request.files);
+        var response = await customClient.sendMultipartRequest(url,
+            files: request.files, request: request);
         if (response.statusCode != 201) {
           print(response.reasonPhrase);
           throw CustomException('Operation failed');
@@ -300,13 +295,9 @@ class UserApiService {
         request.fields['licenseType'] = docs.licenseType;
         request.fields['experience'] = "${docs.experience}";
         request.fields['rate'] = "${docs.rate}";
-        
 
-        var response = await customClient.sendMultipartRequest(
-          url,
-          files: request.files,
-          fields: request.fields,
-        );
+        var response = await customClient.sendMultipartRequest(url,
+            files: request.files, fields: request.fields, request: request);
         if (response.statusCode != 200) {
           print(response.statusCode);
           throw CustomException('Failed to submit');

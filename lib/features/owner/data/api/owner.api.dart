@@ -44,9 +44,10 @@ class OwnerApiService {
             await http.MultipartFile.fromPath('document', file.path),
           );
         }
+        // final response = await request.send();
 
         var response = await customClient.sendMultipartRequest(url,
-            files: request.files, fields: request.fields);
+            files: request.files, fields: request.fields, request: request);
 
         if (response.statusCode != 201) {
           print(response.reasonPhrase);
@@ -79,6 +80,7 @@ class OwnerApiService {
     try {
       final response = await customClient.get(url);
       if (response.statusCode != 200) {
+        print(response.body);
         throw CustomException("couldn't fetch vehicles");
       }
       return bookedVehicleModelFromJson(response.body).data!.data;
@@ -146,6 +148,7 @@ class OwnerApiService {
       if (response.statusCode != 200) {
         throw CustomException("couldn't fetch request");
       }
+      print(response.body);
       return vehicleRequestModelFromJson(response.body).data!.data;
     } catch (e) {
       rethrow;

@@ -20,6 +20,7 @@ class DriverApiService {
   //set driver needed variables
   Future onInit(String userID) async {
     final prefs = SharedPreferencesManager.instance;
+
     final url = '$baseUrl/drivers/$userID';
     try {
       final response = await customClient.get(url);
@@ -43,7 +44,7 @@ class DriverApiService {
         );
       }
     } catch (e) {
-      rethrow;
+      return;
     }
   }
 

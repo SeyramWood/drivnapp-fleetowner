@@ -1,10 +1,8 @@
 import 'package:drivn/features/owner/presentations/views/home.dart';
 import 'package:drivn/features/auth/presentation/views/verifyOwner/identity.info.view.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'driver.doc.dart';
 

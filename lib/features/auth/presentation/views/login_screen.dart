@@ -1,12 +1,9 @@
-import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
-import 'package:drivn/features/auth/presentation/views/verifyDriver.view.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +15,6 @@ import '../../../owner/presentations/views/home.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../providers/auth.shared.provider.dart';
 import '../widget/formfield.dart';
-import 'package:http/http.dart' as http;
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -103,6 +99,8 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   CustomFormField(
                     controller: _passwordController,
+                    obscureText: _obscurePassword,
+                    textInputAction: TextInputAction.done,
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.password_outlined),
                     suffixIcon: GestureDetector(

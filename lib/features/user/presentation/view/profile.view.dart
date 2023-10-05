@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/entities/owner.profile.model.dart';
@@ -19,6 +22,7 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   late Future<Profile> profile;
+  File? _pickedImage;
 
   @override
   void initState() {
@@ -107,6 +111,17 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      setState(() {
+        _pickedImage = File(pickedImage.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,18 +157,39 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     Row(
                       children: [
-                        CircleAvatar(
-                          radius: 35,
-                          child: Text(
-                            '${profile.firstName[0]} ${profile.lastName[0]}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 35,
+                              backgroundImage: _pickedImage != null
+                                  ? FileImage(
+                                      _pickedImage!) // Display the picked image
+                                  : null, // Display nothing if no image is picked
+                              child: _pickedImage == null
+                                  ? Text(
+                                      '${profile.firstName[0]} ${profile.lastName[0]}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: black,
+                                      ),
+                                    )
+                                  : null, // Hide the name initials when an image is picked
+                            ),
+                            Positioned(
+                              right: -10, // Adjust the position as needed
+                              bottom: -15, // Adjust the position as needed
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.camera_alt,
+                                  color: black,
                                 ),
-                          ),
+                                onPressed:
+                                    pickImage, // Allow users to pick an image
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
                           width: 20,

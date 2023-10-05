@@ -1,12 +1,8 @@
-import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/onboarding_screens/onboard.dart';
 import 'package:drivn/features/owner/presentations/views/home.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../shared/utils/shared.prefs.manager.dart';
 
