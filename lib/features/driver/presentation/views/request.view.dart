@@ -21,7 +21,6 @@ class RequestView extends StatefulWidget {
 
 class _RequestViewState extends State<RequestView> {
   bool isOnline = true;
-  final int _selectedDropdownValue = 1;
   late Future<List<DRequest>> request;
   final StreamController<List<DRequest>> _streamController = StreamController();
   // ignore: unused_field
@@ -37,7 +36,6 @@ class _RequestViewState extends State<RequestView> {
               .read<DriverImplProvider>()
               .fetchRequest(context.read<UserAuthProvider>().userID);
         } catch (e) {
-          print(e);
           return NetworkErrorHandler.handleNetworkError(context, e);
         }
         if (data is List<DRequest>) {

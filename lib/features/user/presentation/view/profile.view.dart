@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/shared/show.snacbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ import 'package:drivn/features/user/presentation/view/settings.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/constants/dimensions.dart';
 
+import '../../../../shared/utils/cached.network.image.dart';
 import '../../../../shared/utils/extentions/on.custom.elevated.button.dart';
 import '../../../auth/presentation/views/login_screen.dart';
 
@@ -21,8 +23,7 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  late Future<Profile> profile;
-  File? _pickedImage;
+  Future<Profile>? profile;
 
   @override
   void initState() {
@@ -32,10 +33,21 @@ class _ProfileViewState extends State<ProfileView> {
 
   void getProfile() async {
     final userId = context.read<UserAuthProvider>().userID;
-    final userProfile = UserApiService().fetchOwnerProfile(userId);
-    setState(() {
-      profile = userProfile;
-    });
+    final result =
+        await context.read<UserAuthProvider>().fetchOwnerProfile(userId);
+    result.fold(
+      (error) {
+        showCustomSnackBar(
+          context,
+          error,
+        );
+      },
+      (profile) {
+        setState(() {
+          this.profile = Future.value(profile);
+        });
+      },
+    );
   }
 
   // Function to show the edit profile dialog
@@ -111,14 +123,21 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Future<void> pickImage() async {
+  Future<void> updateImage() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedImage != null) {
-      setState(() {
-        _pickedImage = File(pickedImage.path);
-      });
+      var pickedImage0 = File(pickedImage.path);
+
+      if (context.mounted) {
+        await context
+            .read<UserAuthProvider>()
+            .updateProfilePicture(pickedImage0, context)
+            .then(
+              (value) => getProfile(),
+            );
+      }
     }
   }
 
@@ -130,7 +149,7 @@ class _ProfileViewState extends State<ProfileView> {
         actions: [
           IconButton(
             onPressed: () async {
-              showEditProfileDialog(await profile);
+              showEditProfileDialog(await profile!);
             },
             icon: const ImageIcon(
               AssetImage(AppIcons.edit),
@@ -162,20 +181,20 @@ class _ProfileViewState extends State<ProfileView> {
                           children: [
                             CircleAvatar(
                               radius: 35,
-                              backgroundImage: _pickedImage != null
-                                  ? FileImage(
-                                      _pickedImage!) // Display the picked image
-                                  : null, // Display nothing if no image is picked
-                              child: _pickedImage == null
-                                  ? Text(
+                              child: profile.avatar != null
+                                  ? showImage(
+                                      imageUrl: profile.avatar!,
+                                      radius: 50,
+                                    ) // Display the picked image
+                                  : Text(
                                       '${profile.firstName[0]} ${profile.lastName[0]}',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
                                         color: black,
                                       ),
-                                    )
-                                  : null, // Hide the name initials when an image is picked
+                                    ), // Display nothing if no image is picked
+                              // Hide the name initials when an image is picked
                             ),
                             Positioned(
                               right: -10, // Adjust the position as needed
@@ -186,7 +205,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   color: black,
                                 ),
                                 onPressed:
-                                    pickImage, // Allow users to pick an image
+                                    updateImage, // Allow users to pick an image
                               ),
                             ),
                           ],
@@ -238,17 +257,24 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     const Spacer(),
                     ListTile(
-                      onTap: () {
+                      onTap: () async {
                         LoadingDialog.showLoadingDialog(context);
-                        Future.delayed(const Duration(seconds: 2), () {
-                          LoadingDialog.hideLoadingDialog(context);
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (context) => const LoginView(),
-                            ),
-                            (route) => false,
-                          );
-                        });
+                        await context.read<UserAuthProvider>().logOut().then(
+                          (value) {
+                            value.fold((failure) {
+                              LoadingDialog.hideLoadingDialog(context);
+                              showCustomSnackBar(context, failure);
+                            }, (success) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginView(),
+                                ),
+                                (route) => false,
+                              );
+                              showCustomSnackBar(context, success);
+                            });
+                          },
+                        );
                       },
                       leading: const ImageIcon(
                         AssetImage(AppIcons.logout),

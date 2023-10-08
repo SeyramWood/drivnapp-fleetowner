@@ -27,7 +27,6 @@ class DriverApiService {
       final responseBody = jsonDecode(response.body)['data'];
 
       if (response.statusCode != 200) {
-        print('failed with:${response.reasonPhrase}');
       }
       if (response.statusCode == 200) {
         await prefs.setString(
@@ -53,11 +52,9 @@ class DriverApiService {
     try {
       final response = await customClient.get(url);
       if (response.statusCode != 200) {
-        print('user fetch failed with: ${response.statusCode}');
       }
       return DriverObject.fromJson(json.decode(response.body));
     } catch (e) {
-      print(e);
       rethrow;
     }
   }
@@ -128,15 +125,12 @@ class DriverApiService {
     try {
       final response = await customClient.put(url);
       if (response.statusCode != 200) {
-        print(response.reasonPhrase);
       }
     } catch (e) {
-      print(e);
     }
   }
 
   Future goOnline(String userID, String status) async {
-    print('going');
     final url = '$baseUrl/drivers/$userID/update-status/$status';
     try {
       final body = {'onlineStatus': status};

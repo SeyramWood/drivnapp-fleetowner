@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
 import 'package:drivn/features/owner/domain/entities/v.request.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
 import 'package:drivn/shared/errors/exception.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,12 +28,14 @@ class OwnerApiService {
     try {
       if (vehicle.images.isNotEmpty && vehicle.documents.isNotEmpty) {
         var request = http.MultipartRequest('POST', Uri.parse(url));
+
         // Add fields to the request
         request.fields['owner'] = vehicle.userID;
         request.fields['brand'] = vehicle.brand;
         request.fields['type'] = vehicle.type;
         request.fields['feature'] = vehicle.features.join(',');
         request.fields['moreFeature'] = vehicle.moreFeatures ?? '';
+        request.fields['registrationNumber'] = vehicle.registrationNumber;
 
         for (var file in vehicle.images) {
           request.files.add(
@@ -46,11 +50,10 @@ class OwnerApiService {
         }
         // final response = await request.send();
 
-        var response = await customClient.sendMultipartRequest(url,
+        var response = await customClient.sendMultipartRequest(
             files: request.files, fields: request.fields, request: request);
 
         if (response.statusCode != 201) {
-          print(response.reasonPhrase);
           throw CustomException("Couldn't create or add vehicle");
         }
       } else {
@@ -75,12 +78,34 @@ class OwnerApiService {
     }
   }
 
+  Future addInsurance(String vehicleID) async {
+    final url = Uri.parse('$baseUrl/vehicles/insurance/$vehicleID');
+    try {
+      final fileResult =
+          await FilePicker.platform.pickFiles(allowMultiple: false);
+      if (fileResult != null && fileResult.files.isNotEmpty) {
+        final file = fileResult.files.first;
+        final request = http.MultipartRequest('POST', url);
+        request.files
+            .add(await http.MultipartFile.fromPath('insurance', file.path!));
+        final response =
+            await customClient.sendMultipartRequest(request: request);
+        if (response.statusCode != 201) {
+          throw CustomException("Failed to add insurance. Try again.");
+        }
+      } else {
+        throw CustomException('No file selected');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<List<BookedVehicle>> fetchBookedVehicles(String userID) async {
     final url = '$baseUrl/bookings/owner/$userID';
     try {
       final response = await customClient.get(url);
       if (response.statusCode != 200) {
-        print(response.body);
         throw CustomException("couldn't fetch vehicles");
       }
       return bookedVehicleModelFromJson(response.body).data!.data;
@@ -118,7 +143,6 @@ class OwnerApiService {
 
     try {
       final response = await customClient.put(url);
-      print(response.reasonPhrase);
       if (response.statusCode != 200) {
         throw CustomException("Availability couldn't be updated");
       }
@@ -148,7 +172,6 @@ class OwnerApiService {
       if (response.statusCode != 200) {
         throw CustomException("couldn't fetch request");
       }
-      print(response.body);
       return vehicleRequestModelFromJson(response.body).data!.data;
     } catch (e) {
       rethrow;

@@ -10,7 +10,6 @@ import 'package:drivn/features/vehicle/domain/entities/vehicle.features.dart';
 
 Vehicles vehicleFromJson(String str) => Vehicles.fromJson(json.decode(str));
 
-
 class Vehicles {
   Data? data;
   bool status;
@@ -24,8 +23,6 @@ class Vehicles {
         data: Data.fromJson(json["data"] ?? {}),
         status: json["status"],
       );
-
- 
 }
 
 class Data {
@@ -42,8 +39,6 @@ class Data {
         data: List<Vehicle>.from(
             json["data"]?.map((x) => Vehicle.fromJson(x)) ?? []),
       );
-
-  
 }
 
 class Vehicle {
@@ -51,52 +46,69 @@ class Vehicle {
   bool booked;
   String brand;
   DateTime createdAt;
-  List<Document> documents;
+  List<Document>? documents;
   int id;
   List<Image> images;
   Owner owner;
   String type;
+  Insurance? insurance;
   DateTime updatedAt;
   List<Feature> features;
   String? moreFeatures;
   Rental? rental;
+  String? registrationNumber;
+  /*
+    String availability;
+    bool booked;
+    String brand;
+    DateTime createdAt;
+    List<Feature> features;
+    int id;
+    List<Image> images;
+    Insurance insurance;
+    Owner owner;
+    String registrationNumber;
+    String type;
+    DateTime updatedAt; */
 
-  Vehicle(
-      {required this.availability,
-      required this.booked,
-      required this.brand,
-      required this.createdAt,
-      required this.documents,
-      required this.id,
-      required this.images,
-      required this.owner,
-      required this.type,
-      required this.updatedAt,
-      required this.features,
-      this.rental,
-      this.moreFeatures});
+  Vehicle({
+    required this.availability,
+    required this.booked,
+    required this.brand,
+    required this.createdAt,
+    this.insurance,
+    this.documents,
+    required this.id,
+    required this.images,
+    required this.owner,
+    required this.type,
+    required this.updatedAt,
+    required this.features,
+    this.rental,
+    this.moreFeatures,
+    this.registrationNumber,
+  });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) => Vehicle(
-        availability: json["availability"],
-        booked: json["booked"],
-        brand: json["brand"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        documents: List<Document>.from(
-            json["documents"].map((x) => Document.fromJson(x))),
-        id: json["id"],
-        images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
-        owner: Owner.fromJson(json["owner"]),
-        type: json["type"] ?? '',
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        features: json["features"] == null
-            ? []
-            : List<Feature>.from(
-                json["features"]!.map((x) => Feature.fromJson(x))),
-        moreFeatures: json["moreFeature"] ?? '',
-        rental: json["rental"] == null ? null : Rental.fromJson(json["rental"]),
-      );
-
- 
+      availability: json["availability"],
+      booked: json["booked"],
+      brand: json["brand"],
+      createdAt: DateTime.parse(json["createdAt"]),
+      insurance: Insurance.fromJson(json["insurance"] ?? {}),
+      documents: List<Document>.from(
+          json["documents"]?.map((x) => Document.fromJson(x)) ?? []),
+      id: json["id"],
+      images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+      owner: Owner.fromJson(json["owner"]),
+      type: json["type"] ?? '',
+      updatedAt: DateTime.parse(json["updatedAt"]),
+      features: json["features"] == null
+          ? []
+          : List<Feature>.from(
+              json["features"]!.map((x) => Feature.fromJson(x))),
+      moreFeatures: json["moreFeature"] ?? '',
+      rental: json["rental"] == null ? null : Rental.fromJson(json["rental"]),
+      registrationNumber: json['registrationNumber'] ?? '');
 }
 
 class Document {
@@ -136,6 +148,22 @@ class Image {
   Map<String, dynamic> toJson() => {
         "id": id,
         "image": image,
+      };
+}
+
+class Insurance {
+  String approval;
+
+  Insurance({
+    required this.approval,
+  });
+
+  factory Insurance.fromJson(Map<String, dynamic> json) => Insurance(
+        approval: json["approval"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "approval": approval,
       };
 }
 
@@ -190,9 +218,6 @@ class Rental {
       };
 }
 
-
-
-
 class VehicleToDBModel {
   String userID;
   String brand;
@@ -201,6 +226,7 @@ class VehicleToDBModel {
   String type;
   List<String> features;
   String? moreFeatures;
+  String registrationNumber;
   VehicleToDBModel({
     required this.userID,
     required this.brand,
@@ -209,14 +235,16 @@ class VehicleToDBModel {
     required this.type,
     required this.features,
     this.moreFeatures,
+    required this.registrationNumber,
   });
-   Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "brand": brand,
         "document": documents,
         "image": images,
         "owner": userID,
         "type": type,
         "feature": features,
-        "moreFeature":moreFeatures,
+        "moreFeature": moreFeatures,
+        "registrationNumber": registrationNumber,
       };
 }

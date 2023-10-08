@@ -20,11 +20,9 @@ class VehicleApiService {
       if (response.statusCode == 200) {
         return vehicleTypeFromJson(response.body).data.data;
       } else {
-        print('type status: ${response.statusCode} ${response.reasonPhrase}');
         return [];
       }
     } catch (e) {
-      print('Error while fetching features: $e');
       rethrow;
     }
   }
@@ -35,12 +33,10 @@ class VehicleApiService {
     try {
       response = await customClient.get(url);
       if (response.statusCode != 200) {
-        print(
-            'feature status: ${response.statusCode} ${response.reasonPhrase}');
+            'feature status: ${response.statusCode} ${response.reasonPhrase}';
       }
       return vehicleFeatureFromJson(response.body).data.data;
     } catch (e) {
-      print('Error while fetching features: $e');
       throw Exception('Failed to fetch features');
     }
   }
@@ -52,11 +48,9 @@ class VehicleApiService {
       if (response.statusCode == 200) {
         return vehicleBrandsFromJson(response.body).data.data;
       } else {
-        print('brand status: ${response.statusCode} ${response.reasonPhrase}');
         return [];
       }
     } catch (e) {
-      print('Error while fetching features: $e');
       throw CustomException('Failed to fetch brands');
     }
   }

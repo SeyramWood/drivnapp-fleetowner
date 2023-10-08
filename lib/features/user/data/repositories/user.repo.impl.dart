@@ -33,7 +33,7 @@ class UserRepoImpl implements UserRepo {
   Future<Either<Failure, String>> updateUser(
       String id, String requestBody, String accountType) async {
     try {
-      await api.updateUser(id,requestBody,accountType); 
+      await api.updateUser(id, requestBody, accountType);
       return Right(id);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
@@ -59,7 +59,6 @@ class UserRepoImpl implements UserRepo {
       List<File> file, String userID) async {
     try {
       final result = await api.submitDoc(file, userID);
-      print(Right(result));
 
       return Right(result);
     } on CustomException catch (error) {
@@ -139,6 +138,28 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure('$e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> updateProfilePic(File file) async {
+    try {
+      final result = await api.updateProfilePic(file);
+      return Right(result);
+    } on CustomException catch (error) {
+      return Left(Failure(error.message));
+    } catch (e) {
+      return Left(Failure('$e'));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, String>> logOut() async {
+    try {
+      await api.logOut(); 
+      return const Right('Logged out');
     } catch (e) {
       return Left(Failure('$e'));
     }

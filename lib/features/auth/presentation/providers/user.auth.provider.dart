@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -11,14 +10,18 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../../../../shared/show.snacbar.dart';
 import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../../../../shared/utils/usecase.dart';
+import '../../../user/domain/entities/driver.profile.model.dart';
 import '../../../user/domain/entities/owner.profile.model.dart';
 import '../../../user/domain/entities/driver.profile.model.dart' as driver;
 
 import '../../../user/domain/usecases/create.dart';
+import '../../../user/domain/usecases/logout.dart';
 import '../../../user/domain/usecases/submit.doc.dart';
 import '../../../user/domain/usecases/submit.id.dart';
+import '../../../user/domain/usecases/update.profile.pic.dart';
 import '../../../user/domain/usecases/verify.fleetOwner.dart';
 
 class UserAuthProvider extends ChangeNotifier {
@@ -31,6 +34,8 @@ class UserAuthProvider extends ChangeNotifier {
   final FetchDriverProfile fetchDriver;
   final SubmitData submitData;
   final UpdateUser updaTeUser;
+  final UpdateProfilePic updateProfilePic;
+  final LogOut logout;
 
   UserAuthProvider(
     this.post,
@@ -42,6 +47,8 @@ class UserAuthProvider extends ChangeNotifier {
     this.submitId,
     this.submitData,
     this.updaTeUser,
+    this.updateProfilePic,
+    this.logout,
   );
 
   String _userID = SharedPreferencesManager.instance.getString('userID', '');
@@ -110,43 +117,34 @@ class UserAuthProvider extends ChangeNotifier {
       return failure.message;
     }, (success) async {
       _isLoading = false;
-      print(success);
       await setUserId(success);
       notifyListeners();
     });
   }
 
-  Future<bool> isAccessTokenExpired() async {
-    final accessToken = await storage.read(key: 'accessToken');
-
-    if (accessToken != null) {
-      final decodedToken = json.decode(
-        ascii.decode(
-          base64.decode(
-            base64.normalize(
-              accessToken.split(".")[1],
-            ),
-          ),
-        ),
-      );
-      final expiryTimestamp = decodedToken['exp'];
-
-      final currentTime =
-          DateTime.now().millisecondsSinceEpoch ~/ 1000; // Convert to seconds
-
-      // Compare the current time with the token's expiration time
-      if (expiryTimestamp != null && expiryTimestamp > currentTime) {
-        // Token is not expired
-        return false;
-      }
-    }
-
-    // Token is either expired or not present
-    return true;
+  Future updateProfilePicture(File avatar, context) async {
+    final result = await updateProfilePic(Params(avatar));
+    return result.fold((failure) {
+      showCustomSnackBar(context, failure.message);
+    }, (success) {
+      showCustomSnackBar(context, success);
+    });
   }
 
-  Future<Either<String, Profile>> getOwnerProfile(String iD) async {
+  Future<Either<String, Profile>> fetchOwnerProfile(String iD) async {
     final result = await fetchOwner(Params(iD));
+    return result.fold(
+      (failure) {
+        return Left((failure.message));
+      },
+      (success) {
+        return Right(success);
+      },
+    );
+  }
+
+  Future<Either<String, DProfile>> fetchDriverProfile(String iD) async {
+    final result = await fetchDriver(Params(iD));
     return result.fold(
       (failure) {
         return Left((failure.message));
@@ -161,7 +159,6 @@ class UserAuthProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     final result = await verify(MultiParams(otp, _accountType));
-    print('result: $result');
 
     return result.fold(
       (failure) async {
@@ -196,7 +193,6 @@ class UserAuthProvider extends ChangeNotifier {
     notifyListeners();
 
     final result = await submitData(MultiParams(userID, docs));
-    print(result);
 
     return result.fold(
       (failure) {
@@ -219,7 +215,6 @@ class UserAuthProvider extends ChangeNotifier {
     notifyListeners();
 
     final result = await submitDoc(MultiParams(files, userID));
-    print(result);
 
     return result.fold(
       (failure) {
@@ -280,5 +275,16 @@ class UserAuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     });
+  }
+
+  Future<Either<String, String>> logOut() async {
+    final result = await logout(NoParams());
+    return result.fold(
+      (failure) => Left(failure.message),
+      (success) {
+        
+       return Right(success);
+      },
+    );
   }
 }

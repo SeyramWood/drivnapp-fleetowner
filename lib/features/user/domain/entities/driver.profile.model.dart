@@ -41,7 +41,7 @@ class Data {
 
   Data({
     required this.createdAt,
-this.avatar,
+    required this.avatar,
     this.document,
     required this.firstName,
     required this.id,
@@ -53,7 +53,7 @@ this.avatar,
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         createdAt: DateTime.parse(json["createdAt"]),
-        avatar: json['avatar']??'',
+        avatar: json['avatar'],
         document: Document.fromJson(json["document"] ?? {}),
         firstName: json["firstName"],
         id: json["id"],

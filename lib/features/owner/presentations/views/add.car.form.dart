@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:drivn/features/vehicle/data/api/vehicle.api.service.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../auth/presentation/widget/formfield.dart';
 import '../../../vehicle/domain/entities/vehicle.features.dart' as sym;
 import '../widget/form.field.with.option.dart';
 import '../widget/multi.selection.dialog.dart';
@@ -30,6 +32,7 @@ class AddFleetForm extends StatefulWidget {
 class _AddFleetFormState extends State<AddFleetForm> {
   final carBrand = TextEditingController();
   final carType = TextEditingController();
+  final registrationNumber = TextEditingController();
   final optionalFeatures = TextEditingController();
   final space = const SizedBox(
     height: 10,
@@ -72,6 +75,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
     carBrand.clear();
     carType.clear();
     optionalFeatures.clear();
+    registrationNumber.clear();
   }
 
   @override
@@ -208,6 +212,31 @@ class _AddFleetFormState extends State<AddFleetForm> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Registration Number'),
+                    TextFormField(
+                      controller: registrationNumber,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: yellow),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: yellow),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: yellow),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                space,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     const Text('Optional'),
                     CustomElevatedButton(
                       onPressed: showFieldForFeatures,
@@ -216,7 +245,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.sizeOf(context).height / 15,
+                  height: MediaQuery.sizeOf(context).height / 10,
                 ),
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width / 1.5,
@@ -228,6 +257,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                           userID: context.read<UserAuthProvider>().userID,
                           brand: carBrand.text,
                           type: carType.text,
+                          registrationNumber: registrationNumber.text,
                           features: List.from(selectedOptions
                               .map(
                                 (feature) => feature.id.toString(),

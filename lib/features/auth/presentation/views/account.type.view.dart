@@ -18,7 +18,6 @@ class _AccountTypeViewState extends State<AccountTypeView> {
  
    _setAccountType(String isFleetOwner) async {
       context.read<UserAuthProvider>().isOwner(isFleetOwner);
-      print(context.read<UserAuthProvider>().accountType);
     
   }
 

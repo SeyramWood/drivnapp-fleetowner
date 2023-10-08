@@ -22,4 +22,6 @@ abstract class UserRepo {
   Future<Either<Failure, List<File>>> submitId(List<File> file, String userID);
   Future<Either<Failure, String>> submitData(
       String userID, driver.Document docs);
+  Future<Either<Failure, String>> updateProfilePic(File file);
+  Future<Either<Failure, String>> logOut();
 }

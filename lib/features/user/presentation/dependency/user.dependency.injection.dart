@@ -2,9 +2,11 @@ import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/repositories/user.repo.dart';
 import 'package:drivn/features/user/domain/usecases/login.dart';
 import 'package:drivn/features/user/domain/usecases/submit.data.dart';
+import 'package:drivn/features/user/domain/usecases/update.profile.pic.dart';
 import '../../../auth/presentation/providers/user.auth.provider.dart';
 import '../../data/repositories/user.repo.impl.dart';
 import '../../domain/usecases/create.dart';
+import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/read.dart';
 import '../../domain/usecases/submit.doc.dart';
 
@@ -46,6 +48,12 @@ void setupUserDependencies() {
   getIt.registerLazySingleton<UpdateUser>(
     () => UpdateUser(repo: getIt<UserRepo>()),
   );
+  getIt.registerLazySingleton<UpdateProfilePic>(
+    () => UpdateProfilePic(repo: getIt<UserRepo>()),
+  );
+  getIt.registerLazySingleton<LogOut>(
+    () => LogOut(repo: getIt<UserRepo>()),
+  );
 }
 
 final userAuthProvider = UserAuthProvider(
@@ -58,4 +66,6 @@ final userAuthProvider = UserAuthProvider(
   getIt<SubmitId>(),
   getIt<SubmitData>(),
   getIt<UpdateUser>(),
+  getIt<UpdateProfilePic>(),
+  getIt<LogOut>(),
 );

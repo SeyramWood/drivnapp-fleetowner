@@ -113,7 +113,7 @@ class OwnerRepoImpl implements OwnerRepo {
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } catch (e) {
-      return Left(Failure('Failed to fetch vehicles'));
+      return Left(Failure('$e'));
     }
   }
 
@@ -136,6 +136,18 @@ class OwnerRepoImpl implements OwnerRepo {
     try {
       await apiService.updateRental(vehicleID, updateRentalModel);
       return const Right(null);
+    } on CustomException catch (failure) {
+      return Left(Failure(failure.message));
+    } catch (e) {
+      return Left(Failure('$e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> addInsurance(String vehicleID) async {
+    try {
+       await apiService.addInsurance(vehicleID);
+      return const Right('Insurance added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } catch (e) {

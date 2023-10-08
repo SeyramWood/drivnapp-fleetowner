@@ -24,6 +24,10 @@ class SharedPreferencesManager {
     await _prefs.setString(key, value);
   }
 
+  Future<void> clearStorage() async {
+    await _prefs.clear();
+  }
+
   // Add more methods for other data types as needed
 
   // Example: int, double, bool, etc.

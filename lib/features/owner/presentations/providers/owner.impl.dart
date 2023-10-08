@@ -1,9 +1,11 @@
-
+import 'package:dartz/dartz.dart';
 import 'package:drivn/features/owner/domain/entities/update.rental.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
+import 'package:drivn/features/owner/domain/usecase/add.insurance.dart';
 import 'package:drivn/shared/utils/usecase.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../shared/show.snacbar.dart';
 import '../../domain/usecase/accept.request.dart';
 import '../../domain/usecase/add.vehicle.dart';
 import '../../domain/usecase/cancel.request.dart';
@@ -26,6 +28,7 @@ class OwnerImplProvider extends ChangeNotifier {
   final FetchVehicles _fetchVehicles;
   final UpdateAvailability _updateAvailability;
   final UpdateRental _updateRental;
+  final AddInsurance _addInsurance;
 
   OwnerImplProvider({
     required AcceptRequest acceptRequest,
@@ -38,6 +41,7 @@ class OwnerImplProvider extends ChangeNotifier {
     required FetchVehicles fetchVehicles,
     required UpdateAvailability updateAvailability,
     required UpdateRental updateRental,
+    required AddInsurance addInsurance,
   })  : _acceptRequest = acceptRequest,
         _addVehicle = addVehicle,
         _cancelRequest = cancelRequest,
@@ -47,7 +51,7 @@ class OwnerImplProvider extends ChangeNotifier {
         _fetchRequests = fetchRequests,
         _fetchVehicles = fetchVehicles,
         _updateAvailability = updateAvailability,
-        _updateRental = updateRental;
+        _updateRental = updateRental,_addInsurance =addInsurance;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -60,7 +64,7 @@ class OwnerImplProvider extends ChangeNotifier {
     );
   }
 
-  Future addVehicle(VehicleToDBModel vehicle,BuildContext context) async {
+  Future addVehicle(VehicleToDBModel vehicle, BuildContext context) async {
     _isLoading = true;
     notifyListeners();
     final result = await _addVehicle(Params(vehicle));
@@ -73,11 +77,10 @@ class OwnerImplProvider extends ChangeNotifier {
       (success) {
         _isLoading = false;
         notifyListeners();
-        ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            duration: Duration(seconds: 3),
-                            content: Text('Vehicle added successfully'),
-                          ));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          duration: Duration(seconds: 3),
+          content: Text('Vehicle added successfully'),
+        ));
       },
     );
   }
@@ -122,13 +125,24 @@ class OwnerImplProvider extends ChangeNotifier {
     );
   }
 
-  Future fetchVehicles(String userID) async {
+  Future<Either<String,List<Vehicle>?>> fetchVehicles(String userID, context) async {
     final result = await _fetchVehicles(Params(userID));
     return result.fold(
-      (failure) => failure.message,
-      (success) => success,
+      (failure) {
+       return Left(failure.message);
+      },
+      (success) {
+       return Right(success);
+      },
     );
   }
+
+  Future<Either<String,String>> addInsurance(String vehicleID)async{
+final result = await _addInsurance(Params(vehicleID));
+return result.fold((failure){
+  return Left(failure.message);
+},(success){return Right(success);});
+  } 
 
   Future updateAvailability(String vehicleID, String status) async {
     final result = await _updateAvailability(MultiParams(vehicleID, status));

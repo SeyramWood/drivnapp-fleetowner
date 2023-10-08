@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
 import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/entities/driver.profile.model.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../shared/show.snacbar.dart';
+import '../../../../shared/utils/cached.network.image.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../../shared/utils/extentions/on.custom.elevated.button.dart';
 import '../../../auth/presentation/views/login_screen.dart';
@@ -19,19 +24,51 @@ class DProfileView extends StatefulWidget {
 }
 
 class _DProfileViewState extends State<DProfileView> {
-  late Future<DProfile> profileData;
-  getProfile() {
-    final userId = context.read<UserAuthProvider>().userID;
-
-    final data = UserApiService().fetchDriverProfile(userId);
-    profileData = data;
-  }
+  Future<DProfile>? profile;
 
   @override
   void initState() {
     getProfile();
 
     super.initState();
+  }
+
+  Future<void> updateImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      var pickedImage0 = File(pickedImage.path);
+
+      if (context.mounted) {
+        await context
+            .read<UserAuthProvider>()
+            .updateProfilePicture(pickedImage0, context)
+            .then(
+              (value) => getProfile(),
+            );
+      }
+    }
+  }
+
+  void getProfile() async {
+    final userId = context.read<UserAuthProvider>().userID;
+    final result =
+        await context.read<UserAuthProvider>().fetchDriverProfile(userId);
+    result.fold(
+      (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error),
+          ),
+        );
+      },
+      (profile) {
+        setState(() {
+          this.profile = Future.value(profile);
+        });
+      },
+    );
   }
 
   void showEditProfileDialog(DProfile profile) {
@@ -118,7 +155,7 @@ class _DProfileViewState extends State<DProfileView> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DProfile>(
-        future: profileData,
+        future: profile,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -144,7 +181,7 @@ class _DProfileViewState extends State<DProfileView> {
                     onPressed: () async {
                       // Show the edit profile dialog when the edit icon is pressed
 
-                      showEditProfileDialog(await profileData);
+                      showEditProfileDialog(snapshot.data!);
                     },
                     icon: const ImageIcon(
                       AssetImage('assets/icons/edit.png'),
@@ -159,15 +196,40 @@ class _DProfileViewState extends State<DProfileView> {
                     SizedBox(
                       height: MediaQuery.sizeOf(context).height * .01,
                     ),
-                    CircleAvatar(
-                      radius: 60,
-                      child: Text(
-                        '${profile.firstName[0]}${profile.lastName[0]}',
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CircleAvatar(
+                            radius: 35,
+                            child: profile.avatar != null
+                                ? showImage(
+                                    imageUrl: profile.avatar!,
+                                    radius: 50,
+                                  )
+                                : // Display the picked image
+                                {
+                                    Text(
+                                      '${profile.firstName[0]} ${profile.lastName[0]}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: black,
+                                      ),
+                                    )
+                                  }),
+                        Positioned(
+                          right: -10, // Adjust the position as needed
+                          bottom: -15, // Adjust the position as needed
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.camera_alt,
+                              color: black,
+                            ),
+                            onPressed:
+                                updateImage, // Allow users to pick an image
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                     SizedBox(
                       height: MediaQuery.sizeOf(context).height * .01,
@@ -192,18 +254,6 @@ class _DProfileViewState extends State<DProfileView> {
                     SizedBox(
                       height: MediaQuery.sizeOf(context).height * .02,
                     ),
-                    // ListTile(
-                    //   title: Text(
-                    //     'Email',
-                    //     style: Theme.of(context).textTheme.bodyLarge,
-                    //   ),
-                    //   subtitle: Text(
-                    //     'john.doe@example.com',
-                    //     style: Theme.of(context).textTheme.bodyMedium,
-                    //   ),
-                    //   // trailing: Icon(Icons.arrow_forward_ios),
-                    // ),
-                    // divider,
                     ListTile(
                       title: Text(
                         'Email/Phone',
@@ -216,18 +266,6 @@ class _DProfileViewState extends State<DProfileView> {
                       // trailing: Icon(Icons.arrow_forward_ios),
                     ),
                     divider,
-                    // ListTile(
-                    //   title: Text(
-                    //     'Location',
-                    //     style: Theme.of(context).textTheme.bodyLarge,
-                    //   ),
-                    //   subtitle: Text(
-                    //     '',
-                    //     style: Theme.of(context).textTheme.bodyMedium,
-                    //   ),
-                    //   // trailing: Icon(Icons.arrow_forward_ios),
-                    // ),
-                    // divider,
                     ListTile(
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const VerifyingView(),
@@ -238,27 +276,26 @@ class _DProfileViewState extends State<DProfileView> {
                       ),
                       trailing: const Icon(Icons.arrow_forward_ios),
                     ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height / 4),
+                    SizedBox(height: MediaQuery.sizeOf(context).height),
                     ListTile(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
+                      onTap: () async {
+                        LoadingDialog.showLoadingDialog(context);
+                        await context.read<UserAuthProvider>().logOut().then(
+                          (value) {
+                            value.fold((failure) {
+                              LoadingDialog.hideLoadingDialog(context);
+                              showCustomSnackBar(context, failure);
+                            }, (success) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginView(),
+                                ),
+                                (route) => false,
+                              );
+                              showCustomSnackBar(context, success);
+                            });
                           },
                         );
-                        Future.delayed(const Duration(seconds: 2), () {
-                          Navigator.pop(context);
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (context) => const LoginView(),
-                            ),
-                            (route) => false,
-                          );
-                        });
                       },
                       leading: const ImageIcon(
                           AssetImage('assets/icons/logout.png')),

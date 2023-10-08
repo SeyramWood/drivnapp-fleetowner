@@ -1,4 +1,4 @@
-
+import 'package:drivn/features/auth/google_signing/google.sign.in.dart';
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/register_screen.dart';
 import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
@@ -33,7 +33,6 @@ class _LoginViewState extends State<LoginView> {
 
   void signUserIn() {
     if (_formKey.currentState?.validate() ?? false) {
-      print('Signing in...');
 
       // Navigate to the home screen
       Navigator.push(
@@ -204,9 +203,9 @@ class _LoginViewState extends State<LoginView> {
               ),
             ),
             GoogleButton(
-                  title: 'SignIn',
-                  onTap: () {},
-                )
+              title: 'SignIn',
+              onTap: () => AuthService.instance.login(),
+            )
           ],
         ),
       ),

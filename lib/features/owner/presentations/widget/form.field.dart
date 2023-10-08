@@ -82,7 +82,6 @@ class _DropDownFormFieldState extends State<DropDownFormField> {
           },
           onSuggestionSelected: (option) {
             widget.controller.text = option;
-            print(options);
           },
         ),
       ),

@@ -1,7 +1,15 @@
-import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
-import 'package:drivn/features/owner/presentations/widget/car.carousel.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:drivn/features/owner/data/api/owner.api.dart';
+import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
+import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
+import 'package:drivn/features/owner/presentations/widget/car.carousel.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../shared/show.snacbar.dart';
 import '../../../../shared/utils/constants/colors.dart';
 
 class CarDetails extends StatelessWidget {
@@ -31,7 +39,7 @@ class CarDetails extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Car ID: ${vehicle.id}  ',
+                          'Car ID: ${vehicle.registrationNumber}  ',
                           style: Theme.of(context)
                               .textTheme
                               .headlineMedium!
@@ -41,7 +49,7 @@ class CarDetails extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      'Type: ${vehicle.type}',
+                      'Type:   ${vehicle.type}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
@@ -79,7 +87,20 @@ class CarDetails extends StatelessWidget {
                                       color: black.withOpacity(.4)),
                             )
                           ]),
-                        )
+                        ),
+                        const Spacer(),
+                        TextButton(
+                            onPressed: () async {
+                              final result = await context
+                                  .read<OwnerImplProvider>()
+                                  .addInsurance('${vehicle.id}');
+                              result.fold(
+                                  (failure) =>
+                                      showErrorDialogue(context, failure),
+                                  (success) =>
+                                      showCustomSnackBar(context, success));
+                            },
+                            child: const Text('Add Insurance'))
                       ],
                     ),
                     const Divider(),
@@ -118,20 +139,40 @@ class CarDetails extends StatelessWidget {
                     surfaceTintColor: white,
                     color: white,
                     shadowColor: white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Icon(Icons.auto_awesome),
-                        Text(feature.info),
-                        Text(feature.name),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const Icon(Icons.auto_awesome),
+                          Text(feature.info),
+                          Text(feature.name),
+                        ],
+                      ),
                     ),
                   );
                 },
-                childCount: vehicle.features.length ?? 0,
+                childCount: vehicle.features.length,
               ),
             ),
           ),
+          SliverToBoxAdapter(
+            child: Visibility(
+              visible: vehicle.moreFeatures != null &&
+                  vehicle.moreFeatures!.isNotEmpty,
+              child: ExpansionTile(
+                  backgroundColor: blue.withOpacity(.1),
+                  title: const Text('More features'),
+                  children: List.generate(
+                    vehicle.moreFeatures?.split(',').length ?? 0,
+                    (index) {
+                      return ListTile(
+                        title: Text(vehicle.moreFeatures!.split(',')[index]),
+                      );
+                    },
+                  )),
+            ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(

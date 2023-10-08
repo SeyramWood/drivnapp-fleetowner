@@ -25,7 +25,7 @@ class _RequestsViewState extends State<RequestsView> {
 
   final StreamController<List<VRequest>> _streamController = StreamController();
   // ignore: unused_field
-  late Timer _timer;
+  Timer? _timer;
   fetchRequest() async {
     if (mounted) {
       await context
@@ -49,16 +49,16 @@ class _RequestsViewState extends State<RequestsView> {
 
   @override
   void initState() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      fetchRequest();
-    });
+    // _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    fetchRequest();
+    // });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('All Request')),
+      appBar: AppBar(title: const Text('All Requests')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: StreamBuilder(
@@ -328,7 +328,6 @@ class RequestInfo extends StatelessWidget {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  print(requestID);
                                   context
                                       .read<OwnerImplProvider>()
                                       .cancelRequest(requestID, controller.text)

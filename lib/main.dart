@@ -1,9 +1,11 @@
 import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
+import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
 import 'package:drivn/features/driver/presentation/dependency.injection/bindings.dart';
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
 import 'package:drivn/features/user/presentation/dependency/user.dependency.injection.dart';
 import 'package:drivn/shared/interceptor/http.client.interceptor.dart';
+import 'package:drivn/shared/utils/constants/google.signinig.dart';
 import 'package:drivn/shared/utils/shared.prefs.manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +41,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppLightTheme.themeData,
         home: const OnbordingPage(),
+        routes: {oauthredirect: (context) => const AccountTypeView()},
         // home: const DriverDocsView(),
       ),
     );

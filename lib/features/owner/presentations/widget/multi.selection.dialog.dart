@@ -42,10 +42,8 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
                     setState(() {
                       if (value!) {
                         widget.selectedOptions.add(option);
-                        print(widget.selectedOptions);
                       } else {
                         widget.selectedOptions.remove(option);
-                        print(widget.selectedOptions);
                       }
                     });
                   },

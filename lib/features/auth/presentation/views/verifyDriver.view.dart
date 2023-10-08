@@ -46,7 +46,6 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
   final yearsOfExperience = TextEditingController();
   @override
   void initState() {
-    print(context.read<UserAuthProvider>().userID);
 
     super.initState();
   }
@@ -167,7 +166,6 @@ class _VerifyDriverViewState extends State<VerifyDriverView> {
               width: 200,
               child: CustomElevatedButton(
                 onPressed: () async {
-                  print(context.read<UserAuthProvider>().userID);
 
                   //initialize driver docs with data
                   final Document docs = Document(
