@@ -20,7 +20,7 @@ class DriverRepoImpl implements DriverRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('Failed to fetch requests: $e'));
+      return Left(Failure('Failed to fetch requests.'));
     }
   }
 
@@ -32,7 +32,7 @@ class DriverRepoImpl implements DriverRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('Failed to accept request: $e'));
+      return Left(Failure('Failed to accept request. Try again.'));
     }
   }
 
@@ -45,7 +45,7 @@ class DriverRepoImpl implements DriverRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('Failed to cancel request: $e'));
+      return Left(Failure('Failed to cancel request. Try again.'));
     }
   }
 
@@ -57,7 +57,7 @@ class DriverRepoImpl implements DriverRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('Failed to fetch trips: $e'));
+      return Left(Failure('Failed to fetch trips.'));
     }
   }
 
@@ -69,7 +69,7 @@ class DriverRepoImpl implements DriverRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('Failed to go online: $e'));
+      return Left(Failure('Failed to go online. Try again.'));
     }
   }
 }
