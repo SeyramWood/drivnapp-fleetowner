@@ -57,9 +57,7 @@ class _DriverFieldState extends State<DriverField> {
               controller: textEditingController,
               focusNode: focusNode,
               onEditingComplete: onFieldSubmitted,
-              onTapOutside: (event) {
-                const PointerDownEvent(obscured: true);
-              },
+              onTapOutside: (event) {},
               onFieldSubmitted: (value) {
                 // widget.controller.clear();
               },
@@ -72,6 +70,7 @@ class _DriverFieldState extends State<DriverField> {
                     },
                     child: const Icon(Icons.cancel)),
                 isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(color: blue),
@@ -86,12 +85,6 @@ class _DriverFieldState extends State<DriverField> {
                 ),
                 // hintText: "Search Something",
               ),
-              onChanged: (value) {
-                // widget.controller.text = value;
-              },
-              onSaved: (newValue) {
-                // textEditingController.clear();
-              },
             );
           },
         ),

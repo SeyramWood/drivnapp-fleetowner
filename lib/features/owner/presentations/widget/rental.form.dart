@@ -7,100 +7,139 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
+import '../../../google.places/location_search_screen.dart';
 import '../../domain/entities/vehicle.model.dart';
 import '../providers/owner.impl.dart';
 import 'availability.textfield.dart';
+import 'package:flutter/material.dart';
 
-updateRental(BuildContext context, Vehicle vehicle) {
-  final locationController =
-      TextEditingController(text: vehicle.rental?.location);
-  final priceController =
-      TextEditingController(text: vehicle.rental?.price.toString());
-  final driverController = TextEditingController(
-      text:
-          '${vehicle.rental?.driver?.firstName ?? ''} ${vehicle.rental?.driver?.lastName ?? ''}');
-  final formkey = GlobalKey<FormState>();
+class UpdateRentalDialog extends StatefulWidget {
+  final Vehicle vehicle;
 
-  if (vehicle.rental?.driver?.firstName == null) {
-    driverController.clear();
+  const UpdateRentalDialog({super.key, required this.vehicle});
+
+  @override
+  State<UpdateRentalDialog> createState() => _UpdateRentalDialogState();
+}
+
+class _UpdateRentalDialogState extends State<UpdateRentalDialog> {
+  final locationController = TextEditingController();
+  final priceController = TextEditingController();
+  final driverController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers with vehicle data here
+    locationController.text = widget.vehicle.rental?.location ?? '';
+    priceController.text = widget.vehicle.rental?.price.toString() ?? '';
+    driverController.text =
+        '${widget.vehicle.rental?.driver?.firstName ?? ''} ${widget.vehicle.rental?.driver?.lastName ?? ''}';
   }
 
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      surfaceTintColor: white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      content: SingleChildScrollView(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Update rental details')),
+      body: SingleChildScrollView(
         child: Form(
-          key: formkey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AvailabilityTextField(
-                validator: (p0) => p0!.isEmpty ? 'Please add location' : null,
-                title: 'Location',
-                controller: locationController,
-                prefixIcon:
-                    const ImageIcon(AssetImage('assets/icons/location.png')),
-              ),
-              const SizedBox(height: 10),
-              AvailabilityTextField(
-                validator: (p0) => p0!.isEmpty ? 'Please add price' : null,
-                title: 'Price',
-                controller: priceController,
-                prefixIcon:
-                    const ImageIcon(AssetImage('assets/icons/money-add.png')),
-              ),
-              const SizedBox(height: 10),
-              DriverField(
-                controller: driverController,
-              )
-            ],
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // AvailabilityTextField(
+                //   onTap: () {
+                //     // Show the AddLocationField as a bottom sheet
+                //     showBottomSheet(
+                //       context: context,
+                //       builder: (context) {
+                //         return const AddLocationField();
+                //       },
+                //     );
+                //   },
+                //   validator: (value) =>
+                //       value!.isEmpty ? 'Please add location' : null,
+                //   title: 'Location',
+                //   readOnly: true,
+                //   controller: locationController,
+                //   prefixIcon:
+                //       const ImageIcon(AssetImage('assets/icons/location.png')),
+                // ),
+                AddLocationField(
+                  controller: locationController,
+                  onLocationSelected: (value) {
+                    setState(() {
+                      locationController.text = value;
+                    });
+                  },
+                ),
+                AvailabilityTextField(
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please add price' : null,
+                  title: 'Price',
+                  controller: priceController,
+                  prefixIcon:
+                      const ImageIcon(AssetImage('assets/icons/money-add.png')),
+                ),
+                const SizedBox(height: 10),
+                DriverField(
+                  controller: driverController,
+                ),
+                const SizedBox(height: 20),
+
+                Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 3,
+                    child: CustomElevatedButton(
+                      onPressed: () async {
+                        if (formKey.currentState!.validate()) {
+                          LoadingDialog.showLoadingDialog(context);
+                          UpdateRentalModel updateRentalModel =
+                              UpdateRentalModel(
+                            location: locationController.text,
+                            price: priceController.text,
+                            driver: driverController.text
+                                    .contains(RegExp('[a-zA-Z]'))
+                                ? '${widget.vehicle.rental?.driver?.id}'
+                                : driverController.text,
+                          );
+
+                          await context
+                              .read<OwnerImplProvider>()
+                              .updateRental(
+                                  '${widget.vehicle.id}', updateRentalModel)
+                              .then(
+                            (failure) {
+                              LoadingDialog.hideLoadingDialog(context);
+
+                              if (failure is String && failure.isNotEmpty) {
+                                showErrorDialogue(context, failure);
+                              } else {
+                                Navigator.of(context)
+                                    .pop(widget.vehicle.availability);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Rental updated successfully'),
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        }
+                      },
+                      child: const Text('Update'),
+                    ).loading(context.watch<OwnerImplProvider>().isLoading),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-      actions: [
-        Center(
-          child: SizedBox(
-            width: MediaQuery.sizeOf(context).width / 3,
-            child: CustomElevatedButton(
-              onPressed: () async {
-                if (formkey.currentState!.validate()) {
-                  LoadingDialog.showLoadingDialog(context);
-                  UpdateRentalModel updateRentalModel = UpdateRentalModel(
-                    location: locationController.text,
-                    price: priceController.text,
-                    driver: driverController.text.contains(RegExp('[a-zA-Z]'))
-                        ? '${vehicle.rental?.driver?.id}'
-                        : driverController.text,
-                  );
-
-                  await context
-                      .read<OwnerImplProvider>()
-                      .updateRental('${vehicle.id}', updateRentalModel)
-                      .then(
-                    (failure) {
-                      LoadingDialog.hideLoadingDialog(context);
-
-                      if (failure is String && failure.isNotEmpty) {
-                        showErrorDialogue(context, failure);
-                      } else {
-                        Navigator.of(context).pop(vehicle.availability);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Rental updated successfully'),
-                          ),
-                        );
-                      }
-                    },
-                  );
-                }
-              },
-              child: const Text('Update'),
-            ).loading(context.watch<OwnerImplProvider>().isLoading),
-          ),
-        )
-      ],
-    ),
-  );
+    );
+  }
 }
