@@ -7,13 +7,13 @@ import 'package:drivn/shared/errors/failure.dart';
 import '../../../../shared/utils/usecase.dart';
 import '../repository/owner.repo.dart';
 
-class FetchDrivers extends UseCase<List<Dryver>,Params<NoParams>> {
+class FetchDrivers extends UseCase<List<Dryver>, Param<NoParams>> {
   OwnerRepo repo;
   FetchDrivers({
     required this.repo,
   });
   @override
-  Future<Either<Failure, List<Dryver>>> call(Params params) async {
-   return await repo.fetchDrivers();
+  Future<Either<Failure, List<Dryver>>> call(Param params) async {
+    return await repo.fetchDrivers();
   }
 }

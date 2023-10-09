@@ -7,13 +7,13 @@ import 'package:drivn/shared/utils/usecase.dart';
 
 import '../repository/owner.repo.dart';
 
-class FetchRequests extends UseCase<List<VRequest>,Params<String>> {
+class FetchRequests extends UseCase<List<VRequest>, Param<String>> {
   OwnerRepo repo;
   FetchRequests({
     required this.repo,
   });
   @override
-  Future<Either<Failure, List<VRequest>>> call(Params<String> params) async {
+  Future<Either<Failure, List<VRequest>>> call(Param<String> params) async {
     return await repo.fetchRequests(params.data);
   }
 }

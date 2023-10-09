@@ -25,7 +25,7 @@ class OwnerRepoImpl implements OwnerRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('Failed to execute: $e'));
+      return Left(Failure('Failed to execute: Something went wrong.'));
     }
   }
 
@@ -38,7 +38,7 @@ class OwnerRepoImpl implements OwnerRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('Failed to execute: $e'));
+      return Left(Failure('Failed to execute: Something went wrong.'));
     }
   }
 
@@ -51,7 +51,7 @@ class OwnerRepoImpl implements OwnerRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('Failed to execute: $e'));
+      return Left(Failure('Failed to execute: Something went wrong.'));
     }
   }
 
@@ -63,7 +63,7 @@ class OwnerRepoImpl implements OwnerRepo {
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } catch (e) {
-      return Left(Failure('Failed to execute: $e'));
+      return Left(Failure('Failed to execute: Something went wrong.'));
     }
   }
 
@@ -113,7 +113,7 @@ class OwnerRepoImpl implements OwnerRepo {
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } catch (e) {
-      return Left(Failure('$e'));
+      return Left(Failure('Something went wrong.'));
     }
   }
 
@@ -126,7 +126,7 @@ class OwnerRepoImpl implements OwnerRepo {
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } catch (e) {
-      return Left(Failure('$e'));
+      return Left(Failure('Something went wrong.'));
     }
   }
 
@@ -139,19 +139,91 @@ class OwnerRepoImpl implements OwnerRepo {
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } catch (e) {
-      return Left(Failure('$e'));
+      return Left(Failure('Something went wrong.'));
     }
   }
 
   @override
   Future<Either<Failure, String>> addInsurance(String vehicleID) async {
     try {
-       await apiService.addInsurance(vehicleID);
+      await apiService.addInsurance(vehicleID);
       return const Right('Insurance added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } catch (e) {
-      return Left(Failure('$e'));
+      return Left(Failure('Something went wrong.'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> addVehicleDocument(String vehicleID) async {
+    try {
+      await apiService.addVehicleDocument(vehicleID);
+      return const Right('Document added successfully');
+    } on CustomException catch (failure) {
+      return Left(Failure(failure.message));
+    } catch (e) {
+      return Left(Failure('Something went wrong.'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> addVehicleImage(String vehicleID) async {
+    try {
+      await apiService.addVehicleImage(vehicleID);
+      return const Right('Image(s) added successfully');
+    } on CustomException catch (failure) {
+      return Left(Failure(failure.message));
+    } catch (e) {
+      return Left(Failure('Something went wrong.'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteVehicleDocument(String documentID) async {
+    try {
+      await apiService.deleteVehicleDocument(documentID);
+      return const Right('Document deleted successfully');
+    } on CustomException catch (failure) {
+      return Left(Failure(failure.message));
+    } catch (e) {
+      return Left(Failure('Something went wrong.'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteVehicleImage(String imageID) async {
+    try {
+      await apiService.deleteVehicleImage(imageID);
+      return const Right('Image deleted successfully');
+    } on CustomException catch (failure) {
+      return Left(Failure(failure.message));
+    } catch (e) {
+      return Left(Failure('Something went wrong.'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> updateVehicleDocument(String documentID) async {
+    try {
+      await apiService.addVehicleDocument(documentID);
+      return const Right('Document updated successfully');
+    } on CustomException catch (failure) {
+      return Left(Failure(failure.message));
+    } catch (e) {
+      return Left(Failure('Something went wron.'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> updateVehicleImage(String imageID) async {
+    try {
+      await apiService.updateVehicleImage(imageID);
+      return const Right('Image updated successfully');
+    } on CustomException catch (failure) {
+      return Left(Failure(failure.message));
+    } catch (e) {
+      return Left(Failure('Something went wrong.'));
     }
   }
 }

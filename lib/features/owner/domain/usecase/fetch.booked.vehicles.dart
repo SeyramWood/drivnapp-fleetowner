@@ -5,13 +5,14 @@ import '../../../../shared/errors/failure.dart';
 import '../../../../shared/utils/usecase.dart';
 import '../repository/owner.repo.dart';
 
-class FetchBookedVehicles extends UseCase<List<BookedVehicle>, Params<String>> {
+class FetchBookedVehicles extends UseCase<List<BookedVehicle>, Param<String>> {
   OwnerRepo repo;
   FetchBookedVehicles({
     required this.repo,
   });
   @override
-  Future<Either<Failure, List<BookedVehicle>>> call(Params<String> params) async {
+  Future<Either<Failure, List<BookedVehicle>>> call(
+      Param<String> params) async {
     return await repo.fetchBookedVehicles(params.data);
   }
 }

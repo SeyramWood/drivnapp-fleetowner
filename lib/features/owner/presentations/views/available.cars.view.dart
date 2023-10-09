@@ -20,7 +20,7 @@ class CarsAvailableBuilder extends StatefulWidget {
 class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   List<Vehicle>? vehicles;
   final StreamController<List<Vehicle>> _controller = StreamController();
-  //  Timer? _timer;
+  Timer? _timer;
   void fetchVehicles() async {
     if (mounted) {
       var id = context.read<UserAuthProvider>().userID;
@@ -41,18 +41,18 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   @override
   void initState() {
     super.initState();
-    // _timer = Timer.periodic(
-    //   const Duration(seconds: 2),
-    //   (timer) {
-    fetchVehicles();
-    //   },
-    // );
+    _timer = Timer.periodic(
+      const Duration(seconds: 2),
+      (timer) {
+        fetchVehicles();
+      },
+    );
   }
 
   @override
   void dispose() {
     _controller.close();
-    // _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 

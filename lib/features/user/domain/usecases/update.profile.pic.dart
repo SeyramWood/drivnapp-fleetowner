@@ -8,13 +8,13 @@ import 'package:drivn/shared/utils/usecase.dart';
 
 import '../repositories/user.repo.dart';
 
-class UpdateProfilePic extends UseCase<String,Params<File>> {
+class UpdateProfilePic extends UseCase<String, Param<File>> {
   UserRepo repo;
   UpdateProfilePic({
     required this.repo,
   });
   @override
-  Future<Either<Failure, String>> call(Params<File> params) async {
+  Future<Either<Failure, String>> call(Param<File> params) async {
     return await repo.updateProfilePic(params.data);
   }
 }

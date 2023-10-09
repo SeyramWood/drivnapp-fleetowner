@@ -22,13 +22,15 @@ class _BookedCarsBuilderState extends State<BookedCarsBuilder> {
   }
 
   void fetchVehicles() async {
-    final userID = context.read<UserAuthProvider>().userID;
-    final futureData =
-        await context.read<OwnerImplProvider>().fetchBookedVehicles(userID);
-    if (futureData is List<BookedVehicle>) {
-      setState(() {
-        bookedVehicles = Future.value(futureData);
-      });
+    if (mounted) {
+      final userID = context.read<UserAuthProvider>().userID;
+      final futureData =
+          await context.read<OwnerImplProvider>().fetchBookedVehicles(userID);
+      if (futureData is List<BookedVehicle>) {
+        setState(() {
+          bookedVehicles = Future.value(futureData);
+        });
+      }
     }
   }
 

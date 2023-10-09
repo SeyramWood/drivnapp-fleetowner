@@ -22,7 +22,7 @@ class DriverImplProvider extends ChangeNotifier {
   );
 
   Future fetchRequest(String userID) async {
-    final result = await _fetchRequest(Params(userID));
+    final result = await _fetchRequest(Param(userID));
     return result.fold(
       (failure) => failure.message,
       (success) => success,
@@ -30,7 +30,7 @@ class DriverImplProvider extends ChangeNotifier {
   }
 
   Future acceptRequest(String requestID) async {
-    final result = await _acceptRequest(Params(requestID));
+    final result = await _acceptRequest(Param(requestID));
     return result.fold(
       (failure) => failure.message,
       (success) => success,
@@ -38,7 +38,7 @@ class DriverImplProvider extends ChangeNotifier {
   }
 
   Future fetchTrips(String userID) async {
-    final result = await _fetchTrips(Params(userID));
+    final result = await _fetchTrips(Param(userID));
     return result.fold(
       (failure) => failure.message,
       (succes) => succes,

@@ -4,14 +4,13 @@ import 'package:drivn/shared/utils/usecase.dart';
 
 import '../repositories/driver.repo.dart';
 
-class AcceptRequest extends UseCase<void,Params<String>>{
+class AcceptRequest extends UseCase<void, Param<String>> {
   final DriverRepo repo;
 
   AcceptRequest(this.repo);
 
   @override
-  Future<Either<Failure, void>> call(Params<String> params) async {
+  Future<Either<Failure, void>> call(Param<String> params) async {
     return await repo.acceptRequest(params.data);
   }
-  
 }

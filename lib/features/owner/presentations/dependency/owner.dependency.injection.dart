@@ -1,4 +1,6 @@
 import 'package:drivn/features/owner/domain/usecase/add.insurance.dart';
+import 'package:drivn/features/owner/domain/usecase/manage.document.dart';
+import 'package:drivn/features/owner/domain/usecase/manage.image.dart';
 import 'package:drivn/features/owner/domain/usecase/update.rental.dart';
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:get_it/get_it.dart';
@@ -50,18 +52,35 @@ void setupOwnerDependencies() {
       () => UpdateRental(repo: getIt<OwnerRepo>()));
   getIt.registerLazySingleton<AddInsurance>(
       () => AddInsurance(repo: getIt<OwnerRepo>()));
+  getIt.registerLazySingleton<AddVehicleDocument>(
+      () => AddVehicleDocument(repo: getIt<OwnerRepo>()));
+  getIt.registerLazySingleton<UpdateVehicleDocument>(
+      () => UpdateVehicleDocument(repo: getIt<OwnerRepo>()));
+  getIt.registerLazySingleton<DeleteVehicleDocument>(
+      () => DeleteVehicleDocument(repo: getIt<OwnerRepo>()));
+  getIt.registerLazySingleton<AddVehicleImage>(
+      () => AddVehicleImage(repo: getIt<OwnerRepo>()));
+  getIt.registerLazySingleton<UpdateVehicleImage>(
+      () => UpdateVehicleImage(repo: getIt<OwnerRepo>()));
+  getIt.registerLazySingleton<DeleteVehicleImage>(
+      () => DeleteVehicleImage(repo: getIt<OwnerRepo>()));
 }
 
 final ownerImplProvider = OwnerImplProvider(
-  acceptRequest: getIt<AcceptRequest>(),
-  addVehicle: getIt<AddVehicle>(),
-  cancelRequest: getIt<CancelRequest>(),
-  deleteVehicle: getIt<DeleteVehicle>(),
-  fetchBookedVehicles: getIt<FetchBookedVehicles>(),
-  fetchDrivers: getIt<FetchDrivers>(),
-  fetchRequests: getIt<FetchRequests>(),
-  fetchVehicles: getIt<FetchVehicles>(),
-  updateAvailability: getIt<UpdateAvailability>(),
-  updateRental: getIt<UpdateRental>(),
-  addInsurance: getIt<AddInsurance>(),
-);
+    acceptRequest: getIt<AcceptRequest>(),
+    addVehicle: getIt<AddVehicle>(),
+    cancelRequest: getIt<CancelRequest>(),
+    deleteVehicle: getIt<DeleteVehicle>(),
+    fetchBookedVehicles: getIt<FetchBookedVehicles>(),
+    fetchDrivers: getIt<FetchDrivers>(),
+    fetchRequests: getIt<FetchRequests>(),
+    fetchVehicles: getIt<FetchVehicles>(),
+    updateAvailability: getIt<UpdateAvailability>(),
+    updateRental: getIt<UpdateRental>(),
+    addInsurance: getIt<AddInsurance>(),
+    addVehicleDocument: getIt<AddVehicleDocument>(),
+    addVehicleImage: getIt<AddVehicleImage>(),
+    deleteVehicleDocument: getIt<DeleteVehicleDocument>(),
+    deleteVehicleImage: getIt<DeleteVehicleImage>(),
+    updateVehicleDocument: getIt<UpdateVehicleDocument>(),
+    updateVehicleImage: getIt<UpdateVehicleImage>());

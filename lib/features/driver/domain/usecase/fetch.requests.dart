@@ -5,12 +5,12 @@ import 'package:drivn/shared/utils/usecase.dart';
 
 import '../entities/request.model.dart';
 
-class FetchRequest extends UseCase<List<DRequest>,Params<String>>{
+class FetchRequest extends UseCase<List<DRequest>, Param<String>> {
   final DriverRepo repo;
 
   FetchRequest(this.repo);
   @override
-  Future<Either<Failure, List<DRequest>>> call(Params params) async {
+  Future<Either<Failure, List<DRequest>>> call(Param params) async {
     return await repo.fetchRequest(params.data);
   }
 }

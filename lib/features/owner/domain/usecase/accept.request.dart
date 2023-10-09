@@ -6,13 +6,13 @@ import 'package:drivn/shared/errors/failure.dart';
 import '../../../../shared/utils/usecase.dart';
 import '../repository/owner.repo.dart';
 
-class AcceptRequest extends UseCase<void,Params<String>> {
+class AcceptRequest extends UseCase<void, Param<String>> {
   OwnerRepo repo;
   AcceptRequest({
     required this.repo,
   });
   @override
-  Future<Either<Failure, void>> call(Params<String> params) async {
-  return await repo.acceptRequest(params.data);
+  Future<Either<Failure, void>> call(Param<String> params) async {
+    return await repo.acceptRequest(params.data);
   }
 }

@@ -123,7 +123,7 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
   Future updateProfilePicture(File avatar, context) async {
-    final result = await updateProfilePic(Params(avatar));
+    final result = await updateProfilePic(Param(avatar));
     return result.fold((failure) {
       showCustomSnackBar(context, failure.message);
     }, (success) {
@@ -132,7 +132,7 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
   Future<Either<String, Profile>> fetchOwnerProfile(String iD) async {
-    final result = await fetchOwner(Params(iD));
+    final result = await fetchOwner(Param(iD));
     return result.fold(
       (failure) {
         return Left((failure.message));
@@ -144,7 +144,7 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
   Future<Either<String, DProfile>> fetchDriverProfile(String iD) async {
-    final result = await fetchDriver(Params(iD));
+    final result = await fetchDriver(Param(iD));
     return result.fold(
       (failure) {
         return Left((failure.message));
@@ -282,8 +282,7 @@ class UserAuthProvider extends ChangeNotifier {
     return result.fold(
       (failure) => Left(failure.message),
       (success) {
-        
-       return Right(success);
+        return Right(success);
       },
     );
   }

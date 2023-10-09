@@ -49,12 +49,16 @@ class _RequestsViewState extends State<RequestsView> {
 
   @override
   void initState() {
-    // _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
     fetchRequest();
-    // });
+    });
     super.initState();
   }
-
+@override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

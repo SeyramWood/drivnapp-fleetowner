@@ -8,24 +8,24 @@ import 'package:drivn/shared/utils/usecase.dart';
 import '../entities/driver.profile.model.dart';
 import '../entities/owner.profile.model.dart';
 
-class FetchOwnerProfile extends UseCase<Profile, Params> {
+class FetchOwnerProfile extends UseCase<Profile, Param> {
   UserRepo repo;
   FetchOwnerProfile({
     required this.repo,
   });
   @override
-  Future<Either<Failure, Profile>> call(Params params) async {
+  Future<Either<Failure, Profile>> call(Param params) async {
     return await repo.fetchOwnerProfile(params.data);
   }
 }
 
-class FetchDriverProfile extends UseCase<DProfile, Params> {
+class FetchDriverProfile extends UseCase<DProfile, Param> {
   UserRepo repo;
   FetchDriverProfile({
     required this.repo,
   });
   @override
-  Future<Either<Failure, DProfile>> call(Params params) async {
+  Future<Either<Failure, DProfile>> call(Param params) async {
     return await repo.fetchDriverProfile(params.data);
   }
 }

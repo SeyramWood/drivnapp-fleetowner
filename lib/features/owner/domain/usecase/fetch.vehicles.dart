@@ -7,13 +7,13 @@ import 'package:drivn/shared/errors/failure.dart';
 import '../../../../shared/utils/usecase.dart';
 import '../repository/owner.repo.dart';
 
-class FetchVehicles extends UseCase<List<Vehicle>, Params<String>> {
+class FetchVehicles extends UseCase<List<Vehicle>, Param<String>> {
   OwnerRepo repo;
   FetchVehicles({
     required this.repo,
   });
   @override
-  Future<Either<Failure, List<Vehicle>>> call(Params<String> params) async {
+  Future<Either<Failure, List<Vehicle>>> call(Param<String> params) async {
     return await repo.fetchVehicles(params.data);
   }
 }

@@ -6,15 +6,14 @@ import 'package:drivn/shared/utils/usecase.dart';
 
 import '../repository/owner.repo.dart';
 
-class DeleteVehicle extends UseCase<void,Params<String>> {
+class DeleteVehicle extends UseCase<void, Param<String>> {
   OwnerRepo repo;
- DeleteVehicle({
+  DeleteVehicle({
     required this.repo,
   });
-  
+
   @override
-  Future<Either<Failure, void>> call(Params params) async {
+  Future<Either<Failure, void>> call(Param params) async {
     return await repo.deleteVehicle(params.data);
   }
-  
 }

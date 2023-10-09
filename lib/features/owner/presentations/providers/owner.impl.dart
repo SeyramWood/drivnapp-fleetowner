@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:drivn/features/owner/domain/entities/update.rental.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
 import 'package:drivn/features/owner/domain/usecase/add.insurance.dart';
+import 'package:drivn/features/owner/domain/usecase/manage.document.dart';
+import 'package:drivn/features/owner/domain/usecase/manage.image.dart';
 import 'package:drivn/shared/utils/usecase.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +31,12 @@ class OwnerImplProvider extends ChangeNotifier {
   final UpdateAvailability _updateAvailability;
   final UpdateRental _updateRental;
   final AddInsurance _addInsurance;
+  final AddVehicleImage _addVehicleImage;
+  final AddVehicleDocument _addVehicleDocument;
+  final UpdateVehicleImage _updateVehicleImage;
+  final UpdateVehicleDocument _updateVehicleDocument;
+  final DeleteVehicleDocument _deleteVehicleDocument;
+  final DeleteVehicleImage _deleteVehicleImage;
 
   OwnerImplProvider({
     required AcceptRequest acceptRequest,
@@ -42,6 +50,12 @@ class OwnerImplProvider extends ChangeNotifier {
     required UpdateAvailability updateAvailability,
     required UpdateRental updateRental,
     required AddInsurance addInsurance,
+    required AddVehicleImage addVehicleImage,
+    required AddVehicleDocument addVehicleDocument,
+    required UpdateVehicleImage updateVehicleImage,
+    required UpdateVehicleDocument updateVehicleDocument,
+    required DeleteVehicleDocument deleteVehicleDocument,
+    required DeleteVehicleImage deleteVehicleImage,
   })  : _acceptRequest = acceptRequest,
         _addVehicle = addVehicle,
         _cancelRequest = cancelRequest,
@@ -51,13 +65,20 @@ class OwnerImplProvider extends ChangeNotifier {
         _fetchRequests = fetchRequests,
         _fetchVehicles = fetchVehicles,
         _updateAvailability = updateAvailability,
-        _updateRental = updateRental,_addInsurance =addInsurance;
+        _updateRental = updateRental,
+        _addInsurance = addInsurance,
+        _addVehicleDocument = addVehicleDocument,
+        _addVehicleImage = addVehicleImage,
+        _updateVehicleDocument = updateVehicleDocument,
+        _updateVehicleImage = updateVehicleImage,
+        _deleteVehicleDocument = deleteVehicleDocument,
+        _deleteVehicleImage = deleteVehicleImage;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   Future acceptRequest(String userID) async {
-    final result = await _acceptRequest(Params(userID));
+    final result = await _acceptRequest(Param(userID));
     return result.fold(
       (failure) => failure.message,
       (success) => success,
@@ -67,7 +88,7 @@ class OwnerImplProvider extends ChangeNotifier {
   Future addVehicle(VehicleToDBModel vehicle, BuildContext context) async {
     _isLoading = true;
     notifyListeners();
-    final result = await _addVehicle(Params(vehicle));
+    final result = await _addVehicle(Param(vehicle));
     return result.fold(
       (failure) {
         _isLoading = false;
@@ -94,7 +115,7 @@ class OwnerImplProvider extends ChangeNotifier {
   }
 
   Future deleteVehicle(String vehicleID) async {
-    final result = await _deleteVehicle(Params(vehicleID));
+    final result = await _deleteVehicle(Param(vehicleID));
     return result.fold(
       (failure) => failure.message,
       (success) {},
@@ -102,7 +123,7 @@ class OwnerImplProvider extends ChangeNotifier {
   }
 
   Future fetchBookedVehicles(String userID) async {
-    final result = await _fetchBookedVehicles(Params(userID));
+    final result = await _fetchBookedVehicles(Param(userID));
     return result.fold(
       (failure) => failure.message,
       (success) => success,
@@ -110,7 +131,7 @@ class OwnerImplProvider extends ChangeNotifier {
   }
 
   Future fetchDrivers() async {
-    final result = await _fetchDrivers(Params(NoParams));
+    final result = await _fetchDrivers(Param(NoParams));
     return result.fold(
       (failure) => failure.message,
       (success) => success,
@@ -118,31 +139,34 @@ class OwnerImplProvider extends ChangeNotifier {
   }
 
   Future fetchRequests(String userID) async {
-    final result = await _fetchRequests(Params(userID));
+    final result = await _fetchRequests(Param(userID));
     return result.fold(
       (failure) => failure.message,
       (success) => success,
     );
   }
 
-  Future<Either<String,List<Vehicle>?>> fetchVehicles(String userID, context) async {
-    final result = await _fetchVehicles(Params(userID));
+  Future<Either<String, List<Vehicle>?>> fetchVehicles(
+      String userID, context) async {
+    final result = await _fetchVehicles(Param(userID));
     return result.fold(
       (failure) {
-       return Left(failure.message);
+        return Left(failure.message);
       },
       (success) {
-       return Right(success);
+        return Right(success);
       },
     );
   }
 
-  Future<Either<String,String>> addInsurance(String vehicleID)async{
-final result = await _addInsurance(Params(vehicleID));
-return result.fold((failure){
-  return Left(failure.message);
-},(success){return Right(success);});
-  } 
+  Future<Either<String, String>> addInsurance(String vehicleID) async {
+    final result = await _addInsurance(Param(vehicleID));
+    return result.fold((failure) {
+      return Left(failure.message);
+    }, (success) {
+      return Right(success);
+    });
+  }
 
   Future updateAvailability(String vehicleID, String status) async {
     final result = await _updateAvailability(MultiParams(vehicleID, status));
@@ -160,6 +184,102 @@ return result.fold((failure){
     notifyListeners();
     final result =
         await _updateRental(MultiParams(vehicleID, updateRentalModel));
+    return result.fold(
+      (failure) {
+        _isLoading = false;
+        notifyListeners();
+        return failure.message;
+      },
+      (success) {
+        _isLoading = false;
+        notifyListeners();
+        return success;
+      },
+    );
+  }
+
+  Future addVehicleImage(String vehicleID) async {
+    final result = await _addVehicleImage(Param(vehicleID));
+    return result.fold(
+      (failure) {
+        _isLoading = false;
+        notifyListeners();
+        return failure.message;
+      },
+      (success) {
+        _isLoading = false;
+        notifyListeners();
+        return success;
+      },
+    );
+  }
+
+  Future addVehicleDocument(String vehicleID) async {
+    final result = await _addVehicleDocument(Param(vehicleID));
+    return result.fold(
+      (failure) {
+        _isLoading = false;
+        notifyListeners();
+        return failure.message;
+      },
+      (success) {
+        _isLoading = false;
+        notifyListeners();
+        return success;
+      },
+    );
+  }
+
+  Future updateVehicleImage(String vehicleID) async {
+    final result = await _updateVehicleImage(Param(vehicleID));
+    return result.fold(
+      (failure) {
+        _isLoading = false;
+        notifyListeners();
+        return failure.message;
+      },
+      (success) {
+        _isLoading = false;
+        notifyListeners();
+        return success;
+      },
+    );
+  }
+
+  Future updateVehicleDocument(String documentID) async {
+    final result = await _updateVehicleDocument(Param(documentID));
+    return result.fold(
+      (failure) {
+        _isLoading = false;
+        notifyListeners();
+        return failure.message;
+      },
+      (success) {
+        _isLoading = false;
+        notifyListeners();
+        return success;
+      },
+    );
+  }
+
+  Future<Either<String, String>> deleteVehicleImage(String imageID) async {
+    final result = await _deleteVehicleImage(Param(imageID));
+    return result.fold(
+      (failure) {
+        _isLoading = false;
+        notifyListeners();
+        return Left(failure.message);
+      },
+      (success) {
+        _isLoading = false;
+        notifyListeners();
+        return Right(success);
+      },
+    );
+  }
+
+  Future deleteVehicleDocument(String documentID) async {
+    final result = await _deleteVehicleDocument(Param(documentID));
     return result.fold(
       (failure) {
         _isLoading = false;

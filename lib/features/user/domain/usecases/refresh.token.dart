@@ -4,13 +4,13 @@ import 'package:drivn/features/user/domain/repositories/user.repo.dart';
 import 'package:drivn/shared/errors/failure.dart';
 import 'package:drivn/shared/utils/usecase.dart';
 
-class RefreshToken extends UseCase<String,Params<String>> {
+class RefreshToken extends UseCase<String, Param<String>> {
   UserRepo repo;
   RefreshToken({
     required this.repo,
   });
   @override
-  Future<Either<Failure, String>> call(Params<String> params) async {
+  Future<Either<Failure, String>> call(Param<String> params) async {
     return await repo.refreshAccessToken(params.data);
   }
 }

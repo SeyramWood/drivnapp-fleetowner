@@ -26,4 +26,10 @@ abstract class OwnerRepo {
   Future<Either<Failure, void>> acceptRequest(String requestID);
   Future<Either<Failure, void>> cancelRequest(String requestID, String? reason);
   Future<Either<Failure, String>> addInsurance(String vehicleID);
+  Future<Either<Failure, String>> addVehicleDocument(String vehicleID);
+  Future<Either<Failure, String>> updateVehicleDocument(String documentID);
+  Future<Either<Failure, String>> deleteVehicleDocument(String documentID);
+  Future<Either<Failure, String>> addVehicleImage(String vehicleID);
+  Future<Either<Failure, String>> updateVehicleImage(String imageID);
+  Future<Either<Failure, String>> deleteVehicleImage(String imageID);
 }

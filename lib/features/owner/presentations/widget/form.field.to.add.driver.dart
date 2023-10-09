@@ -70,7 +70,7 @@ class _DriverFieldState extends State<DriverField> {
                     },
                     child: const Icon(Icons.cancel)),
                 isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                //  contentPadding: EdgeInsets.symmetric(vertical: 0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(color: blue),

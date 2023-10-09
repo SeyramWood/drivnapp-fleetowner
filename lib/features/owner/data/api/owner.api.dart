@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
 import 'package:drivn/features/owner/domain/entities/v.request.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
@@ -64,17 +62,127 @@ class OwnerApiService {
     }
   }
 
-//http get request for vehicles belonging to a user
+// http get request for vehicles belonging to a user
   Future<List<v.Vehicle>> fetchVehicles(String userID) async {
     final url = '$baseUrl/vehicles/owner/$userID';
     try {
       final response = await customClient.get(url);
+
       if (response.statusCode != 200) {
+        if (response.statusCode == 404) {
+          // Handle the 404 error for the vehicle fetch.
+          print('Vehicle not found for user $userID');
+        } else {
+          // Handle other HTTP status codes here.
+          print('HTTP Error: ${response.statusCode}');
+        }
         throw CustomException('Request  failed');
       }
+
       return v.vehicleFromJson(response.body).data!.data;
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future addVehicleImage(String vehicleID) async {
+    final url = '$baseUrl/vehicles/images/$vehicleID';
+    try {
+      final response = await customClient.put(url);
+      if (response.statusCode != 200) {
+        throw CustomException('Failed to add image. Try again.');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future addVehicleDocument(String documentID) async {
+    final url = '$baseUrl/vehicles/images/$documentID';
+    try {
+      final response = await customClient.put(url);
+      if (response.statusCode != 200) {
+        throw CustomException('Failed to add image. Try again.');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future updateVehicleImage(String imageID) async {
+    final url = '$baseUrl/vehicles/images/$imageID';
+    try {
+      final response = await customClient.put(url);
+      if (response.statusCode != 200) {
+        throw CustomException('Failed to update image. Try again.');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future deleteVehicleImage(String imageID) async {
+    final url = '$baseUrl/vehicles/images/$imageID';
+    try {
+      final response = await customClient.delete(url);
+      if (response.statusCode != 200) {
+        print(response.reasonPhrase);
+        throw CustomException('Failed to delete image. Try again.');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future updateVehicleDocument(String documentID) async {
+    final url = '$baseUrl/vehicles/document/$documentID';
+    try {
+      final response = await customClient.put(url);
+      if (response.statusCode != 200) {
+        throw CustomException('Failed to update document. Try again.');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future deleteVehicleDocument(String documentID) async {
+    final url = '$baseUrl/vehicles/document/$documentID';
+    try {
+      final response = await customClient.delete(url);
+      if (response.statusCode != 200) {
+        throw CustomException('Failed to delete document. Try again.');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Stream<List<v.Vehicle>> streamVehicles(String userID) async* {
+    final url = '$baseUrl/vehicles/owner/$userID';
+
+    try {
+      final response = await customClient.get(url);
+
+      if (response.statusCode != 200) {
+        throw CustomException('Request failed');
+      }
+
+      final streamedResponse = http.StreamedResponse(
+          response.bodyBytes as Stream<List<int>>, response.statusCode);
+      final responseBodyStream = streamedResponse.stream;
+      final buffer = <int>[];
+
+      await for (final chunk in responseBodyStream) {
+        buffer.addAll(chunk);
+      }
+
+      final decodedResponse = utf8.decode(buffer);
+      final vehicles = v.vehicleFromJson(decodedResponse).data!.data;
+
+      yield vehicles;
+    } catch (e) {
+      yield []; // Yield an empty list or handle errors as needed
     }
   }
 
