@@ -6,12 +6,10 @@ import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../shared/utils/constants/colors.dart';
 import '../../../google.places/location_search_screen.dart';
 import '../../domain/entities/vehicle.model.dart';
 import '../providers/owner.impl.dart';
 import 'availability.textfield.dart';
-import 'package:flutter/material.dart';
 
 class UpdateRentalDialog extends StatefulWidget {
   final Vehicle vehicle;

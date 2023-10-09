@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/validating.view.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/entities/driver.profile.model.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:flutter/material.dart';

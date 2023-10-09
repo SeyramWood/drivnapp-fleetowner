@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn/features/auth/presentation/widget/phone.field.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:drivn/features/vehicle/data/api/vehicle.api.service.dart';
@@ -15,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../../auth/presentation/widget/formfield.dart';
 import '../../../vehicle/domain/entities/vehicle.features.dart' as sym;
 import '../widget/form.field.with.option.dart';
 import '../widget/multi.selection.dialog.dart';

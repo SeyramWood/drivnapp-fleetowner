@@ -1,4 +1,3 @@
-import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
 import 'package:drivn/features/owner/presentations/widget/rental.form.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/cached.network.image.dart';

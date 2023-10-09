@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:drivn/shared/show.snacbar.dart';
@@ -7,7 +6,6 @@ import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ManageImagesView extends StatelessWidget {

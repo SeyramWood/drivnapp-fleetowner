@@ -1,8 +1,6 @@
-import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
 
 import '../../../features/auth/presentation/widget/elevated.button.dart';
 

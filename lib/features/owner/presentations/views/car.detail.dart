@@ -1,11 +1,8 @@
-import 'dart:io';
 
-import 'package:drivn/features/owner/data/api/owner.api.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:drivn/features/owner/presentations/widget/car.carousel.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

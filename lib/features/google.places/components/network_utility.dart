@@ -16,5 +16,6 @@ class NetworkUtility {
     } catch (e) {
       debugPrint(e.toString());
     }
+    return null;
   }
 }

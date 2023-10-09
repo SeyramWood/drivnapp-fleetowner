@@ -5,7 +5,6 @@ import 'package:drivn/shared/show.snacbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:drivn/features/user/data/api/user.api.service.dart';
 import 'package:drivn/features/user/domain/entities/owner.profile.model.dart';
 import 'package:drivn/features/user/presentation/view/settings.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
