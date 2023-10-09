@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:drivn/features/owner/domain/entities/update.rental.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
@@ -170,9 +172,9 @@ class OwnerImplProvider extends ChangeNotifier {
   Future updateAvailability(String vehicleID, String status) async {
     final result = await _updateAvailability(MultiParams(vehicleID, status));
     return result.fold(
-      (failure) => failure.message,
+      (failure) => Left(failure.message),
       (success) {
-        return success;
+        return Right(success);
       },
     );
   }
@@ -187,7 +189,7 @@ class OwnerImplProvider extends ChangeNotifier {
       (failure) {
         _isLoading = false;
         notifyListeners();
-        return failure.message;
+        return Left(failure.message);
       },
       (success) {
         _isLoading = false;
@@ -197,66 +199,72 @@ class OwnerImplProvider extends ChangeNotifier {
     );
   }
 
-  Future addVehicleImage(String vehicleID) async {
-    final result = await _addVehicleImage(Param(vehicleID));
+  Future<Either<String, String>> addVehicleImage(
+      String vehicleID, List<File> files) async {
+    print('response.reasonPhrase');
+
+    final result = await _addVehicleImage(MultiParams(vehicleID, files));
     return result.fold(
       (failure) {
         _isLoading = false;
         notifyListeners();
-        return failure.message;
+        return Left(failure.message);
       },
       (success) {
         _isLoading = false;
         notifyListeners();
-        return success;
+        return Right(success);
       },
     );
   }
 
-  Future addVehicleDocument(String vehicleID) async {
-    final result = await _addVehicleDocument(Param(vehicleID));
+  Future<Either<String, String>> addVehicleDocument(
+      String vehicleID, List<File> files) async {
+    final result = await _addVehicleDocument(MultiParams(vehicleID, files));
     return result.fold(
       (failure) {
         _isLoading = false;
         notifyListeners();
-        return failure.message;
+        return Left(failure.message);
       },
       (success) {
         _isLoading = false;
         notifyListeners();
-        return success;
+        return Right(success);
       },
     );
   }
 
-  Future updateVehicleImage(String vehicleID) async {
-    final result = await _updateVehicleImage(Param(vehicleID));
+  Future<Either<String, String>> updateVehicleImage(
+      String vehicleID, List<File> files) async {
+    final result = await _updateVehicleImage(MultiParams(vehicleID, files));
     return result.fold(
       (failure) {
         _isLoading = false;
         notifyListeners();
-        return failure.message;
+        return Left(failure.message);
       },
       (success) {
         _isLoading = false;
         notifyListeners();
-        return success;
+        return Right(success);
       },
     );
   }
 
-  Future updateVehicleDocument(String documentID) async {
-    final result = await _updateVehicleDocument(Param(documentID));
+  Future<Either<String, String>> updateVehicleDocument(
+      String documentID, List<File> files) async {
+    final result = await _updateVehicleDocument(MultiParams(documentID, files));
     return result.fold(
       (failure) {
         _isLoading = false;
         notifyListeners();
-        return failure.message;
+        return Left(failure.message);
       },
       (success) {
         _isLoading = false;
         notifyListeners();
-        return success;
+        return Right(success);
       },
     );
   }

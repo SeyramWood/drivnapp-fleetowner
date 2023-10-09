@@ -1,4 +1,6 @@
+import 'dart:io';
 
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:drivn/shared/show.snacbar.dart';
 import 'package:drivn/shared/utils/cached.network.image.dart';
@@ -6,6 +8,7 @@ import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ManageImagesView extends StatelessWidget {
@@ -54,6 +57,7 @@ class ManageImagesView extends StatelessWidget {
                           ),
                           TextButton.icon(
                             onPressed: () async {
+                              print('${image.id}');
                               final result = await context
                                   .read<OwnerImplProvider>()
                                   .deleteVehicleImage('${image.id}');
@@ -79,23 +83,18 @@ class ManageImagesView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-           showCustomSnackBar(
-                                  context, 'Yet to be implemented');
-    //        final picker = ImagePicker();
-    // final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-
-    // if (pickedImage != null) {
-    //   var pickedImage0 = File(pickedImage.path);
-
-    //   if (context.mounted) {
-    //     await context
-    //         .read<OwnerImplProvider>()
-    //         .addVehicleImage(pickedImage0, context)
-    //         .then(
-    //           (value) => getProfile(),
-    //         );
-    //   }
-    // }
+          await context.read<UserAuthProvider>().selectFiles();
+          final files = context.read<UserAuthProvider>().files;
+          if (files.isNotEmpty) {
+            if (context.mounted) {
+              print(files);
+              final result = await context
+                  .read<OwnerImplProvider>()
+                  .addVehicleImage(vehicle.id.toString(), files);
+              result.fold((failure) => showCustomSnackBar(context, failure),
+                  (success) => showCustomSnackBar(context, success));
+            }
+          }
         },
         child: const Icon(Icons.add),
       ),

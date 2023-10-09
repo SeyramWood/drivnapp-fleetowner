@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 
 import 'package:drivn/features/owner/data/api/owner.api.dart';
@@ -156,9 +158,9 @@ class OwnerRepoImpl implements OwnerRepo {
   }
 
   @override
-  Future<Either<Failure, String>> addVehicleDocument(String vehicleID) async {
+  Future<Either<Failure, String>> addVehicleDocument(String vehicleID,List<File> files) async {
     try {
-      await apiService.addVehicleDocument(vehicleID);
+      await apiService.addVehicleDocument(vehicleID,files);
       return const Right('Document added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
@@ -168,9 +170,9 @@ class OwnerRepoImpl implements OwnerRepo {
   }
 
   @override
-  Future<Either<Failure, String>> addVehicleImage(String vehicleID) async {
+  Future<Either<Failure, String>> addVehicleImage(String vehicleID,List<File> files) async {
     try {
-      await apiService.addVehicleImage(vehicleID);
+      await apiService.addVehicleImage(vehicleID,files);
       return const Right('Image(s) added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
@@ -204,9 +206,9 @@ class OwnerRepoImpl implements OwnerRepo {
   }
 
   @override
-  Future<Either<Failure, String>> updateVehicleDocument(String documentID) async {
+  Future<Either<Failure, String>> updateVehicleDocument(String documentID,List<File> files) async {
     try {
-      await apiService.addVehicleDocument(documentID);
+      await apiService.addVehicleDocument(documentID,files);
       return const Right('Document updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
@@ -216,9 +218,9 @@ class OwnerRepoImpl implements OwnerRepo {
   }
 
   @override
-  Future<Either<Failure, String>> updateVehicleImage(String imageID) async {
+  Future<Either<Failure, String>> updateVehicleImage(String imageID,List<File> files) async {
     try {
-      await apiService.updateVehicleImage(imageID);
+      await apiService.updateVehicleImage(imageID,files);
       return const Right('Image updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));

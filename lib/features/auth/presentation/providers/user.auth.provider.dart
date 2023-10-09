@@ -176,7 +176,7 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 //select files to be uploaded
-  Future<List<File>> selectFiles({file}) async {
+  Future<List<File>>  selectFiles({file}) async {
     final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
     if (fileResult != null) {
       file = _filesToDB = fileResult.files

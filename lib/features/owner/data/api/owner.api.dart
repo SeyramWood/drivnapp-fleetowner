@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:drivn/features/owner/domain/entities/booked.vehicle.model.dart';
 import 'package:drivn/features/owner/domain/entities/v.request.model.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart' as v;
@@ -85,11 +86,19 @@ class OwnerApiService {
     }
   }
 
-  Future addVehicleImage(String vehicleID) async {
+  Future addVehicleImage(String vehicleID, List<File> files) async {
     final url = '$baseUrl/vehicles/images/$vehicleID';
     try {
-      final response = await customClient.put(url);
+      final request = http.MultipartRequest('POST', Uri.parse(url));
+      for (var file in files) {
+        request.files
+            .add(await http.MultipartFile.fromPath('image', file.path));
+      }
+      final response =
+          await customClient.sendMultipartRequest(request: request);
       if (response.statusCode != 200) {
+        print(response.reasonPhrase);
+
         throw CustomException('Failed to add image. Try again.');
       }
     } catch (e) {
@@ -97,10 +106,16 @@ class OwnerApiService {
     }
   }
 
-  Future addVehicleDocument(String documentID) async {
+  Future addVehicleDocument(String documentID, List<File> files) async {
     final url = '$baseUrl/vehicles/images/$documentID';
     try {
-      final response = await customClient.put(url);
+      final request = http.MultipartRequest('PUT', Uri.parse(url));
+      for (var file in files) {
+        request.files
+            .add(await http.MultipartFile.fromPath('document', file.path));
+      }
+      final response =
+          await customClient.sendMultipartRequest(request: request);
       if (response.statusCode != 200) {
         throw CustomException('Failed to add image. Try again.');
       }
@@ -109,10 +124,16 @@ class OwnerApiService {
     }
   }
 
-  Future updateVehicleImage(String imageID) async {
+  Future updateVehicleImage(String imageID, List<File> files) async {
     final url = '$baseUrl/vehicles/images/$imageID';
     try {
-      final response = await customClient.put(url);
+      final request = http.MultipartRequest('PUT', Uri.parse(url));
+      for (var file in files) {
+        request.files
+            .add(await http.MultipartFile.fromPath('image', file.path));
+      }
+      final response =
+          await customClient.sendMultipartRequest(request: request);
       if (response.statusCode != 200) {
         throw CustomException('Failed to update image. Try again.');
       }
@@ -134,11 +155,18 @@ class OwnerApiService {
     }
   }
 
-  Future updateVehicleDocument(String documentID) async {
+  Future updateVehicleDocument(String documentID, List<File> files) async {
     final url = '$baseUrl/vehicles/document/$documentID';
     try {
-      final response = await customClient.put(url);
+      final request = http.MultipartRequest('PUT', Uri.parse(url));
+      for (var file in files) {
+        request.files
+            .add(await http.MultipartFile.fromPath('document', file.path));
+      }
+      final response =
+          await customClient.sendMultipartRequest(request: request);
       if (response.statusCode != 200) {
+        print(response.reasonPhrase);
         throw CustomException('Failed to update document. Try again.');
       }
     } catch (e) {
@@ -151,6 +179,8 @@ class OwnerApiService {
     try {
       final response = await customClient.delete(url);
       if (response.statusCode != 200) {
+        print(response.reasonPhrase);
+
         throw CustomException('Failed to delete document. Try again.');
       }
     } catch (e) {
