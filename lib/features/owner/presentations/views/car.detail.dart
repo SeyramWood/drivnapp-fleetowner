@@ -1,12 +1,60 @@
+
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
+import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:drivn/features/owner/presentations/widget/car.carousel.dart';
+import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../shared/show.snacbar.dart';
 import '../../../../shared/utils/constants/colors.dart';
+import 'manage.documents.view.dart';
+import 'manage.images.view.dart';
 
-class CarDetails extends StatelessWidget {
+class CarDetails extends StatefulWidget {
   const CarDetails({super.key, required this.vehicle});
   final Vehicle vehicle;
+
+  @override
+  State<CarDetails> createState() => _CarDetailsState();
+}
+
+class _CarDetailsState extends State<CarDetails> {
+  List<PopupMenuEntry<int>> _popupMenuEntries(BuildContext context) {
+    return [
+      PopupMenuItem<int>(
+        value: 0,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: FloatingActionButton(
+            onPressed: () {
+
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ManageImagesView(
+                  vehicle: widget.vehicle,
+                ),
+              ));
+            },
+            child: const Icon(Icons.image),
+          ),
+        ),
+      ),
+      PopupMenuItem<int>(
+        value: 1,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ManageDocumentsView(
+                vehicle: widget.vehicle,
+              ),
+            ));
+          },
+          child: const Icon(Icons.edit_document),
+        ),
+      ),
+      // Add more PopupMenuItem for additional functions
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +65,7 @@ class CarDetails extends StatelessWidget {
           SliverToBoxAdapter(
             child: SizedBox(
               height: MediaQuery.of(context).size.height / 3.5,
-              child: CarCarousel(images: vehicle.images),
+              child: CarCarousel(images: widget.vehicle.images),
             ),
           ),
           SliverPadding(
@@ -31,19 +79,28 @@ class CarDetails extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Car ID:idhiei53i  ',
-                          style: Theme.of(context).textTheme.headlineMedium,
+                          'Car ID: ${widget.vehicle.registrationNumber}  ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .copyWith(fontSize: 20),
                         ),
                         const Icon(Icons.copy)
                       ],
                     ),
                     Text(
-                      vehicle.type,
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      'Type:   ${widget.vehicle.type}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontSize: 20),
                     ),
                     Text(
-                      vehicle.brand,
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      'Brand: ${widget.vehicle.brand}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontSize: 20),
                     ),
                     Row(
                       children: [
@@ -55,17 +112,35 @@ class CarDetails extends StatelessWidget {
                           text: TextSpan(children: [
                             TextSpan(
                               text: '4.8',
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium!
+                                  .copyWith(fontSize: 20),
                             ),
                             TextSpan(
                               text: '  (200+ review)',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall!
-                                  .copyWith(color: black.withOpacity(.4)),
+                                  .copyWith(
+                                      fontSize: 15,
+                                      color: black.withOpacity(.4)),
                             )
                           ]),
-                        )
+                        ),
+                        const Spacer(),
+                        TextButton(
+                            onPressed: () async {
+                              final result = await context
+                                  .read<OwnerImplProvider>()
+                                  .addInsurance('${widget.vehicle.id}');
+                              result.fold(
+                                  (failure) =>
+                                      showErrorDialogue(context, failure),
+                                  (success) =>
+                                      showCustomSnackBar(context, success));
+                            },
+                            child: const Text('Add Insurance'))
                       ],
                     ),
                     const Divider(),
@@ -75,7 +150,7 @@ class CarDetails extends StatelessWidget {
                           Theme.of(context).textTheme.headlineLarge!.copyWith(
                                 color: black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 25,
+                                fontSize: 22,
                               ),
                     ),
                   ],
@@ -93,37 +168,70 @@ class CarDetails extends StatelessWidget {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  print(vehicle.features);
-                  if (vehicle.features == null || vehicle.features!.isEmpty) {
+                  if (widget.vehicle.features.isEmpty) {
                     return const Center(
                       child: Text(
                           'No features available to show for this vehicle'),
                     );
                   }
-                  var feature = vehicle.features![index];
+                  var feature = widget.vehicle.features[index];
                   return Card(
                     surfaceTintColor: white,
                     color: white,
                     shadowColor: white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Icon(Icons.auto_awesome),
-                        Text(feature.info),
-                        Text(feature.name),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const Icon(Icons.auto_awesome),
+                          Text(feature.info),
+                          Text(feature.name),
+                        ],
+                      ),
                     ),
                   );
                 },
-                childCount: vehicle.features?.length ?? 0,
+                childCount: widget.vehicle.features.length,
               ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Visibility(
+              visible: widget.vehicle.moreFeatures != null &&
+                  widget.vehicle.moreFeatures!.isNotEmpty,
+              child: ExpansionTile(
+                  backgroundColor: blue.withOpacity(.1),
+                  title: const Text('More features'),
+                  children: List.generate(
+                    widget.vehicle.moreFeatures?.split(',').length ?? 0,
+                    (index) {
+                      return ListTile(
+                        title: Text(
+                            widget.vehicle.moreFeatures!.split(',')[index]),
+                      );
+                    },
+                  )),
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const ImageIcon(AssetImage('assets/icons/edit.png')),
+        onPressed: () async {
+          await showMenu<int>(
+            context: context,
+            position: const RelativeRect.fromLTRB(
+              10,
+              600,
+              500,
+              10,
+            ), // Adjust the position as needed
+            items: _popupMenuEntries(context),
+          );
+
+          // Handle the selectedValue if needed
+        },
+        child: const Icon(Icons.menu),
       ),
     );
   }

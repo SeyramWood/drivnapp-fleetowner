@@ -1,23 +1,28 @@
 import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
-import 'package:drivn/features/auth/presentation/views/authState/auth.state.dart';
-import 'package:drivn/features/driver/presentation/provider/toggle.dart';
+import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
+import 'package:drivn/features/driver/presentation/dependency.injection/bindings.dart';
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
-import 'package:drivn/features/user/presentation/bindings/fleet.owner.bindings.dart';
+import 'package:drivn/features/user/presentation/dependency/user.dependency.injection.dart';
+import 'package:drivn/shared/interceptor/http.client.interceptor.dart';
+import 'package:drivn/shared/utils/constants/google.signinig.dart';
+import 'package:drivn/shared/utils/shared.prefs.manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'features/onboarding_screens/onboard.dart';
+import 'features/owner/presentations/dependency/owner.dependency.injection.dart';
 
 void main() {
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
-      create: (context) => CarProvider(),
-    )
-  ], child: const MyApp()));
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferencesManager.instance.init();
+  setupDriverDependencies();
+  setupOwnerDependencies();
+  //auth dependency locator
+  setupUserDependencies();
+  setStorageLocator();
+  runApp(const MyApp());
 }
-
-UserBindings bindings = UserBindings();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,21 +31,36 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => CarProvider()),
         ChangeNotifierProvider(create: (context) => AuthSharedProvider()),
-        
-        bindings.apiService,
-        bindings.userRepo,
-        bindings.postUser,
-        bindings.verifUser,
-        bindings.submitID,
-        bindings.userAuthProvider,
+        ChangeNotifierProvider(create: (context) => driverImplProvider),
+        ChangeNotifierProvider(create: (context) => userAuthProvider),
+        ChangeNotifierProvider(create: (context) => ownerImplProvider),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppLightTheme.themeData,
         home: const OnbordingPage(),
+        routes: {oauthredirect: (context) => const AccountTypeView()},
         // home: const DriverDocsView(),
       ),
     );
   }
 }
+// keytool -list -v -keystore c/Users/kojomensah.android\debug.keystore -alias androiddebugkey
+
+// keytool -list -v -keystore ~/Users/kojomensah/.android/debug.keystore -alias androiddebugkey
+
+// keytool -exportcert -alias androiddebugkey -keystore "C:\Users\kojomensah\.android\debug.keystore" -list -v
+
+// keytool -list -v -keystore C:\Users\kojomensah\.android\debug.keystore -alias androiddebugkey
+
+// -keystore C:\Users\kojomensah\.android\debug.keystore -alias androiddebugkey
+
+
+
+
+
+//ios client id //707888038435-h1jtdkqat3punrqqpcv39vbltr9ai2rj.apps.googleusercontent.com
+
+//android client id //707888038435-9vuvrq33uammvdvjq62fa8jk7bjc5bh5.apps.googleusercontent.com

@@ -21,7 +21,6 @@ class _DriverFieldState extends State<DriverField> {
     for (var driver in drivers) {
       driverLists.add(driver);
     }
-    print(driverLists);
   }
 
   @override
@@ -37,14 +36,11 @@ class _DriverFieldState extends State<DriverField> {
       children: [
         const Text('Driver (Optional)'),
         Autocomplete<String>(
+          initialValue: widget.controller.value,
           onSelected: (selectedOption) {
-            try {
-              var selectedDriver = driverLists.firstWhere((driver) =>
-                  '${driver.firstName} ${driver.lastName}' == selectedOption);
-              widget.controller.text = selectedDriver.id.toString();
-            } catch (e) {
-              print('Error: No matching driver found');
-            }
+            var selectedDriver = driverLists.firstWhere((driver) =>
+                '${driver.firstName} ${driver.lastName}' == selectedOption);
+            widget.controller.text = selectedDriver.id.toString();
           },
           optionsBuilder: (textEditingValue) {
             if (textEditingValue.text.isEmpty) {
@@ -58,19 +54,23 @@ class _DriverFieldState extends State<DriverField> {
               (context, textEditingController, focusNode, onFieldSubmitted) {
             return TextFormField(
               textCapitalization: TextCapitalization.sentences,
-              
               controller: textEditingController,
               focusNode: focusNode,
               onEditingComplete: onFieldSubmitted,
-              onTapOutside: (event) {
-                const PointerDownEvent(obscured: true);
-              },
+              onTapOutside: (event) {},
               onFieldSubmitted: (value) {
                 // widget.controller.clear();
               },
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
+                suffix: GestureDetector(
+                    onTap: () {
+                      textEditingController.clear();
+                      widget.controller.clear();
+                    },
+                    child: const Icon(Icons.cancel)),
                 isDense: true,
+                //  contentPadding: EdgeInsets.symmetric(vertical: 0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(color: blue),
@@ -85,17 +85,10 @@ class _DriverFieldState extends State<DriverField> {
                 ),
                 // hintText: "Search Something",
               ),
-              onChanged: (value) {
-                // widget.controller.text = value;
-              },
-              onSaved: (newValue) {
-                // textEditingController.clear();
-              },
             );
           },
         ),
       ],
     );
-    
   }
 }

@@ -6,7 +6,6 @@ class CarProvider extends ChangeNotifier {
   get date => _date;
   set setDate(DateTime date) {
     _date = date;
-    print(_date);
     notifyListeners();
   }
 
@@ -15,7 +14,6 @@ class CarProvider extends ChangeNotifier {
   get time => _time;
   set setTime(TimeOfDay time) {
     _time = time;
-    print(_time);
     notifyListeners();
   }
 }

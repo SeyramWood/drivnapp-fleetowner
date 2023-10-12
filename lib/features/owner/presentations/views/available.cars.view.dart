@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/api/owner.api.dart';
+import '../../../../shared/show.snacbar.dart';
 import '../../domain/entities/vehicle.model.dart';
 import '../widget/available.car.tile.dart';
 
@@ -16,17 +17,23 @@ class CarsAvailableBuilder extends StatefulWidget {
 }
 
 class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
-  late Future<List<Vehicle>> vehicles;
+  List<Vehicle>? vehicles;
   final StreamController<List<Vehicle>> _controller = StreamController();
-  late Timer _timer;
+  Timer? _timer;
   void fetchVehicles() async {
     if (mounted) {
-      vehicles =
-          OwnerApiService().fetchVehicles(context.read<APIService>().userId);
-      var streamData = await vehicles;
-      if (!_controller.isClosed) {
-        _controller.sink.add(streamData);
-      }
+      var id = context.read<UserAuthProvider>().userID;
+      // var futureData =
+      await context.read<OwnerImplProvider>().fetchVehicles(id, context).then(
+        (value) {
+          value.fold((failure) => showCustomSnackBar(context, failure),
+              (success) {
+            if (!_controller.isClosed) {
+              _controller.sink.add(success ?? []);
+            }
+          });
+        },
+      );
     }
   }
 
@@ -44,16 +51,9 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
   @override
   void dispose() {
     _controller.close();
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   vehicles =
-  //       OwnerApiService().fetchVehicles(context.read<APIService>().userId);
-  //   super.didChangeDependencies();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,8 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData) {
+        }
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
@@ -76,7 +77,7 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
           return Center(
             child: Text('Error: ${snapshot.error}'),
           );
-        } else if (!snapshot.hasData) {
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(child: Text('No available vehicle.'));
         }
 

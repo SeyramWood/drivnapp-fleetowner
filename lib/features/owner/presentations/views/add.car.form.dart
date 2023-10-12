@@ -1,18 +1,20 @@
 import 'dart:io';
 
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
+import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
+import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
 import 'package:drivn/features/vehicle/data/api/vehicle.api.service.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.brands.dart';
 import 'package:drivn/features/vehicle/domain/entities/vehicle.type.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
+import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../vehicle/domain/entities/vehicle.features.dart' as sym;
-import '../../data/api/owner.api.dart';
 import '../widget/form.field.with.option.dart';
 import '../widget/multi.selection.dialog.dart';
 
@@ -28,6 +30,7 @@ class AddFleetForm extends StatefulWidget {
 class _AddFleetFormState extends State<AddFleetForm> {
   final carBrand = TextEditingController();
   final carType = TextEditingController();
+  final registrationNumber = TextEditingController();
   final optionalFeatures = TextEditingController();
   final space = const SizedBox(
     height: 10,
@@ -43,7 +46,6 @@ class _AddFleetFormState extends State<AddFleetForm> {
   List<File> imageFile = [];
   List<File> proofFile = [];
 
-  OwnerApiService apiService = OwnerApiService();
   //this method fetch the needed data asyncronosly and iterate into another local list variable for easy access at the init state
 
   Future getVehicleInfo() async {
@@ -71,6 +73,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
     carBrand.clear();
     carType.clear();
     optionalFeatures.clear();
+    registrationNumber.clear();
   }
 
   @override
@@ -109,6 +112,9 @@ class _AddFleetFormState extends State<AddFleetForm> {
                               (brand) => brand.contains(text),
                             ));
                   },
+                  onSubmitted: (p0) {
+                    carBrand.clear();
+                  },
                 ),
                 space,
                 FormWithOption(
@@ -124,8 +130,11 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   //displays list items(vehicle types) as a dropdown for easy selection
                   customOptionsBuilder: (String text) async {
                     return List.from(vtypeList.map((vType) => vType.name).where(
-                          (type) => type.contains(text),
+                          (type) => type.isNotEmpty,
                         ));
+                  },
+                  onSubmitted: (p0) {
+                    carBrand.clear();
                   },
                 ),
                 space,
@@ -201,6 +210,31 @@ class _AddFleetFormState extends State<AddFleetForm> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Registration Number'),
+                    TextFormField(
+                      controller: registrationNumber,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: yellow),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: yellow),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: yellow),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                space,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     const Text('Optional'),
                     CustomElevatedButton(
                       onPressed: showFieldForFeatures,
@@ -209,27 +243,32 @@ class _AddFleetFormState extends State<AddFleetForm> {
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.sizeOf(context).height / 15,
+                  height: MediaQuery.sizeOf(context).height / 10,
                 ),
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width / 1.5,
                   //elevated button for submission of data
                   child: CustomElevatedButton(
                     onPressed: () {
-                      apiService
-                          .addVehicle(
-                              userID: context.read<APIService>().userId,
-                              carBrand: carBrand.text,
-                              carType: carType.text,
-                              features: List.from(selectedOptions
-                                  .map(
-                                    (feature) => feature.id.toString(),
-                                  )
-                                  .toList()),
-                              imageFiles: imageFile,
-                              proofFiles: proofFile,
-                              moreFeatures: optionalFeatures.text.trim())
+                      LoadingDialog.showLoadingDialog(context);
+                      VehicleToDBModel vehicle = VehicleToDBModel(
+                          userID: context.read<UserAuthProvider>().userID,
+                          brand: carBrand.text,
+                          type: carType.text,
+                          registrationNumber: registrationNumber.text,
+                          features: List.from(selectedOptions
+                              .map(
+                                (feature) => feature.id.toString(),
+                              )
+                              .toList()),
+                          images: imageFile,
+                          documents: proofFile,
+                          moreFeatures: optionalFeatures.text.trim());
+                      context
+                          .read<OwnerImplProvider>()
+                          .addVehicle(vehicle, context)
                           .then((failure) {
+                        LoadingDialog.hideLoadingDialog(context);
                         if (failure != null) {
                           showErrorDialogue(
                             context,
@@ -238,17 +277,12 @@ class _AddFleetFormState extends State<AddFleetForm> {
                         } else {
                           clearFields();
                           setState(() {});
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            duration: Duration(seconds: 3),
-                            content: Text('Vehicle added successfully'),
-                          ));
                         }
                       });
                     },
                     backgroundColor: blue,
                     child: const Text('Done'),
-                  ),
+                  ).loading(context.watch<OwnerImplProvider>().isLoading),
                 ),
                 space
               ],
@@ -325,7 +359,6 @@ class _AddFleetFormState extends State<AddFleetForm> {
               onPressed: () {
                 // Use the enteredValue as needed
                 optionalFeatures.text = enteredValue;
-                print('Entered Value: $enteredValue');
                 Navigator.of(context).pop(enteredValue); // Close the dialog
               },
               child: const Text('Submit'),
