@@ -201,7 +201,7 @@ class OwnerImplProvider extends ChangeNotifier {
 
   Future<Either<String, String>> addVehicleImage(
       String vehicleID, List<File> files) async {
-    print('response.reasonPhrase');
+    print(files);
 
     final result = await _addVehicleImage(MultiParams(vehicleID, files));
     return result.fold(
@@ -236,8 +236,8 @@ class OwnerImplProvider extends ChangeNotifier {
   }
 
   Future<Either<String, String>> updateVehicleImage(
-      String vehicleID, List<File> files) async {
-    final result = await _updateVehicleImage(MultiParams(vehicleID, files));
+      String vehicleID, File file) async {
+    final result = await _updateVehicleImage(MultiParams(vehicleID, file));
     return result.fold(
       (failure) {
         _isLoading = false;
@@ -253,8 +253,8 @@ class OwnerImplProvider extends ChangeNotifier {
   }
 
   Future<Either<String, String>> updateVehicleDocument(
-      String documentID, List<File> files) async {
-    final result = await _updateVehicleDocument(MultiParams(documentID, files));
+      String documentID, File file) async {
+    final result = await _updateVehicleDocument(MultiParams(documentID, file));
     return result.fold(
       (failure) {
         _isLoading = false;

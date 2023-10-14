@@ -13,6 +13,7 @@ import 'package:drivn/shared/utils/constants/dimensions.dart';
 import '../../../../shared/utils/cached.network.image.dart';
 import '../../../../shared/utils/extentions/on.custom.elevated.button.dart';
 import '../../../auth/presentation/views/login_screen.dart';
+import '../../../owner/presentations/views/home.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
@@ -180,13 +181,14 @@ class _ProfileViewState extends State<ProfileView> {
                           children: [
                             CircleAvatar(
                               radius: 35,
-                              child: profile.avatar != null
+                              child: 
+                                      profile.avatar!.isNotEmpty
                                   ? showImage(
                                       imageUrl: profile.avatar!,
                                       radius: 50,
                                     ) // Display the picked image
                                   : Text(
-                                      '${profile.firstName[0]} ${profile.lastName[0]}',
+                                      '${profile.firstName[0]}${profile.lastName[0]}',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
@@ -263,14 +265,16 @@ class _ProfileViewState extends State<ProfileView> {
                             value.fold((failure) {
                               LoadingDialog.hideLoadingDialog(context);
                               showCustomSnackBar(context, failure);
-                            }, (success) {
-                              Navigator.of(context).pushAndRemoveUntil(
+                            }, (success) async {
+                              await Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => const LoginView(),
                                 ),
-                                (route) => false,
                               );
-                              showCustomSnackBar(context, success);
+                              if (mounted) {
+                                IndexNotifier().value = 0;
+                                showCustomSnackBar(context, success);
+                              }
                             });
                           },
                         );
@@ -285,8 +289,8 @@ class _ProfileViewState extends State<ProfileView> {
               ),
             );
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: Text('${snapshot.data ?? 'Helo'}'),
           );
         },
       ),

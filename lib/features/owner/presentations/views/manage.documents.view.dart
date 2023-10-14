@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -5,6 +8,7 @@ import '../../../../shared/show.snacbar.dart';
 import '../../../../shared/utils/cached.network.image.dart';
 import '../../../../shared/utils/constants/colors.dart';
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
+import '../../../auth/presentation/providers/user.auth.provider.dart';
 import '../providers/owner.impl.dart';
 
 class ManageDocumentsView extends StatelessWidget {
@@ -45,9 +49,26 @@ class ManageDocumentsView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton.icon(
-                            onPressed: () {
-                              showCustomSnackBar(
-                                  context, 'Yet to be implemented');
+                            onPressed: () async {
+                              final fileResult =
+                                  await FilePicker.platform.pickFiles();
+
+                              if (fileResult != null) {
+                                final pickedFile = fileResult.files.map(
+                                    (platformFile) =>
+                                        File(platformFile.path.toString()));
+                                if (context.mounted) {
+                                  final result = await context
+                                      .read<OwnerImplProvider>()
+                                      .updateVehicleDocument(
+                                          '${document.id}', pickedFile.first);
+                                  result.fold(
+                                      (failure) =>
+                                          showCustomSnackBar(context, failure),
+                                      (success) =>
+                                          showCustomSnackBar(context, success));
+                                }
+                              }
                             },
                             icon: const Icon(Icons.edit),
                             label: const Text('Update'),
@@ -78,8 +99,22 @@ class ManageDocumentsView extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showCustomSnackBar(context, 'Yet to be implemented');
+        onPressed: () async {
+          await context.read<UserAuthProvider>().selectFiles();
+          // ignore: use_build_context_synchronously
+          final files = context.read<UserAuthProvider>().files;
+          // var limit = files.length + vehicle.documents!.length <=
+          //     5; //checking not to exceed the expect vehicle images
+
+          if (files.isNotEmpty) {
+            if (context.mounted) {
+              final result = await context
+                  .read<OwnerImplProvider>()
+                  .addVehicleDocument(vehicle.id.toString(), files);
+              result.fold((failure) => showCustomSnackBar(context, failure),
+                  (success) => showCustomSnackBar(context, success));
+            }
+          }
         },
         child: const Icon(Icons.add),
       ),
