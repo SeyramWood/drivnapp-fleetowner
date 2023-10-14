@@ -1,6 +1,7 @@
 import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
 import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
+import 'package:drivn/features/auth/presentation/views/authState/auth.state.dart';
 import 'package:drivn/features/driver/presentation/dependency.injection/bindings.dart';
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
 import 'package:drivn/features/user/presentation/dependency/user.dependency.injection.dart';
@@ -40,8 +41,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppLightTheme.themeData,
-        home: const OnbordingPage(),
-        routes: {oauthredirect: (context) => const AccountTypeView()},
+        home: const AuthState(),
         // home: const DriverDocsView(),
       ),
     );

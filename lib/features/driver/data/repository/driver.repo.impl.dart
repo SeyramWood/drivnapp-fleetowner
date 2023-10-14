@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:drivn/features/driver/data/api/driver.api.service.dart';
 import 'package:drivn/features/driver/domain/entities/trips.model.dart';
@@ -19,6 +21,8 @@ class DriverRepoImpl implements DriverRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Failed to fetch requests.'));
     }
@@ -31,6 +35,8 @@ class DriverRepoImpl implements DriverRepo {
       return const Right(null);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Failed to accept request. Try again.'));
     }
@@ -44,6 +50,8 @@ class DriverRepoImpl implements DriverRepo {
       return const Right(null);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Failed to cancel request. Try again.'));
     }
@@ -56,6 +64,8 @@ class DriverRepoImpl implements DriverRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Failed to fetch trips.'));
     }
@@ -68,6 +78,8 @@ class DriverRepoImpl implements DriverRepo {
       return const Right(null);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Failed to go online. Try again.'));
     }

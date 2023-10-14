@@ -24,6 +24,8 @@ class UserRepoImpl implements UserRepo {
       return const Right<Failure, void>(null);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Unkown error'));
     }
@@ -37,6 +39,8 @@ class UserRepoImpl implements UserRepo {
       return Right(id);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -49,6 +53,8 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('$e'));
     }
@@ -63,6 +69,8 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -75,6 +83,8 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -87,6 +97,8 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -100,6 +112,8 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -113,6 +127,8 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -126,6 +142,8 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -138,6 +156,8 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('$e'));
     }
@@ -150,15 +170,17 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('$e'));
     }
   }
-  
+
   @override
   Future<Either<Failure, String>> logOut() async {
     try {
-      await api.logOut(); 
+      await api.logOut();
       return const Right('Logged out');
     } catch (e) {
       return Left(Failure('$e'));

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/owner/presentations/providers/owner.impl.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,7 @@ class _CarsAvailableBuilderState extends State<CarsAvailableBuilder> {
       // var futureData =
       await context.read<OwnerImplProvider>().fetchVehicles(id, context).then(
         (value) {
-          value.fold((failure) => showCustomSnackBar(context, failure),
+          value.fold((failure) => showCustomSnackBar(context, failure,red),
               (success) {
             if (!_controller.isClosed) {
               _controller.sink.add(success ?? []);

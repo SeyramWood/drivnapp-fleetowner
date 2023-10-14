@@ -77,6 +77,8 @@ class OwnerRepoImpl implements OwnerRepo {
       return Right(result);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Failed to fetch vehicls'));
     }
@@ -89,6 +91,8 @@ class OwnerRepoImpl implements OwnerRepo {
       return Right(result);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Failed to fetch drivers'));
     }
@@ -101,6 +105,8 @@ class OwnerRepoImpl implements OwnerRepo {
       return Right(result);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Failed to fetch request'));
     }
@@ -114,6 +120,8 @@ class OwnerRepoImpl implements OwnerRepo {
       return Right(result);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -127,6 +135,8 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right(null);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -140,6 +150,8 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right(null);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -152,42 +164,53 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right('Insurance added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
   }
 
   @override
-  Future<Either<Failure, String>> addVehicleDocument(String vehicleID,List<File> files) async {
+  Future<Either<Failure, String>> addVehicleDocument(
+      String vehicleID, List<File> files) async {
     try {
-      await apiService.addVehicleDocument(vehicleID,files);
+      await apiService.addVehicleDocument(vehicleID, files);
       return const Right('Document added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
   }
 
   @override
-  Future<Either<Failure, String>> addVehicleImage(String vehicleID,List<File> files) async {
+  Future<Either<Failure, String>> addVehicleImage(
+      String vehicleID, List<File> files) async {
     try {
-      await apiService.addVehicleImage(vehicleID,files);
+      await apiService.addVehicleImage(vehicleID, files);
       return const Right('Image(s) added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
   }
 
   @override
-  Future<Either<Failure, String>> deleteVehicleDocument(String documentID) async {
+  Future<Either<Failure, String>> deleteVehicleDocument(
+      String documentID) async {
     try {
       await apiService.deleteVehicleDocument(documentID);
       return const Right('Document deleted successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -200,30 +223,38 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right('Image deleted successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
   }
 
   @override
-  Future<Either<Failure, String>> updateVehicleDocument(String documentID,File file) async {
+  Future<Either<Failure, String>> updateVehicleDocument(
+      String documentID, File file) async {
     try {
-      await apiService.updateVehicleDocument(documentID,file);
+      await apiService.updateVehicleDocument(documentID, file);
       return const Right('Document updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wron.'));
     }
   }
 
   @override
-  Future<Either<Failure, String>> updateVehicleImage(String imageID,File file) async {
+  Future<Either<Failure, String>> updateVehicleImage(
+      String imageID, File file) async {
     try {
-      await apiService.updateVehicleImage(imageID,file);
+      await apiService.updateVehicleImage(imageID, file);
       return const Right('Image updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
+    } on SocketException {
+      return Left(Failure('You are offline. Check your network.'));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }

@@ -153,7 +153,7 @@ class _LoginViewState extends State<LoginView> {
                             if (failure != null) {
                               return showErrorDialogue(context, failure);
                             }
-                            Navigator.of(context).pushReplacement(
+                            Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                   builder: (context) => context
                                               .read<UserAuthProvider>()
@@ -161,6 +161,7 @@ class _LoginViewState extends State<LoginView> {
                                           'fleet-owners'
                                       ? const OMainPage()
                                       : const DMainPage()),
+                              (route) => false,
                             );
                           },
                         );

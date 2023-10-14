@@ -69,9 +69,9 @@ class _ManageImagesViewState extends State<ManageImagesView> {
                                           '${image.id}', pickedImage.first);
                                   result.fold(
                                       (failure) => showCustomSnackBar(
-                                          context, failure),
+                                          context, failure, red),
                                       (success) => showCustomSnackBar(
-                                          context, success));
+                                          context, success, green));
                                 }
                               }
                             },
@@ -85,9 +85,9 @@ class _ManageImagesViewState extends State<ManageImagesView> {
                                   .deleteVehicleImage('${image.id}');
                               result.fold(
                                   (failure) =>
-                                      showCustomSnackBar(context, failure),
-                                  (success) =>
-                                      showCustomSnackBar(context, success));
+                                      showCustomSnackBar(context, failure, red),
+                                  (success) => showCustomSnackBar(
+                                      context, success, green));
                             },
                             style: ButtonStyle(
                                 foregroundColor:
@@ -117,13 +117,14 @@ class _ManageImagesViewState extends State<ManageImagesView> {
                 final result = await context
                     .read<OwnerImplProvider>()
                     .addVehicleImage(widget.vehicle.id.toString(), files);
-                result.fold((failure) => showCustomSnackBar(context, failure),
-                    (success) => showCustomSnackBar(context, success));
+                result.fold(
+                    (failure) => showCustomSnackBar(context, failure, red),
+                    (success) => showCustomSnackBar(context, success, green));
               }
             } else {
               if (context.mounted) {
                 showCustomSnackBar(
-                    context, 'Ooops! A vehicle can have upto 5 images.');
+                    context, 'Ooops! A vehicle can have upto 5 images.', red);
               }
             }
           }

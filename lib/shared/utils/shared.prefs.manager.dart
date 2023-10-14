@@ -28,7 +28,11 @@ class SharedPreferencesManager {
     await _prefs.clear();
   }
 
-  // Add more methods for other data types as needed
 
-  // Example: int, double, bool, etc.
+ bool getBool(String key, bool defaultValue) {
+    return _prefs.getBool(key) ?? defaultValue;
+  }
+  Future<void> setBool(String key,bool value) async {
+    await _prefs.setBool(key,value);
+  }
 }

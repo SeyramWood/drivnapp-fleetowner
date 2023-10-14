@@ -103,7 +103,7 @@ class _CarDetailsState extends State<CarDetails> {
                                     (failure) =>
                                         showErrorDialogue(context, failure),
                                     (success) =>
-                                        showCustomSnackBar(context, success));
+                                        showCustomSnackBar(context, success,green));
                               },
                               child: const Text('Add Insurance'))
                         ],

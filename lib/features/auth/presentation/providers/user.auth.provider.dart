@@ -6,6 +6,7 @@ import 'package:drivn/features/user/domain/usecases/login.dart';
 import 'package:drivn/features/user/domain/usecases/read.dart';
 import 'package:drivn/features/user/domain/usecases/submit.data.dart';
 import 'package:drivn/features/user/domain/usecases/update.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -51,12 +52,12 @@ class UserAuthProvider extends ChangeNotifier {
     this.updateProfilePic,
     this.logout,
   );
+  final prefs = SharedPreferencesManager.instance;
 
   String _userID = SharedPreferencesManager.instance.getString('userID', '');
   String get userID => _userID;
 
   Future<void> setUserId(String id) async {
-    final prefs = SharedPreferencesManager.instance;
     await prefs.setString(
       'userID',
       id,
@@ -68,11 +69,13 @@ class UserAuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _accountType = '';
+  String _accountType =
+      SharedPreferencesManager.instance.getString('accountType', '');
 
   String get accountType => _accountType;
-  isOwner(String thisAccount) {
-    _accountType = thisAccount;
+  isOwner(String thisAccount) async {
+    await prefs.setString('accountType', thisAccount);
+    _accountType = prefs.getString('accountType', '');
     notifyListeners();
   }
 
@@ -90,7 +93,7 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 //a secure storage to store access and refresh token
-  final storage =  getIt<FlutterSecureStorage>();
+  final storage = getIt<FlutterSecureStorage>();
 
   Future postUser(SignUpBody fleetOwner, context) async {
     _isLoading = true;
@@ -128,9 +131,9 @@ class UserAuthProvider extends ChangeNotifier {
   Future updateProfilePicture(File avatar, context) async {
     final result = await updateProfilePic(Param(avatar));
     return result.fold((failure) {
-      showCustomSnackBar(context, failure.message);
+      showCustomSnackBar(context, failure.message, red);
     }, (success) {
-      showCustomSnackBar(context, success);
+      showCustomSnackBar(context, success, green);
     });
   }
 

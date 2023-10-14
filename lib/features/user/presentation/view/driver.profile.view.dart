@@ -283,7 +283,7 @@ class _DProfileViewState extends State<DProfileView> {
                           (value) {
                             value.fold((failure) {
                               LoadingDialog.hideLoadingDialog(context);
-                              showCustomSnackBar(context, failure);
+                              showCustomSnackBar(context, failure,red);
                             }, (success) {
                               Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
@@ -291,7 +291,7 @@ class _DProfileViewState extends State<DProfileView> {
                                 ),
                                 (route) => false,
                               );
-                              showCustomSnackBar(context, success);
+                              showCustomSnackBar(context, success,Colors.green);
                             });
                           },
                         );

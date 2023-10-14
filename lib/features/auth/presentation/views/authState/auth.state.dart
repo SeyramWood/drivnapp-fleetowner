@@ -1,10 +1,15 @@
+import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
 import 'package:drivn/features/auth/presentation/views/login_screen.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/onboarding_screens/onboard.dart';
 import 'package:drivn/features/owner/presentations/views/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../shared/utils/shared.prefs.manager.dart';
+import '../../../../driver/presentation/dependency.injection/bindings.dart';
+import '../../providers/user.auth.provider.dart';
 
 class AuthState extends StatefulWidget {
   const AuthState({super.key});
@@ -15,25 +20,46 @@ class AuthState extends StatefulWidget {
 
 class _AuthStateState extends State<AuthState> {
   String? user;
-  late bool userIsOwner;
-final prefs = SharedPreferencesManager.instance;
-  
+  late String accountType;
+  final prefs = getIt<FlutterSecureStorage>();
 
   @override
   void initState() {
-    // userIsOwner = context.read<UserAuthProvider>().accountType;
-    user = prefs.getString('userID','');
+    accountType = context.read<UserAuthProvider>().accountType;
+    hasAccess();
+    Future.microtask(() => checkOnboardingStatus());
     super.initState();
+  }
+
+  hasAccess() async {
+    user = await prefs.read(key: 'refreshToken');
+  }
+
+  checkOnboardingStatus() async {
+    final prefs = SharedPreferencesManager.instance;
+    bool onboardingShown = prefs.getBool('onboardingShown', false);
+
+    if (onboardingShown) {
+      if (accountType.isEmpty) {
+        print(accountType);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const AccountTypeView()));
+      }
+    } else {
+      prefs.setBool('onboardingShown', true);
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const OnbordingPage()));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
     if (user != null) {
-      return userIsOwner ? const OMainPage() : const DMainPage();
-    } else if (user == null) {
+      return accountType == 'fleet-owner'
+          ? const OMainPage()
+          : const DMainPage();
+    } else {
       return const LoginView();
     }
-    return const OnbordingPage();
   }
 }

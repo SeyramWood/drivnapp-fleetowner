@@ -64,9 +64,9 @@ class ManageDocumentsView extends StatelessWidget {
                                           '${document.id}', pickedFile.first);
                                   result.fold(
                                       (failure) =>
-                                          showCustomSnackBar(context, failure),
+                                          showCustomSnackBar(context, failure,red),
                                       (success) =>
-                                          showCustomSnackBar(context, success));
+                                          showCustomSnackBar(context, success,green));
                                 }
                               }
                             },
@@ -80,9 +80,9 @@ class ManageDocumentsView extends StatelessWidget {
                                   .deleteVehicleDocument('${document.id}');
                               result.fold(
                                   (failure) =>
-                                      showCustomSnackBar(context, failure),
+                                      showCustomSnackBar(context, failure,red),
                                   (success) =>
-                                      showCustomSnackBar(context, success));
+                                      showCustomSnackBar(context, success,green));
                             },
                             style: ButtonStyle(
                                 foregroundColor:
@@ -111,8 +111,8 @@ class ManageDocumentsView extends StatelessWidget {
               final result = await context
                   .read<OwnerImplProvider>()
                   .addVehicleDocument(vehicle.id.toString(), files);
-              result.fold((failure) => showCustomSnackBar(context, failure),
-                  (success) => showCustomSnackBar(context, success));
+              result.fold((failure) => showCustomSnackBar(context, failure,red),
+                  (success) => showCustomSnackBar(context, success,green));
             }
           }
         },

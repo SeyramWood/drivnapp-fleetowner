@@ -27,7 +27,7 @@ class _RequestsViewState extends State<RequestsView> {
   // ignore: unused_field
   Timer? _timer;
   fetchRequest() async {
-    if (mounted) {
+    if (context.mounted) {
       await context
           .read<OwnerImplProvider>()
           .fetchRequests(
@@ -50,15 +50,17 @@ class _RequestsViewState extends State<RequestsView> {
   @override
   void initState() {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-    fetchRequest();
+      fetchRequest();
     });
     super.initState();
   }
-@override
+
+  @override
   void dispose() {
     _timer?.cancel();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

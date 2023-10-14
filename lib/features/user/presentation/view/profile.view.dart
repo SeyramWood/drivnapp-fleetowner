@@ -39,7 +39,7 @@ class _ProfileViewState extends State<ProfileView> {
       (error) {
         showCustomSnackBar(
           context,
-          error,
+          error,red
         );
       },
       (profile) {
@@ -181,8 +181,7 @@ class _ProfileViewState extends State<ProfileView> {
                           children: [
                             CircleAvatar(
                               radius: 35,
-                              child: 
-                                      profile.avatar!.isNotEmpty
+                              child: profile.avatar!.isNotEmpty
                                   ? showImage(
                                       imageUrl: profile.avatar!,
                                       radius: 50,
@@ -264,16 +263,21 @@ class _ProfileViewState extends State<ProfileView> {
                           (value) {
                             value.fold((failure) {
                               LoadingDialog.hideLoadingDialog(context);
-                              showCustomSnackBar(context, failure);
+                              showCustomSnackBar(context, failure, red);
                             }, (success) async {
-                              await Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginView(),
-                                ),
-                              );
-                              if (mounted) {
+                              await Navigator.of(context)
+                                  .pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginView(),
+                                    ),
+                                  )
+                                  .then(
+                                    (value) => showCustomSnackBar(
+                                        context, success, Colors.green),
+                                  );
+
+                              if (context.mounted) {
                                 IndexNotifier().value = 0;
-                                showCustomSnackBar(context, success);
                               }
                             });
                           },
