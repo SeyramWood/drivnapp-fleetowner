@@ -62,6 +62,9 @@ class HttpClientWithInterceptor {
         rethrow; // Rethrow if token refresh fails
       }
     }
+    if(response.statusCode==404){
+      throw CustomException('Something went wrong.');
+    }
 
     return response;
   }
@@ -158,6 +161,7 @@ Future<String> refreshAccessToken() async {
     final token = await storage.read(
         key:
             'refreshToken'); //read or get the refresh token stored in the local db
+    print('refreshToken: $token');
     final response = await http.post(
       url,
       headers: {'X-Refresh-Token': token ?? ''},

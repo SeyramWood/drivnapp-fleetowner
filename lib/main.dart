@@ -13,9 +13,9 @@ import 'package:provider/provider.dart';
 import 'features/onboarding_screens/onboard.dart';
 import 'features/owner/presentations/dependency/owner.dependency.injection.dart';
 
-void main() {
+void main()async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferencesManager.instance.init();
+ await SharedPreferencesManager.instance.init();
   setupDriverDependencies();
   setupOwnerDependencies();
   //auth dependency locator

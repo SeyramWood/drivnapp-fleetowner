@@ -33,7 +33,6 @@ class _LoginViewState extends State<LoginView> {
 
   void signUserIn() {
     if (_formKey.currentState?.validate() ?? false) {
-
       // Navigate to the home screen
       Navigator.push(
         context,
@@ -154,7 +153,7 @@ class _LoginViewState extends State<LoginView> {
                             if (failure != null) {
                               return showErrorDialogue(context, failure);
                             }
-                            Navigator.of(context).pushAndRemoveUntil(
+                            Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) => context
                                               .read<UserAuthProvider>()
@@ -162,7 +161,6 @@ class _LoginViewState extends State<LoginView> {
                                           'fleet-owners'
                                       ? const OMainPage()
                                       : const DMainPage()),
-                              (route) => false,
                             );
                           },
                         );

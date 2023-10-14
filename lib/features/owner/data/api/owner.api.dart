@@ -87,7 +87,7 @@ class OwnerApiService {
   }
 
   Future addVehicleImage(String vehicleID, List<File> files) async {
-    final url = '$baseUrl/vehicles/images/$vehicleID';
+    final url = '$baseUrl/vehicles/image/$vehicleID';
     try {
       final request = http.MultipartRequest('POST', Uri.parse(url));
       for (var file in files) {
@@ -96,9 +96,7 @@ class OwnerApiService {
       }
       final response =
           await customClient.sendMultipartRequest(request: request);
-      if (response.statusCode != 200) {
-        print(response.reasonPhrase);
-
+      if (response.statusCode != 201) {
         throw CustomException('Failed to add image. Try again.');
       }
     } catch (e) {
@@ -107,16 +105,17 @@ class OwnerApiService {
   }
 
   Future addVehicleDocument(String documentID, List<File> files) async {
-    final url = '$baseUrl/vehicles/images/$documentID';
+    final url = '$baseUrl/vehicles/document/$documentID';
     try {
-      final request = http.MultipartRequest('PUT', Uri.parse(url));
+      final request = http.MultipartRequest('POST', Uri.parse(url));
       for (var file in files) {
         request.files
             .add(await http.MultipartFile.fromPath('document', file.path));
       }
       final response =
           await customClient.sendMultipartRequest(request: request);
-      if (response.statusCode != 200) {
+      if (response.statusCode != 201) {
+        print(response.statusCode);
         throw CustomException('Failed to add image. Try again.');
       }
     } catch (e) {
@@ -124,14 +123,12 @@ class OwnerApiService {
     }
   }
 
-  Future updateVehicleImage(String imageID, List<File> files) async {
-    final url = '$baseUrl/vehicles/images/$imageID';
+  Future updateVehicleImage(String imageID, File file) async {
+    final url = '$baseUrl/vehicles/image/$imageID';
     try {
       final request = http.MultipartRequest('PUT', Uri.parse(url));
-      for (var file in files) {
-        request.files
-            .add(await http.MultipartFile.fromPath('image', file.path));
-      }
+      request.files.add(await http.MultipartFile.fromPath('image', file.path));
+
       final response =
           await customClient.sendMultipartRequest(request: request);
       if (response.statusCode != 200) {
@@ -143,7 +140,7 @@ class OwnerApiService {
   }
 
   Future deleteVehicleImage(String imageID) async {
-    final url = '$baseUrl/vehicles/images/$imageID';
+    final url = '$baseUrl/vehicles/image/$imageID';
     try {
       final response = await customClient.delete(url);
       if (response.statusCode != 200) {
@@ -155,14 +152,13 @@ class OwnerApiService {
     }
   }
 
-  Future updateVehicleDocument(String documentID, List<File> files) async {
+  Future updateVehicleDocument(String documentID, File file) async {
     final url = '$baseUrl/vehicles/document/$documentID';
     try {
       final request = http.MultipartRequest('PUT', Uri.parse(url));
-      for (var file in files) {
-        request.files
-            .add(await http.MultipartFile.fromPath('document', file.path));
-      }
+      request.files
+          .add(await http.MultipartFile.fromPath('document', file.path));
+
       final response =
           await customClient.sendMultipartRequest(request: request);
       if (response.statusCode != 200) {

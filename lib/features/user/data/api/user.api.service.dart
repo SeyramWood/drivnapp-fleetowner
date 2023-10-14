@@ -128,7 +128,10 @@ class UserApiService {
       if (response.statusCode != 200) {
         final errorMessage = jsonDecode(response.body)['error'] as String?;
         if (errorMessage != null) {
-          throw CustomException(errorMessage);
+          print(errorMessage);
+          errorMessage == 'bad credentials'
+              ? throw CustomException('Wrong Password\nor Telephone number')
+              : throw CustomException(errorMessage);
         } else {
           throw CustomException('An error occurred');
         }
@@ -137,12 +140,13 @@ class UserApiService {
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
 
-        await storage.write(key: 'accessToken', value: jsonData['accessToken']);
+        // await storage.write(key: 'accessToken', value: jsonData['accessToken']);
         await storage.write(
             key: 'refreshToken', value: jsonData['refreshToken']);
         //fetch user session after successfull login
         //within the fetchSession is return user id
         final user = await fetchSession();
+        print(user);
         return user.toString();
       }
     } catch (e) {
@@ -154,6 +158,9 @@ class UserApiService {
     try {
       await storage.deleteAll();
       await SharedPreferencesManager.instance.clearStorage();
+      var data1 = await storage.read(key: 'refreshToken');
+      var data2 = SharedPreferencesManager.instance.getString('userID', '');
+      print('token: $data1\nid: $data2');
     } catch (e) {
       rethrow;
     }
@@ -192,6 +199,7 @@ class UserApiService {
         throw CustomException('Failed to get your profile');
       }
       final jsonBody = jsonDecode(response.body);
+      print(jsonBody); 
       return Profile.fromJson(jsonBody);
     } catch (e) {
       rethrow;

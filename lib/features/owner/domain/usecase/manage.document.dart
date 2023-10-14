@@ -17,7 +17,7 @@ class AddVehicleDocument extends UseCase<String, MultiParams<String,List<File>,S
   }
 }
 
-class UpdateVehicleDocument extends UseCase<String, MultiParams<String,List<File>,String>> {
+class UpdateVehicleDocument extends UseCase<String, MultiParams<String,File,String>> {
   OwnerRepo repo;
   UpdateVehicleDocument({
     required this.repo,

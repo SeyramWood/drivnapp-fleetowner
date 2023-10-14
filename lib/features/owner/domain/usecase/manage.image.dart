@@ -19,7 +19,7 @@ class AddVehicleImage extends UseCase<String, MultiParams<String,List<File>,Stri
   }
 }
 
-class UpdateVehicleImage extends UseCase<String, MultiParams<String,List<File>,String>> {
+class UpdateVehicleImage extends UseCase<String, MultiParams<String,File,String>> {
   OwnerRepo repo;
   UpdateVehicleImage({
     required this.repo,

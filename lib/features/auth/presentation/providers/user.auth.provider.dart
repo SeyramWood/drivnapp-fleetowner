@@ -13,6 +13,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../shared/show.snacbar.dart';
 import '../../../../shared/utils/shared.prefs.manager.dart';
 import '../../../../shared/utils/usecase.dart';
+import '../../../driver/presentation/dependency.injection/bindings.dart';
 import '../../../user/domain/entities/driver.profile.model.dart';
 import '../../../user/domain/entities/owner.profile.model.dart';
 import '../../../user/domain/entities/driver.profile.model.dart' as driver;
@@ -68,6 +69,7 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
   String _accountType = '';
+
   String get accountType => _accountType;
   isOwner(String thisAccount) {
     _accountType = thisAccount;
@@ -88,7 +90,7 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 //a secure storage to store access and refresh token
-  final storage = const FlutterSecureStorage();
+  final storage =  getIt<FlutterSecureStorage>();
 
   Future postUser(SignUpBody fleetOwner, context) async {
     _isLoading = true;
@@ -117,6 +119,7 @@ class UserAuthProvider extends ChangeNotifier {
       return failure.message;
     }, (success) async {
       _isLoading = false;
+      print(success);
       await setUserId(success);
       notifyListeners();
     });
@@ -176,7 +179,7 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 //select files to be uploaded
-  Future<List<File>>  selectFiles({file}) async {
+  Future<List<File>> selectFiles({file}) async {
     final fileResult = await FilePicker.platform.pickFiles(allowMultiple: true);
     if (fileResult != null) {
       file = _filesToDB = fileResult.files
@@ -281,7 +284,7 @@ class UserAuthProvider extends ChangeNotifier {
     final result = await logout(NoParams());
     return result.fold(
       (failure) => Left(failure.message),
-      (success) {
+      (success) async {
         return Right(success);
       },
     );

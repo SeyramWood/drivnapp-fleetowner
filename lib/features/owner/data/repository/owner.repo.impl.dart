@@ -206,9 +206,9 @@ class OwnerRepoImpl implements OwnerRepo {
   }
 
   @override
-  Future<Either<Failure, String>> updateVehicleDocument(String documentID,List<File> files) async {
+  Future<Either<Failure, String>> updateVehicleDocument(String documentID,File file) async {
     try {
-      await apiService.addVehicleDocument(documentID,files);
+      await apiService.updateVehicleDocument(documentID,file);
       return const Right('Document updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
@@ -218,9 +218,9 @@ class OwnerRepoImpl implements OwnerRepo {
   }
 
   @override
-  Future<Either<Failure, String>> updateVehicleImage(String imageID,List<File> files) async {
+  Future<Either<Failure, String>> updateVehicleImage(String imageID,File file) async {
     try {
-      await apiService.updateVehicleImage(imageID,files);
+      await apiService.updateVehicleImage(imageID,file);
       return const Right('Image updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));

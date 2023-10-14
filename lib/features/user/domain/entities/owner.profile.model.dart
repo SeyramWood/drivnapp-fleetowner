@@ -31,7 +31,7 @@ class Profile {
 class Data {
   DateTime createdAt;
   String? avatar;
-  Document document;
+  Document? document;
   String firstName;
   int id;
   String lastName;
@@ -40,8 +40,8 @@ class Data {
 
   Data({
     required this.createdAt,
-    required this.avatar,
-    required this.document,
+    this.avatar,
+    this.document,
     required this.firstName,
     required this.id,
     required this.lastName,
@@ -51,8 +51,8 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         createdAt: DateTime.parse(json["createdAt"]),
-        avatar: json['avatar'] ,
-        document: Document.fromJson(json["document"]),
+        avatar: json['avatar']??'',
+        document: Document.fromJson(json["document"] ?? {}),
         firstName: json["firstName"],
         id: json["id"],
         lastName: json["lastName"],
@@ -62,7 +62,7 @@ class Data {
 
   Map<String, dynamic> toJson() => {
         "createdAt": createdAt.toIso8601String(),
-        "document": document.toJson(),
+        "document": document?.toJson(),
         "firstName": firstName,
         "id": id,
         "lastName": lastName,
@@ -74,7 +74,7 @@ class Data {
 class Document {
   DateTime createdAt;
   int id;
-  List<String> idCard;
+  List<String>? idCard;
   DateTime updatedAt;
 
   Document({
@@ -87,14 +87,14 @@ class Document {
   factory Document.fromJson(Map<String, dynamic> json) => Document(
         createdAt: DateTime.parse(json["createdAt"]),
         id: json["id"],
-        idCard: List<String>.from(json["idCard"].map((x) => x) ?? []),
+        idCard: List<String>.from(json["idCard"]?.map((x) => x) ?? []),
         updatedAt: DateTime.parse(json["updatedAt"]),
       );
 
   Map<String, dynamic> toJson() => {
         "createdAt": createdAt.toIso8601String(),
         "id": id,
-        "idCard": List<dynamic>.from(idCard.map((x) => x)),
+        "idCard": List<dynamic>.from(idCard?.map((x) => x)??[]),
         "updatedAt": updatedAt.toIso8601String(),
       };
 }
