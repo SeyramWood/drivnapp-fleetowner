@@ -157,10 +157,7 @@ class UserApiService {
   Future logOut() async {
     try {
       await storage.deleteAll();
-      await SharedPreferencesManager.instance.clearStorage();
-      var data1 = await storage.read(key: 'refreshToken');
-      var data2 = SharedPreferencesManager.instance.getString('userID', '');
-      print('token: $data1\nid: $data2');
+      await SharedPreferencesManager.instance.removeUser();
     } catch (e) {
       rethrow;
     }
@@ -199,7 +196,7 @@ class UserApiService {
         throw CustomException('Failed to get your profile');
       }
       final jsonBody = jsonDecode(response.body);
-      print(jsonBody); 
+      print(jsonBody);
       return Profile.fromJson(jsonBody);
     } catch (e) {
       rethrow;

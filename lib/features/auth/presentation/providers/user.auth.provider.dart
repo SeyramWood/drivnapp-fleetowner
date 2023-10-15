@@ -285,6 +285,10 @@ class UserAuthProvider extends ChangeNotifier {
 
   Future<Either<String, String>> logOut() async {
     final result = await logout(NoParams());
+    _userID = prefs.getString('userID', '');
+    print(prefs.getString('userID', ''));
+    print(_userID);
+    notifyListeners();
     return result.fold(
       (failure) => Left(failure.message),
       (success) async {

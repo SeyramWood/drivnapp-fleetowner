@@ -7,8 +7,7 @@ class SharedPreferencesManager {
   SharedPreferencesManager._();
 
   // Singleton instance
-  static final SharedPreferencesManager instance =
-      SharedPreferencesManager._();
+  static final SharedPreferencesManager instance = SharedPreferencesManager._();
 
   // Initialize SharedPreferences when first accessed
   Future<void> init() async {
@@ -24,15 +23,15 @@ class SharedPreferencesManager {
     await _prefs.setString(key, value);
   }
 
-  Future<void> clearStorage() async {
-    await _prefs.clear();
+  Future<void> removeUser() async {
+    await _prefs.remove('userID');
   }
 
-
- bool getBool(String key, bool defaultValue) {
+  bool getBool(String key, bool defaultValue) {
     return _prefs.getBool(key) ?? defaultValue;
   }
-  Future<void> setBool(String key,bool value) async {
-    await _prefs.setBool(key,value);
+
+  Future<void> setBool(String key, bool value) async {
+    await _prefs.setBool(key, value);
   }
 }

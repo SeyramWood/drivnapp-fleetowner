@@ -264,12 +264,12 @@ class _ProfileViewState extends State<ProfileView> {
                             value.fold((failure) {
                               LoadingDialog.hideLoadingDialog(context);
                               showCustomSnackBar(context, failure, red);
-                            }, (success) async {
-                              await Navigator.of(context)
-                                  .pushReplacement(
+                            }, (success)  {
+                               Navigator.of(context)
+                                  .pushAndRemoveUntil(
                                     MaterialPageRoute(
                                       builder: (context) => const LoginView(),
-                                    ),
+                                    ),(route) => false,
                                   )
                                   .then(
                                     (value) => showCustomSnackBar(

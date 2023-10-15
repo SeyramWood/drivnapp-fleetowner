@@ -153,160 +153,163 @@ class _DProfileViewState extends State<DProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DProfile>(
-        future: profile,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Something went wrong'),
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () => getProfile(),
-                  )
-                ],
-              ),
-            );
-          }
-          if (snapshot.hasData) {
-            final profile = snapshot.data!.data;
-            return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                actions: [
-                  IconButton(
-                    onPressed: () async {
-                      // Show the edit profile dialog when the edit icon is pressed
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              // Show the edit profile dialog when the edit icon is pressed
 
-                      showEditProfileDialog(snapshot.data!);
-                    },
-                    icon: const ImageIcon(
-                      AssetImage('assets/icons/edit.png'),
-                      color: blue,
-                    ),
-                  ),
-                ],
-              ),
-              body: SingleChildScrollView(
+              showEditProfileDialog(await profile!);
+            },
+            icon: const ImageIcon(
+              AssetImage('assets/icons/edit.png'),
+              color: blue,
+            ),
+          ),
+        ],
+      ),
+      body: FutureBuilder<DProfile>(
+          future: profile,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * .01,
-                    ),
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CircleAvatar(
-                            radius: 35,
-                            child: profile.avatar != null
-                                ? showImage(
-                                    imageUrl: profile.avatar!,
-                                    radius: 50,
-                                  )
-                                : // Display the picked image
-                                {
-                                    Text(
+                    const Text('Something went wrong'),
+                    IconButton(
+                      icon: const Icon(Icons.refresh),
+                      onPressed: () => getProfile(),
+                    )
+                  ],
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              final profile = snapshot.data!.data;
+              return SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0)
+                      .copyWith(top: 20),
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircleAvatar(
+                              radius: 35,
+                              child: profile.avatar.isNotEmpty
+                                  ? showImage(
+                                      imageUrl: profile.avatar,
+                                      radius: 50,
+                                    )
+                                  : // Display the picked image
+
+                                  Text(
                                       '${profile.firstName[0]} ${profile.lastName[0]}',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
                                         color: black,
                                       ),
-                                    )
-                                  }),
-                        Positioned(
-                          right: -10, // Adjust the position as needed
-                          bottom: -15, // Adjust the position as needed
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.camera_alt,
-                              color: black,
+                                    )),
+                          Positioned(
+                            right: -10, // Adjust the position as needed
+                            bottom: -15, // Adjust the position as needed
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.camera_alt,
+                                color: black,
+                              ),
+                              onPressed:
+                                  updateImage, // Allow users to pick an image
                             ),
-                            onPressed:
-                                updateImage, // Allow users to pick an image
                           ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height * .01,
+                      ),
+                      Text(
+                        '${profile.firstName} ${profile.lastName}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(fontSize: 18),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height * .01,
+                      ),
+                      Text(
+                        'Class ${profile.document?.licenseType}',
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * .01,
-                    ),
-                    Text(
-                      '${profile.firstName} ${profile.lastName}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontSize: 18),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * .01,
-                    ),
-                    Text(
-                      'Class ${profile.document?.licenseType}',
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
                       ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * .02,
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Email/Phone',
-                        style: Theme.of(context).textTheme.bodyLarge,
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height * .02,
                       ),
-                      subtitle: Text(
-                        profile.username,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      ListTile(
+                        title: Text(
+                          'Email/Phone',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        subtitle: Text(
+                          profile.username,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        // trailing: Icon(Icons.arrow_forward_ios),
                       ),
-                      // trailing: Icon(Icons.arrow_forward_ios),
-                    ),
-                    divider,
-                    ListTile(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const VerifyingView(),
-                      )),
-                      title: Text(
-                        'Document verification',
-                        style: Theme.of(context).textTheme.bodyLarge,
+                      divider,
+                      ListTile(
+                        onTap: () =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const VerifyingView(),
+                        )),
+                        title: Text(
+                          'Document verification',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios),
                       ),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                    ),
-                    SizedBox(height: MediaQuery.sizeOf(context).height),
-                    ListTile(
-                      onTap: () async {
-                        LoadingDialog.showLoadingDialog(context);
-                        await context.read<UserAuthProvider>().logOut().then(
-                          (value) {
-                            value.fold((failure) {
-                              LoadingDialog.hideLoadingDialog(context);
-                              showCustomSnackBar(context, failure,red);
-                            }, (success) {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginView(),
-                                ),
-                                (route) => false,
-                              );
-                              showCustomSnackBar(context, success,Colors.green);
-                            });
-                          },
-                        );
-                      },
-                      leading: const ImageIcon(
-                          AssetImage('assets/icons/logout.png')),
-                      title: const Text('Logout'),
-                    ),
-                  ],
+                      const Spacer(),
+                      ListTile(
+                        onTap: () async {
+                          LoadingDialog.showLoadingDialog(context);
+                          await context.read<UserAuthProvider>().logOut().then(
+                            (value) {
+                              value.fold((failure) {
+                                LoadingDialog.hideLoadingDialog(context);
+                                showCustomSnackBar(context, failure, red);
+                              }, (success) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginView(),
+                                  ),
+                                  (route) => false,
+                                );
+                                showCustomSnackBar(
+                                    context, success, Colors.green);
+                              });
+                            },
+                          );
+                        },
+                        leading: const ImageIcon(
+                            AssetImage('assets/icons/logout.png')),
+                        title: const Text('Logout'),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        });
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          }),
+    );
   }
 }
 // 
