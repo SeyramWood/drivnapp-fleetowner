@@ -23,7 +23,6 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
         children: [
           const Text('Telephone', style: TextStyle(color: yellow)),
           Container(
-            height: 50,
             padding: const EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
               border: Border.all(color: white),
@@ -34,15 +33,22 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
                 context.read<AuthSharedProvider>().phoneNumber =
                     number.phoneNumber.toString();
               },
+              spaceBetweenSelectorAndTextField: 5,
               onInputValidated: (bool value) {},
               selectorConfig: const SelectorConfig(
+                setSelectorButtonAsPrefixIcon: true,
+                trailingSpace: false,
                 selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
               ),
               cursorColor: white,
               ignoreBlank: true,
               initialValue: number,
               autoValidateMode: AutovalidateMode.disabled,
-              selectorTextStyle: const TextStyle(color: white),
+              selectorTextStyle: const TextStyle(
+                color: white,
+                fontSize: 17,
+                fontWeight: FontWeight.w400,
+              ),
               textFieldController: widget.controller,
               formatInput: true,
               keyboardAction: TextInputAction.next,
@@ -51,11 +57,13 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
                 decimal: false,
               ),
               inputDecoration: const InputDecoration(
-                border: UnderlineInputBorder(borderSide: BorderSide.none),
-                focusedErrorBorder:
-                    UnderlineInputBorder(borderSide: BorderSide.none),
-              ),
-              textStyle: const TextStyle(color: white),
+                  border: UnderlineInputBorder(borderSide: BorderSide.none),
+                  focusedErrorBorder:
+                      UnderlineInputBorder(borderSide: BorderSide.none),
+                  errorBorder:
+                      UnderlineInputBorder(borderSide: BorderSide.none)),
+              textStyle: const TextStyle(
+                  color: white, fontSize: 17, fontWeight: FontWeight.w500),
               onSaved: (PhoneNumber number) {},
               validator: (p0) =>
                   p0 == null || p0.isEmpty ? 'Phone number is required' : null,

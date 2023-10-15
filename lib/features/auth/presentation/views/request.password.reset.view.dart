@@ -26,7 +26,6 @@ class _RequestPinViewState extends State<RequestPinView> {
     if (_formKey.currentState?.validate() ?? false) {
       // Form is valid, proceed with sign-in logic
       // You can access the entered values using _controllerUsername.text and _controllerPassword.text
-      print('Signing in...');
     }
   }
 

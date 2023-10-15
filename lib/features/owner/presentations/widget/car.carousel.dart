@@ -1,7 +1,6 @@
 import 'package:drivn/shared/utils/cached.network.image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../shared/utils/constants/colors.dart';
 
 class CarCarousel extends StatefulWidget {
   const CarCarousel({

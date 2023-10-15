@@ -1,19 +1,23 @@
 import 'package:drivn/features/owner/presentations/views/home.dart';
 import 'package:drivn/features/auth/presentation/views/verifyOwner/identity.info.view.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
-import 'package:drivn/features/user/data/api/api.service.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'driver.doc.dart';
 
-class GetVerifiedOption extends StatelessWidget {
+class GetVerifiedOption extends StatefulWidget {
   const GetVerifiedOption({super.key});
 
   @override
+  State<GetVerifiedOption> createState() => _GetVerifiedOptionState();
+}
+
+class _GetVerifiedOptionState extends State<GetVerifiedOption> {
+ 
+
+  @override
   Widget build(BuildContext context) {
-    var provider = context.read<APIService>();
     return Scaffold(
         backgroundColor: blue,
         body: Center(
@@ -45,8 +49,8 @@ class GetVerifiedOption extends StatelessWidget {
                   color: white,
                   child: ListTile(
                     onTap: () {
-                      provider.setfield('idCard');
-                      provider.setPath('proof-identity');
+                      
+
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const ProofIDView(),
                       ));
@@ -76,8 +80,7 @@ class GetVerifiedOption extends StatelessWidget {
                   color: white,
                   child: ListTile(
                     onTap: () {
-                      provider.setfield('documents');
-                      provider.setPath('drivers-document');
+                      
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const DriverDocsView(),
@@ -101,36 +104,19 @@ class GetVerifiedOption extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Align(
-                //   alignment: Alignment.bottomRight,
-                //   child: TextButton(
-                //     onPressed: () {
-                //       Navigator.of(context).pushAndRemoveUntil(
-                //         MaterialPageRoute(
-                //           builder: (context) => const OMainPage(),
-                //         ),
-                //         (route) => false,
-                //       );
-                //     },
-                //     child: Text(
-                //       'Later',
-                //       style: Theme.of(context)
-                //           .textTheme
-                //           .bodyLarge!
-                //           .copyWith(color: white),
-                //     ),
-                //   ),
-                // ),
 
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height / 6,
                 ),
                 CustomElevatedButton(
                   backgroundColor: black,
-                  onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => const OMainPage()),
-                      (route) => false),
+                  onPressed: () {
+                    
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => const OMainPage()),
+                        (route) => false);
+                  },
                   child: const Text('Done'),
                 )
               ],

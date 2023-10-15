@@ -34,7 +34,7 @@ class InfoCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Text(
-                      info?.bookingStatus ?? '',
+                      info?.tripStatus ?? info?.bookingStatus ?? '',
                       style: const TextStyle(backgroundColor: white),
                     ),
                   ),

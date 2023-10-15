@@ -1,4 +1,5 @@
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/auth/presentation/views/verify.option.view.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
@@ -9,7 +10,10 @@ import 'package:provider/provider.dart';
 import '../../../../shared/errors/error.alert.dart';
 
 class OTPInputView extends StatefulWidget {
-  const OTPInputView({Key? key}) : super(key: key);
+  final String? phoneNumber;
+  final String? password;
+  const OTPInputView({Key? key, this.phoneNumber, this.password})
+      : super(key: key);
 
   @override
   State<OTPInputView> createState() => _OTPInputViewState();
@@ -66,9 +70,10 @@ class _OTPInputViewState extends State<OTPInputView> {
                   ),
                   child: CustomElevatedButton(
                     backgroundColor: black,
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formkey.currentState!.validate()) {
-                        context
+                        LoadingDialog.showLoadingDialog(context);
+                        await context
                             .read<UserAuthProvider>()
                             .verifyUser(
                               otpController.text,
@@ -76,11 +81,22 @@ class _OTPInputViewState extends State<OTPInputView> {
                             )
                             .then(
                           (failure) {
-                            if (failure != null) {
-                              showErrorDialogue(context, failure);
-                              print(failure);
+                            if (failure == null) {
+                              context
+                                  .read<UserAuthProvider>()
+                                  .logIn(widget.phoneNumber!, widget.password!);
                             }
-                            otpController.clear();
+                            LoadingDialog.hideLoadingDialog(context);
+                            if (failure != null) {
+                              return showErrorDialogue(context, failure);
+                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const VerifyOptionView(),
+                              ),
+                            );
+                            // otpController.clear();
                           },
                         );
                       }
@@ -93,7 +109,7 @@ class _OTPInputViewState extends State<OTPInputView> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 GestureDetector(
                   onTap: () {},

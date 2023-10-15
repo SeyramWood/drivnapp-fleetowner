@@ -1,12 +1,12 @@
 import 'package:drivn/features/driver/data/api/driver.api.service.dart';
 import 'package:drivn/features/driver/presentation/views/my.trips.dart';
 import 'package:drivn/features/driver/presentation/views/request.view.dart';
-import 'package:drivn/features/driver/presentation/views/summary.view.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/constants/colors.dart';
 import '../../../user/presentation/view/driver.profile.view.dart';
 import '../provider/index.notifier.dart';
+import '../provider/toggle.dart';
 
 class DMainPage extends StatefulWidget {
   const DMainPage({super.key});
@@ -19,10 +19,14 @@ class _DMainPageState extends State<DMainPage> {
   DriverApiService driverApiService = DriverApiService();
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        GoOnline().init();
+      },
+    );
     super.initState();
   }
 
- 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -33,7 +37,7 @@ class _DMainPageState extends State<DMainPage> {
           children: const [
             RequestView(),
             MyTrips(),
-            SummaryView(),
+            // SummaryView(),
             DProfileView(),
           ],
         ),
@@ -54,9 +58,9 @@ class _DMainPageState extends State<DMainPage> {
                 label: ''),
             BottomNavigationBarItem(
                 icon: ImageIcon(AssetImage('assets/icons/car.png')), label: ''),
-            BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/icons/note.png')),
-                label: ''),
+            // BottomNavigationBarItem(
+            //     icon: ImageIcon(AssetImage('assets/icons/note.png')),
+            //     label: ''),
             BottomNavigationBarItem(
               icon: ImageIcon(
                 AssetImage('assets/icons/profile.png'),
