@@ -20,8 +20,10 @@ class AuthState extends StatefulWidget {
 
 class _AuthStateState extends State<AuthState> {
   String? user;
+  String? currentUser;
   late String accountType;
   final prefs = getIt<FlutterSecureStorage>();
+  final _prefs = SharedPreferencesManager.instance;
 
   @override
   void initState() {
@@ -33,6 +35,7 @@ class _AuthStateState extends State<AuthState> {
 
   hasAccess() async {
     user = await prefs.read(key: 'refreshToken');
+    currentUser = _prefs.getString('userID', '');
   }
 
   checkOnboardingStatus() async {
@@ -41,7 +44,6 @@ class _AuthStateState extends State<AuthState> {
 
     if (onboardingShown) {
       if (accountType.isEmpty) {
-        print(accountType);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const AccountTypeView()));
       }
@@ -54,7 +56,7 @@ class _AuthStateState extends State<AuthState> {
 
   @override
   Widget build(BuildContext context) {
-    if (user != null) {
+    if (user != null && (currentUser != null || currentUser!.isNotEmpty)) {
       return accountType == 'fleet-owner'
           ? const OMainPage()
           : const DMainPage();
