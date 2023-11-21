@@ -24,8 +24,11 @@ class UserRepoImpl implements UserRepo {
       return const Right<Failure, void>(null);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Unkown error'));
     }
@@ -39,8 +42,11 @@ class UserRepoImpl implements UserRepo {
       return Right(id);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -53,8 +59,11 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('$e'));
     }
@@ -69,8 +78,11 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -83,8 +95,11 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -97,8 +112,11 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -112,8 +130,11 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -127,8 +148,11 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -142,8 +166,11 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -156,8 +183,11 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('$e'));
     }
@@ -170,8 +200,11 @@ class UserRepoImpl implements UserRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('$e'));
     }

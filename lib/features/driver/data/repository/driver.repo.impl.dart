@@ -21,8 +21,11 @@ class DriverRepoImpl implements DriverRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Failed to fetch requests.'));
     }
@@ -35,8 +38,11 @@ class DriverRepoImpl implements DriverRepo {
       return const Right(null);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Failed to accept request. Try again.'));
     }
@@ -50,8 +56,11 @@ class DriverRepoImpl implements DriverRepo {
       return const Right(null);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Failed to cancel request. Try again.'));
     }
@@ -64,8 +73,11 @@ class DriverRepoImpl implements DriverRepo {
       return Right(result);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Failed to fetch trips.'));
     }
@@ -78,8 +90,11 @@ class DriverRepoImpl implements DriverRepo {
       return const Right(null);
     } on CustomException catch (error) {
       return Left(Failure(error.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Failed to go online. Try again.'));
     }

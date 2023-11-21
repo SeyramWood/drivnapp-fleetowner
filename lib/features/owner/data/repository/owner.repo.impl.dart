@@ -77,8 +77,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return Right(result);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Failed to fetch vehicls'));
     }
@@ -91,8 +94,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return Right(result);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Failed to fetch drivers'));
     }
@@ -105,8 +111,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return Right(result);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Failed to fetch request'));
     }
@@ -120,8 +129,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return Right(result);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -135,8 +147,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right(null);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -150,8 +165,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right(null);
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -164,8 +182,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right('Insurance added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -179,8 +200,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right('Document added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -194,8 +218,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right('Image(s) added successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -209,8 +236,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right('Document deleted successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -223,8 +253,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right('Image deleted successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
@@ -238,8 +271,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right('Document updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wron.'));
     }
@@ -253,8 +289,11 @@ class OwnerRepoImpl implements OwnerRepo {
       return const Right('Image updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
-    } on SocketException {
-      return Left(Failure('You are offline. Check your network.'));
+    } on SocketException catch (se) {
+      return Left(Failure(
+          se.message == "Failed host lookup: 'devapi.drivnapp.net'"
+              ? "You are offline. Connect and retry"
+              : se.message));
     } catch (e) {
       return Left(Failure('Something went wrong.'));
     }
