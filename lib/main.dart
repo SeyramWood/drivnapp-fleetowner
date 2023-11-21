@@ -1,17 +1,13 @@
 import 'package:drivn/config/themes/light.theme.dart';
 import 'package:drivn/features/auth/presentation/providers/auth.shared.provider.dart';
-import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
 import 'package:drivn/features/auth/presentation/views/authState/auth.state.dart';
 import 'package:drivn/features/driver/presentation/dependency.injection/bindings.dart';
 import 'package:drivn/features/owner/presentations/providers/available.or.booked.dart';
 import 'package:drivn/features/user/presentation/dependency/user.dependency.injection.dart';
 import 'package:drivn/shared/interceptor/http.client.interceptor.dart';
-import 'package:drivn/shared/utils/constants/google.signinig.dart';
 import 'package:drivn/shared/utils/shared.prefs.manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'features/onboarding_screens/onboard.dart';
 import 'features/owner/presentations/dependency/owner.dependency.injection.dart';
 
 void main()async {
