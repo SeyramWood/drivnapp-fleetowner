@@ -9,7 +9,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import 'package:drivn/features/owner/domain/entities/vehicle.model.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ManageImagesView extends StatefulWidget {
