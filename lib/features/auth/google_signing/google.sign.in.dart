@@ -77,6 +77,7 @@ class AuthService {
         );
       }
 
+      // ignore: unused_local_variable
       final String googleAccessToken = result.accessToken!;
 
       // Send request to backend with access token
