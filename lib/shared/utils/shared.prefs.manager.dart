@@ -7,8 +7,7 @@ class SharedPreferencesManager {
   SharedPreferencesManager._();
 
   // Singleton instance
-  static final SharedPreferencesManager instance =
-      SharedPreferencesManager._();
+  static final SharedPreferencesManager instance = SharedPreferencesManager._();
 
   // Initialize SharedPreferences when first accessed
   Future<void> init() async {
@@ -24,7 +23,15 @@ class SharedPreferencesManager {
     await _prefs.setString(key, value);
   }
 
-  // Add more methods for other data types as needed
+  Future<void> removeUser() async {
+    await _prefs.remove('userID');
+  }
 
-  // Example: int, double, bool, etc.
+  bool getBool(String key, bool defaultValue) {
+    return _prefs.getBool(key) ?? defaultValue;
+  }
+
+  Future<void> setBool(String key, bool value) async {
+    await _prefs.setBool(key, value);
+  }
 }

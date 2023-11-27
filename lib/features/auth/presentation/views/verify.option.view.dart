@@ -1,3 +1,4 @@
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/views/verifyDriver.view.dart';
 import 'package:drivn/features/auth/presentation/views/verifyOwner/verify.user.view.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
@@ -6,14 +7,19 @@ import 'package:provider/provider.dart';
 
 import '../../../driver/presentation/views/main.page.dart';
 import '../../../owner/presentations/views/home.dart';
-import '../../../user/data/api/api.service.dart';
 
-class VerifyOptionView extends StatelessWidget {
+class VerifyOptionView extends StatefulWidget {
   const VerifyOptionView({super.key});
 
   @override
+  State<VerifyOptionView> createState() => _VerifyOptionViewState();
+}
+
+class _VerifyOptionViewState extends State<VerifyOptionView> {
+  
+  @override
   Widget build(BuildContext context) {
-    var isDriver = context.read<APIService>().accTypeIsOwner;
+    var isDriver = context.read<UserAuthProvider>().accountType;
     return Scaffold(
       backgroundColor: blue,
       body: Center(
@@ -38,7 +44,7 @@ class VerifyOptionView extends StatelessWidget {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                           builder: (context) =>
-                              isDriver ? const OMainPage() : const DMainPage()),
+                              isDriver=='fleet-owners' ? const OMainPage() : const DMainPage()),
                       (route) => false,
                     );
                   },
@@ -53,14 +59,17 @@ class VerifyOptionView extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.06,
                 ),
                 ElevatedButton(
-                  onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => isDriver
-                          ? const GetVerifiedOption()
-                          : const VerifyDriverView(),
-                    ),
-                    (route) => false,
-                  ),
+                  onPressed: () {
+
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => isDriver=='fleet-owners' 
+                            ? const GetVerifiedOption()
+                            : const VerifyDriverView(),
+                      ),
+                      (route) => false,
+                    );
+                  },
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(white)),
                   child: const Padding(

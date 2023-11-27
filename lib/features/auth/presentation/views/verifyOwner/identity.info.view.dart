@@ -1,9 +1,12 @@
+
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../../shared/errors/error.alert.dart';
 
 class ProofIDView extends StatelessWidget {
   const ProofIDView({super.key});
@@ -14,7 +17,10 @@ class ProofIDView extends StatelessWidget {
     final height = MediaQuery.sizeOf(context).height;
     final provider = context.read<UserAuthProvider>();
     return Scaffold(
-        appBar: AppBar(backgroundColor: blue),
+        appBar: AppBar(
+          backgroundColor: blue,
+          foregroundColor: white,
+        ),
         backgroundColor: blue,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -51,44 +57,68 @@ class ProofIDView extends StatelessWidget {
                 ),
                 SizedBox(
                   height: height / 2.5,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        context.watch<UserAuthProvider>().files?.length ?? 0,
-                        (index) {
-                          String filename = context
-                              .watch<UserAuthProvider>()
-                              .files![index]
-                              .path
-                              .split('/')
-                              .last;
-                          return Container(
-                            padding: const EdgeInsets.all(10),
-                            color: white,
-                            child: Text(filename),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                  child: context.watch<UserAuthProvider>().files.isNotEmpty
+                      ? Center(
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(5),
+                                    topLeft: Radius.circular(5),
+                                    topRight: Radius.circular(20))),
+                            padding: const EdgeInsets.all(20),
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 50, horizontal: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(
+                                context.watch<UserAuthProvider>().files.length,
+                                (index) {
+                                  String filename = context
+                                      .watch<UserAuthProvider>()
+                                      .files[index]
+                                      .path
+                                      .split('/')
+                                      .last;
+                                  return Text(
+                                    '(${index + 1}) $filename',
+                                    overflow: TextOverflow.ellipsis,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                      : null,
                 ),
                 CustomElevatedButton(
-                  onPressed: () {
-                    provider
-                        .submitUserID(
-                          context,
-                        )
-                        .then(
-                          (value) => ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text('Added successfully'),
-                          )),
-                        );
+                  onPressed: () async {
+                    LoadingDialog.showLoadingDialog(context);
+                    await provider
+                        .submitUserId(
+                      context,
+                      context.read<UserAuthProvider>().files,
+                      provider.userID,
+                    )
+                        .then((value) {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      if (value is String) {
+                        showErrorDialogue(context, value);
+                      }
+
+                      context.read<UserAuthProvider>().emptyFiles();
+                      return ScaffoldMessenger.of(context)
+                          .showSnackBar(const SnackBar(
+                        content: Text('Added successfully'),
+                      ));
+                    });
                   },
                   backgroundColor: black,
                   child: const Text('Submit for review'),
-                ).loading(provider.isLoading)
+                )
               ],
             ),
           ),

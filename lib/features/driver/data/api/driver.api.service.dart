@@ -1,119 +1,145 @@
 import 'dart:convert';
 
 import 'package:drivn/features/driver/domain/entities/trips.model.dart';
+import 'package:drivn/shared/errors/exception.dart';
 import 'package:drivn/shared/utils/constants/base.url.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../shared/interceptor/http.client.interceptor.dart';
 import '../../../../shared/utils/shared.prefs.manager.dart';
+import '../../../owner/presentations/dependency/owner.dependency.injection.dart';
+import '../../domain/entities/driver.model.dart';
 import '../../domain/entities/request.model.dart';
 
+final httpClient = http.Client();
+
 class DriverApiService {
+  final storage = getIt<FlutterSecureStorage>();
+  final customClient = HttpClientWithInterceptor(httpClient);
   //set driver needed variables
   Future onInit(String userID) async {
     final prefs = SharedPreferencesManager.instance;
-    final url = Uri.parse('$baseUrl/drivers/$userID');
+
+    final url = '$baseUrl/drivers/$userID';
     try {
-      final response = await http.get(url);
-      final responseBody = jsonDecode(response.body);
+      final response = await customClient.get(url);
+      final responseBody = jsonDecode(response.body)['data'];
 
       if (response.statusCode != 200) {
-        print(response.reasonPhrase);
       }
       if (response.statusCode == 200) {
         await prefs.setString(
           'isOnline',
-          responseBody['data']['status'],
+          responseBody['status'],
         );
         await prefs.setString(
           'cardStatus',
-          responseBody['data']['document']['cardStatus'],
+          responseBody['document']['cardStatus'],
         );
         await prefs.setString(
           'licenseStatus',
-          responseBody['data']['document']['licenseStatus'],
+          responseBody['document']['licenseStatus'],
         );
       }
     } catch (e) {
-      print(e);
+      return;
+    }
+  }
+
+  Future<DriverObject> fetchDriver(String userID) async {
+    final url = '$baseUrl/drivers/$userID';
+    try {
+      final response = await customClient.get(url);
+      if (response.statusCode != 200) {
+      }
+      return DriverObject.fromJson(json.decode(response.body));
+    } catch (e) {
       rethrow;
     }
   }
 
   Future<List<DRequest>> fetchRequest(String userID) async {
-    final uri = Uri.parse('$baseUrl/booking/requests/driver/$userID');
+    final uri = '$baseUrl/booking/requests/driver/$userID';
     try {
-      final response = await http.get(uri);
+      final response = await customClient.get(uri);
 
       if (response.statusCode != 200) {
-        print(response.reasonPhrase);
+        throw CustomException("couldn't fetch requests");
       }
       return driverRequestModelFromJson(response.body).data!.data;
     } catch (e) {
-      print(e);
-      throw Exception("couldn't fetch requests");
+      rethrow;
     }
   }
 
   Future acceptRequest(String requestID) async {
-    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+    final url = '$baseUrl/booking/requests/accept/$requestID';
     try {
       final body = {
         "requestType": "driver",
         "status": "accepted",
         "reason": ""
       };
-      final response = await http.put(url, body: body);
-      if (response.statusCode != 200 || response.statusCode == 202) {
-        print(response.statusCode);
+      final response = await customClient.put(url, body: body);
+      if (response.statusCode != 200) {
+        throw CustomException('An error occurred');
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 
   Future<List<DTrip>> fetchTrips(String userID) async {
-    final uri = Uri.parse('$baseUrl/bookings/driver/$userID');
+    final uri = '$baseUrl/bookings/driver/$userID';
     try {
-      final response = await http.get(uri);
+      final response = await customClient.get(uri);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        CustomException("couldn't fetch vehicles");
       }
       return driverTripModelFromJson(response.body).data!.data;
     } catch (e) {
-      print(e);
-      throw Exception("couldn't fetch vehicles");
+      rethrow;
     }
   }
 
   Future cancelRequest(String requestID, String reason) async {
-    final url = Uri.parse('$baseUrl/booking/requests/accept/$requestID');
+    final url = '$baseUrl/booking/requests/accept/$requestID';
     final body = {
       "requestType": "driver",
       "status": "declined",
       "reason": reason
     };
     try {
-      final response = await http.put(url, body: body);
+      final response = await customClient.put(url, body: body);
       if (response.statusCode != 200) {
-        print(response.statusCode);
+        throw CustomException('Could not cancel request.Retry!');
       }
     } catch (e) {
-      print(e);
+      rethrow;
+    }
+  }
+
+  Future updateTripStatus(String bookingID, String status) async {
+    final url = '$baseUrl/bookings/$bookingID/trip-status/$status';
+    try {
+      final response = await customClient.put(url);
+      if (response.statusCode != 200) {
+      }
+    } catch (e) {
     }
   }
 
   Future goOnline(String userID, String status) async {
-    final url = Uri.parse('$baseUrl/drivers/$userID/update-status/$status');
+    final url = '$baseUrl/drivers/$userID/update-status/$status';
     try {
       final body = {'onlineStatus': status};
-      var response = await http.put(url, body: body);
+      var response = await customClient.put(url, body: body);
       if (response.statusCode != 200) {
-        print('request failed with code:${response.statusCode}');
+        throw CustomException("Couldn't switch.Retry!");
       }
-      print(response.body);
     } catch (e) {
-      print(e);
-      throw Exception(e);
+      rethrow;
     }
   }
 }

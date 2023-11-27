@@ -1,5 +1,4 @@
 import 'package:drivn/features/driver/domain/entities/request.model.dart' as r;
-import 'package:drivn/shared/utils/cached.network.image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/utils/audio.player.dart';

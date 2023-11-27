@@ -2,11 +2,11 @@ name: Build and Release
 on:
   push:
     branches:
-      - new
+      - dev
 
 jobs:
   build-and-release-artifacts:
-    if: ${{github.ref == 'refs/heads/new'}}
+    if: ${{github.ref == 'refs/heads/dev'}}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3.1.0
@@ -43,7 +43,7 @@ jobs:
           zip -r app.ipa Payload
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/debug/*, build/ios/iphoneos/app.ipa"
+          artifacts: "build/app/outputs/apk/debug/*, build/app/outputs/bundle/release/*.aab, build/ios/iphoneos/app.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.DRIVN_TOKEN }}
 

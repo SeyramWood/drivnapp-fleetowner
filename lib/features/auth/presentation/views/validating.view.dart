@@ -1,6 +1,9 @@
+import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
+import 'package:drivn/features/driver/data/api/driver.api.service.dart';
 import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../shared/utils/constants/dimensions.dart';
 import '../../../../shared/utils/shared.prefs.manager.dart';
@@ -17,11 +20,16 @@ class _VerifyingViewState extends State<VerifyingView> {
   late String idStatus;
   late String licenseStatus;
   final prefs = SharedPreferencesManager.instance;
+  void initialize() async {
+    await DriverApiService().onInit(context.read<UserAuthProvider>().userID);
+  }
+
   @override
   initState() {
-    super.initState();
+    initialize();
     idStatus = prefs.getString('cardStatus', '');
     licenseStatus = prefs.getString('licenseStatus', '');
+    super.initState();
   }
 
   @override
@@ -62,7 +70,10 @@ class _VerifyingViewState extends State<VerifyingView> {
                 style: TextStyle(color: white, fontSize: 15),
               ),
             ),
-            title: const Text('Verifying national id'),
+            title: Text(
+              'Verifying national ID',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             trailing: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
@@ -86,7 +97,10 @@ class _VerifyingViewState extends State<VerifyingView> {
                 style: TextStyle(color: white, fontSize: 15),
               ),
             ),
-            title: const Text('Verifying driving licence'),
+            title: Text(
+              'Verifying driving licence',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             trailing: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
