@@ -2,11 +2,11 @@ name: Build and Release
 on:
   push:
     branches:
-      - dev
+      - new
 
 jobs:
   build-and-release-artifacts:
-    if: ${{github.ref == 'refs/heads/dev'}}
+    if: ${{github.ref == 'refs/heads/new'}}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3.1.0
