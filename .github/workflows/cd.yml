@@ -4,6 +4,9 @@ on:
     branches:
       - dev
 
+env:
+  PROPERTIES_PATH: "./android/key.properties"
+
 jobs:
   build-and-release-artifacts:
     if: ${{github.ref == 'refs/heads/dev'}}
