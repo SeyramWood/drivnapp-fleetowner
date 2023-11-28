@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev
+      - master
 
 env:
   PROPERTIES_PATH: "./android/key.properties"
