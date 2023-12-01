@@ -2,6 +2,8 @@ import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/features/owner/domain/entities/update.rental.model.dart';
 import 'package:drivn/features/owner/presentations/widget/form.field.to.add.driver.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
+import 'package:drivn/shared/show.snacbar.dart';
+import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +35,7 @@ class _UpdateRentalDialogState extends State<UpdateRentalDialog> {
     locationController.text = widget.vehicle.rental?.location ?? '';
     priceController.text = widget.vehicle.rental?.price.toString() ?? '';
     driverController.text =
-        '${widget.vehicle.rental?.driver?.firstName ?? ''} ${widget.vehicle.rental?.driver?.lastName ?? ''}';
+        '${widget.vehicle.rental?.driver?.firstName} ${widget.vehicle.rental?.driver?.lastName}';
   }
 
   @override
@@ -48,24 +50,6 @@ class _UpdateRentalDialogState extends State<UpdateRentalDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // AvailabilityTextField(
-                //   onTap: () {
-                //     // Show the AddLocationField as a bottom sheet
-                //     showBottomSheet(
-                //       context: context,
-                //       builder: (context) {
-                //         return const AddLocationField();
-                //       },
-                //     );
-                //   },
-                //   validator: (value) =>
-                //       value!.isEmpty ? 'Please add location' : null,
-                //   title: 'Location',
-                //   readOnly: true,
-                //   controller: locationController,
-                //   prefixIcon:
-                //       const ImageIcon(AssetImage('assets/icons/location.png')),
-                // ),
                 AddLocationField(
                   controller: locationController,
                   onLocationSelected: (value) {
@@ -87,12 +71,12 @@ class _UpdateRentalDialogState extends State<UpdateRentalDialog> {
                   controller: driverController,
                 ),
                 const SizedBox(height: 20),
-
                 Center(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width / 3,
                     child: CustomElevatedButton(
                       onPressed: () async {
+                        print(driverController.text);
                         if (formKey.currentState!.validate()) {
                           LoadingDialog.showLoadingDialog(context);
                           UpdateRentalModel updateRentalModel =
@@ -110,21 +94,21 @@ class _UpdateRentalDialogState extends State<UpdateRentalDialog> {
                               .updateRental(
                                   '${widget.vehicle.id}', updateRentalModel)
                               .then(
-                            (failure) {
+                            (value) {
                               LoadingDialog.hideLoadingDialog(context);
-
-                              if (failure is String && failure.isNotEmpty) {
-                                showErrorDialogue(context, failure);
-                              } else {
+                              value.fold(
+                                  (failure) => showErrorDialogue(
+                                        context,
+                                        failure,
+                                      ), (success) {
                                 Navigator.of(context)
                                     .pop(widget.vehicle.availability);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Rental updated successfully'),
-                                  ),
+                                showCustomSnackBar(
+                                  context,
+                                  success,
+                                  green,
                                 );
-                              }
+                              });
                             },
                           );
                         }

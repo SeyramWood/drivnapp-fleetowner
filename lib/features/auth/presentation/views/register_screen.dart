@@ -18,7 +18,7 @@ import '../widget/google.button.dart';
 import 'otp.input.view.dart';
 
 class RegisterView extends StatefulWidget {
-  const RegisterView({Key? key}) : super(key: key);
+  const RegisterView({super.key});
 
   @override
   State<RegisterView> createState() => _RegisterViewState();

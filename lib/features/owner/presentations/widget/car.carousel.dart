@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class CarCarousel extends StatefulWidget {
   const CarCarousel({
-    Key? key,
+    super.key,
     required this.images,
-  }) : super(key: key);
+  });
   final List<dynamic> images;
   @override
   State<CarCarousel> createState() => _CarCarouselState();

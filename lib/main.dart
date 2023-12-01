@@ -8,6 +8,7 @@ import 'package:drivn/shared/interceptor/http.client.interceptor.dart';
 import 'package:drivn/shared/utils/shared.prefs.manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'features/owner/presentations/dependency/owner.dependency.injection.dart';
 
 void main()async {

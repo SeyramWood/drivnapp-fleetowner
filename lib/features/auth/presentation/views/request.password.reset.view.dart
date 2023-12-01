@@ -7,7 +7,7 @@ import '../../../../shared/utils/validators.dart';
 import 'otp.input.view.dart';
 
 class RequestPinView extends StatefulWidget {
-  const RequestPinView({Key? key}) : super(key: key);
+  const RequestPinView({super.key});
 
   @override
   _RequestPinViewState createState() => _RequestPinViewState();

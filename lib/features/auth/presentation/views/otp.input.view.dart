@@ -12,8 +12,7 @@ import '../../../../shared/errors/error.alert.dart';
 class OTPInputView extends StatefulWidget {
   final String? phoneNumber;
   final String? password;
-  const OTPInputView({Key? key, this.phoneNumber, this.password})
-      : super(key: key);
+  const OTPInputView({super.key, this.phoneNumber, this.password});
 
   @override
   State<OTPInputView> createState() => _OTPInputViewState();

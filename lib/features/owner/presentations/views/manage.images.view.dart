@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 class ManageImagesView extends StatefulWidget {
   final Vehicle vehicle;
-  const ManageImagesView({Key? key, required this.vehicle}) : super(key: key);
+  const ManageImagesView({super.key, required this.vehicle});
 
   @override
   State<ManageImagesView> createState() => _ManageImagesViewState();

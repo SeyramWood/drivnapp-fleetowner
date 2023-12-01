@@ -16,7 +16,7 @@ import '../../../auth/presentation/views/login_screen.dart';
 import '../../../owner/presentations/views/home.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({Key? key}) : super(key: key);
+  const ProfileView({super.key});
 
   @override
   State<ProfileView> createState() => _ProfileViewState();
