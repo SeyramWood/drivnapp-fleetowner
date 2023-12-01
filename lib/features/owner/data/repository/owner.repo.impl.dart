@@ -128,11 +128,11 @@ class OwnerRepoImpl implements OwnerRepo {
   }
 
   @override
-  Future<Either<Failure, void>> updateAvailability(
+  Future<Either<Failure, String>> updateAvailability(
       String vehicleID, String status) async {
     try {
       await apiService.updateAvailability(vehicleID, status);
-      return const Right(null);
+      return const Right('Availability updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } on SocketException {
@@ -143,11 +143,11 @@ class OwnerRepoImpl implements OwnerRepo {
   }
 
   @override
-  Future<Either<Failure, void>> updateRental(
+  Future<Either<Failure, String>> updateRental(
       String vehicleID, UpdateRentalModel updateRentalModel) async {
     try {
       await apiService.updateRental(vehicleID, updateRentalModel);
-      return const Right(null);
+      return const Right('Rental updated successfully');
     } on CustomException catch (failure) {
       return Left(Failure(failure.message));
     } on SocketException {

@@ -18,7 +18,7 @@ import '../widget/formfield.dart';
 import '../widget/google.button.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -56,6 +56,8 @@ class _LoginViewState extends State<LoginView> {
   @override
   void dispose() {
     super.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
   }
 
   @override

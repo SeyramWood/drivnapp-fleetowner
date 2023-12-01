@@ -194,7 +194,7 @@ class OwnerImplProvider extends ChangeNotifier {
       (success) {
         _isLoading = false;
         notifyListeners();
-        return success;
+        return Right(success);
       },
     );
   }

@@ -1,8 +1,6 @@
 import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
 import 'package:drivn/features/auth/presentation/views/login_screen.dart';
-import 'package:drivn/features/driver/presentation/views/main.page.dart';
 import 'package:drivn/features/onboarding_screens/onboard.dart';
-import 'package:drivn/features/owner/presentations/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -28,40 +26,44 @@ class _AuthStateState extends State<AuthState> {
   @override
   void initState() {
     accountType = context.read<UserAuthProvider>().accountType;
-    hasAccess();
-    Future.microtask(() => checkOnboardingStatus());
     super.initState();
+    Future.microtask(() async {
+      await hasAccess();
+      checkOnboardingStatus();
+    });
   }
 
-  hasAccess() async {
+  Future<void> hasAccess() async {
     user = await prefs.read(key: 'refreshToken');
     currentUser = _prefs.getString('userID', '');
   }
 
-  checkOnboardingStatus() async {
+  Future<void> checkOnboardingStatus() async {
     final prefs = SharedPreferencesManager.instance;
     bool onboardingShown = prefs.getBool('onboardingShown', false);
 
     if (onboardingShown) {
       if (accountType.isEmpty) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const AccountTypeView()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AccountTypeView()),
+        );
       }
     } else {
       prefs.setBool('onboardingShown', true);
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const OnbordingPage()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const OnbordingPage()),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (user != null && (currentUser != null || currentUser!.isNotEmpty)) {
-      return accountType == 'fleet-owner'
-          ? const OMainPage()
-          : const DMainPage();
-    } else {
-      return const LoginView();
-    }
+    // if (user != null && (currentUser != null && currentUser!.isNotEmpty)) {
+    //   return accountType == 'fleet-owner' ? const OMainPage() : const DMainPage();
+    // } else {
+    return const LoginView();
+    // }
   }
 }

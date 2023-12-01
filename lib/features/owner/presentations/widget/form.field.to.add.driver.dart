@@ -26,7 +26,15 @@ class _DriverFieldState extends State<DriverField> {
   @override
   void initState() {
     getDrivers();
+    clearValue();
     super.initState();
+  }
+
+  //clear controller value if null
+  clearValue() {
+    if (widget.controller.text == 'null null') {
+      widget.controller.clear();
+    }
   }
 
   @override
@@ -36,7 +44,9 @@ class _DriverFieldState extends State<DriverField> {
       children: [
         const Text('Driver (Optional)'),
         Autocomplete<String>(
-          initialValue: widget.controller.value,
+          initialValue: widget.controller.value.text.isEmpty
+              ? null
+              : widget.controller.value,
           onSelected: (selectedOption) {
             var selectedDriver = driverLists.firstWhere((driver) =>
                 '${driver.firstName} ${driver.lastName}' == selectedOption);

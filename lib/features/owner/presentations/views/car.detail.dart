@@ -24,7 +24,7 @@ class _CarDetailsState extends State<CarDetails> {
     return Scaffold(
       appBar: AppBar(title: const Text('Car details')),
       body: Hero(
-        tag: 'one',
+        tag: 'hgfddfghj',
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(

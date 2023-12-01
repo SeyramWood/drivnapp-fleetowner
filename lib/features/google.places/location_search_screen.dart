@@ -11,8 +11,7 @@ class AddLocationField extends StatefulWidget {
   final TextEditingController controller;
 
   const AddLocationField(
-      {Key? key, this.onLocationSelected, required this.controller})
-      : super(key: key);
+      {super.key, this.onLocationSelected, required this.controller});
 
   @override
   State<AddLocationField> createState() => _AddLocationFieldState();

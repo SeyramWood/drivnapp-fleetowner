@@ -11,7 +11,7 @@ import '../../domain/entities/vehicle.model.dart';
 import '../widget/available.car.tile.dart';
 
 class CarsAvailableBuilder extends StatefulWidget {
-  const CarsAvailableBuilder({Key? key}) : super(key: key);
+  const CarsAvailableBuilder({super.key});
 
   @override
   State<CarsAvailableBuilder> createState() => _CarsAvailableBuilderState();

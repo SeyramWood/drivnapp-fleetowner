@@ -6,7 +6,7 @@ import '../../domain/entities/booked.vehicle.model.dart';
 import '../widget/booked.vehicle.info.card.dart';
 
 class BookedCarsBuilder extends StatefulWidget {
-  const BookedCarsBuilder({Key? key}) : super(key: key);
+  const BookedCarsBuilder({super.key});
 
   @override
   State<BookedCarsBuilder> createState() => _BookedCarsBuilderState();

@@ -82,7 +82,15 @@ class _AddFleetFormState extends State<AddFleetForm> {
     super.initState();
   }
 
-// class's main build
+  @override
+  void dispose() {
+    carBrand.dispose();
+    carType.dispose();
+    optionalFeatures.dispose();
+    registrationNumber.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -113,6 +121,7 @@ class _AddFleetFormState extends State<AddFleetForm> {
                             ));
                   },
                   onSubmitted: (p0) {
+                    p0 = '';
                     carBrand.clear();
                   },
                 ),
