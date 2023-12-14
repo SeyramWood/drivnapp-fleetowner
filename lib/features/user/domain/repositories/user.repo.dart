@@ -19,7 +19,7 @@ abstract class UserRepo {
       String id, String requestBody, String accountType);
   Future<Either<Failure, String>> verify(String otp, String accountType);
   Future<Either<Failure, String>> submitDocs(List<File> file, String userID);
-  Future<Either<Failure, List<File>>> submitId(List<File> file, String userID);
+  Future<Either<Failure, String>> submitId(List<File> file, String userID);
   Future<Either<Failure, String>> submitData(
       String userID, driver.Document docs);
   Future<Either<Failure, String>> updateProfilePic(File file);

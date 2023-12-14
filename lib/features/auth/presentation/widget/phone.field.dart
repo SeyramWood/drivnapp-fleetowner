@@ -34,7 +34,6 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
                     number.phoneNumber.toString();
               },
               spaceBetweenSelectorAndTextField: 5,
-              onInputValidated: (bool value) {},
               selectorConfig: const SelectorConfig(
                 setSelectorButtonAsPrefixIcon: true,
                 trailingSpace: false,
@@ -43,7 +42,7 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
               cursorColor: white,
               ignoreBlank: true,
               initialValue: number,
-              autoValidateMode: AutovalidateMode.disabled,
+              autoValidateMode: AutovalidateMode.onUserInteraction,
               selectorTextStyle: const TextStyle(
                 color: white,
                 fontSize: 17,
@@ -64,9 +63,20 @@ class _PhoneFormFieldState extends State<PhoneFormField> {
                       UnderlineInputBorder(borderSide: BorderSide.none)),
               textStyle: const TextStyle(
                   color: white, fontSize: 17, fontWeight: FontWeight.w500),
-              onSaved: (PhoneNumber number) {},
-              validator: (p0) =>
-                  p0 == null || p0.isEmpty ? 'Phone number is required' : null,
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Phone number is required';
+                }
+
+                // Additional validation based on your requirements
+                if (value.length < 11) {
+                  return 'Phone number must be at least 10 digits';
+                }
+
+                // You can add more validation rules if needed
+
+                return null; // Return null if the input is valid
+              },
             ),
           ),
         ],

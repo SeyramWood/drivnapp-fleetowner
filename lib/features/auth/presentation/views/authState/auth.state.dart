@@ -1,16 +1,16 @@
-import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
-import 'package:drivn/features/auth/presentation/views/login_screen.dart';
-import 'package:drivn/features/onboarding_screens/onboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
+import 'package:drivn/features/auth/presentation/views/account.type.view.dart';
+import 'package:drivn/features/auth/presentation/views/login_screen.dart';
+import 'package:drivn/features/onboarding_screens/onboard.dart';
 import '../../../../../shared/utils/shared.prefs.manager.dart';
 import '../../../../driver/presentation/dependency.injection/bindings.dart';
 import '../../providers/user.auth.provider.dart';
 
 class AuthState extends StatefulWidget {
-  const AuthState({super.key});
+  const AuthState({Key? key}) : super(key: key);
 
   @override
   State<AuthState> createState() => _AuthStateState();
@@ -25,37 +25,44 @@ class _AuthStateState extends State<AuthState> {
 
   @override
   void initState() {
-    accountType = context.read<UserAuthProvider>().accountType;
     super.initState();
+    accountType = context.read<UserAuthProvider>().accountType;
     Future.microtask(() async {
-      await hasAccess();
-      checkOnboardingStatus();
+      await _hasAccess();
+      _checkOnboardingStatus();
     });
   }
 
-  Future<void> hasAccess() async {
+  @override
+  void dispose() {
+    // Dispose of resources here if necessary
+    super.dispose();
+  }
+
+  Future<void> _hasAccess() async {
     user = await prefs.read(key: 'refreshToken');
     currentUser = _prefs.getString('userID', '');
   }
 
-  Future<void> checkOnboardingStatus() async {
+  Future<void> _checkOnboardingStatus() async {
     final prefs = SharedPreferencesManager.instance;
     bool onboardingShown = prefs.getBool('onboardingShown', false);
 
     if (onboardingShown) {
       if (accountType.isEmpty) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AccountTypeView()),
-        );
+        _navigateToReplacement(const AccountTypeView());
       }
     } else {
       prefs.setBool('onboardingShown', true);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const OnbordingPage()),
-      );
+      _navigateToReplacement(const OnbordingPage());
     }
+  }
+
+  void _navigateToReplacement(Widget page) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
   }
 
   @override

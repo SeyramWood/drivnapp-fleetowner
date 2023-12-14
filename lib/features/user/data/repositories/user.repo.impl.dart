@@ -123,11 +123,11 @@ class UserRepoImpl implements UserRepo {
   }
 
   @override
-  Future<Either<Failure, List<File>>> submitId(
+  Future<Either<Failure, String>> submitId(
       List<File> file, String userID) async {
     try {
-      final result = await api.submitId(file, userID);
-      return Right(result);
+      await api.submitId(file, userID);
+      return Right("Identity files submitted successfully");
     } on CustomException catch (error) {
       return Left(Failure(error.message));
     } on SocketException catch (se) {

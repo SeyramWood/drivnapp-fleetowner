@@ -6,6 +6,7 @@ import 'package:drivn/features/user/domain/usecases/login.dart';
 import 'package:drivn/features/user/domain/usecases/read.dart';
 import 'package:drivn/features/user/domain/usecases/submit.data.dart';
 import 'package:drivn/features/user/domain/usecases/update.dart';
+import 'package:drivn/shared/errors/failure.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -216,7 +217,8 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 //for the owner usage
-  Future submitUserDoc(context, List<File> files, String userID) async {
+  Future<Either<Failure, String>> submitUserDoc(
+      context, List<File> files, String userID) async {
     _isLoading = true;
     notifyListeners();
 
@@ -226,22 +228,19 @@ class UserAuthProvider extends ChangeNotifier {
       (failure) {
         _isLoading = false;
         notifyListeners();
-        return failure.message;
+        return Left(Failure(failure.message));
       },
       (success) async {
-        await Future.delayed(
-          const Duration(seconds: 2),
-          () => Navigator.of(context).pop(),
-        );
         _isLoading = false;
         _filesToDB = [];
         notifyListeners();
-        // return _filesToDB;
+        return Right(success);
       },
     );
   }
 
-  Future submitUserId(context, List<File> files, String userID) async {
+  Future<Either<Failure, String>> submitUserId(
+      context, List<File> files, String userID) async {
     _isLoading = true;
     notifyListeners();
 
@@ -251,17 +250,13 @@ class UserAuthProvider extends ChangeNotifier {
       (failure) {
         _isLoading = false;
         notifyListeners();
-        return failure.message;
+        return Left(Failure(failure.message));
       },
       (success) async {
-        await Future.delayed(
-          const Duration(seconds: 2),
-          () => Navigator.of(context).pop(),
-        );
         _isLoading = false;
         _filesToDB = [];
         notifyListeners();
-        // return _filesToDB;
+        return Right(success);
       },
     );
   }

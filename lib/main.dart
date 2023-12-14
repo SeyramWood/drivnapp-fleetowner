@@ -11,14 +11,9 @@ import 'package:provider/provider.dart';
 
 import 'features/owner/presentations/dependency/owner.dependency.injection.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await SharedPreferencesManager.instance.init();
-  } catch (e) {
-    // Handle initialization error (e.g., log the error, display an error message)
-    print('Error initializing SharedPreferences: $e');
-  }
+  await SharedPreferencesManager.instance.init();
   setupDriverDependencies();
   setupOwnerDependencies();
   //auth dependency locator

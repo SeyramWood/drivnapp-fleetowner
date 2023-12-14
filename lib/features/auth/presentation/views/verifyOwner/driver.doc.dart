@@ -1,5 +1,6 @@
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
 import 'package:drivn/shared/errors/error.alert.dart';
+import 'package:drivn/shared/show.snacbar.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
@@ -98,19 +99,19 @@ class DriverDocsView extends StatelessWidget {
                   LoadingDialog.showLoadingDialog(context);
                   // if (provider.files == null) return;
                   await provider
-                      .submitUserDoc(context,files,provider.userID)
+                      .submitUserDoc(context, files, provider.userID)
                       .then((value) {
-                    LoadingDialog.hideLoadingDialog(context);
-                    Navigator.of(context).pop();
-
-                    if (value is String) {
-                      return showErrorDialogue(context, value);
-                    }
-                    context.read<UserAuthProvider>().emptyFiles();
-                    return ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(
-                      content: Text('Added successfully'),
-                    ));
+                    value.fold((failure) {
+                      Navigator.of(context).pop();
+                      showErrorDialogue(context, failure.message);
+                      Navigator.of(context).pop();
+                    }, (success) {
+                      Navigator.of(context).pop();
+                      context.read<UserAuthProvider>().emptyFiles();
+                      showCustomSnackBar(
+                          context, 'Driving documents submitted successfully', black);
+                      Navigator.of(context).pop();
+                    });
                   });
                 },
                 backgroundColor: black,

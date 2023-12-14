@@ -99,6 +99,20 @@ class _LoginViewState extends State<LoginView> {
                     controller: _phoneController,
                   ),
                   CustomFormField(
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password field is required';
+                      }
+
+                      // Additional validation based on your requirements
+                      if (value.length < 4) {
+                        return 'Password must be at least 4 digits';
+                      }
+
+                      // You can add more validation rules if needed
+
+                      return null; // Return null if the input is valid
+                    },
                     controller: _passwordController,
                     obscureText: _obscurePassword,
                     textInputAction: TextInputAction.done,
@@ -141,32 +155,34 @@ class _LoginViewState extends State<LoginView> {
                     child: CustomElevatedButton(
                       backgroundColor: black,
                       onPressed: () async {
-                        LoadingDialog.showLoadingDialog(context);
+                        if (_formKey.currentState!.validate()) {
+                          LoadingDialog.showLoadingDialog(context);
 
-                        context
-                            .read<UserAuthProvider>()
-                            .logIn(
-                              context.read<AuthSharedProvider>().phone.trim(),
-                              _passwordController.text.trim(),
-                            )
-                            .then(
-                          (failure) async {
-                            LoadingDialog.hideLoadingDialog(context);
-                            if (failure != null) {
-                              return showErrorDialogue(context, failure);
-                            }
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => context
-                                              .read<UserAuthProvider>()
-                                              .accountType ==
-                                          'fleet-owners'
-                                      ? const OMainPage()
-                                      : const DMainPage()),
-                              (route) => false,
-                            );
-                          },
-                        );
+                          context
+                              .read<UserAuthProvider>()
+                              .logIn(
+                                context.read<AuthSharedProvider>().phone.trim(),
+                                _passwordController.text.trim(),
+                              )
+                              .then(
+                            (failure) async {
+                              LoadingDialog.hideLoadingDialog(context);
+                              if (failure != null) {
+                                return showErrorDialogue(context, failure);
+                              }
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => context
+                                                .read<UserAuthProvider>()
+                                                .accountType ==
+                                            'fleet-owners'
+                                        ? const OMainPage()
+                                        : const DMainPage()),
+                                (route) => false,
+                              );
+                            },
+                          );
+                        }
                       },
                       child: const Text('Login'),
                     ),
@@ -203,10 +219,10 @@ class _LoginViewState extends State<LoginView> {
                 ],
               ),
             ),
-            GoogleButton(
-              title: 'SignIn',
-              onTap: () => AuthService.instance.login(),
-            )
+            // GoogleButton(
+            //   title: 'SignIn',
+            //   onTap: () => AuthService.instance.login(),
+            // )
           ],
         ),
       ),

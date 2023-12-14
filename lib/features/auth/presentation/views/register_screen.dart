@@ -198,8 +198,6 @@ class _RegisterViewState extends State<RegisterView> {
                             }
                           },
                           child: const Text('Sign up'),
-                        ).loading(
-                          context.watch<UserAuthProvider>().isLoading,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -235,10 +233,10 @@ class _RegisterViewState extends State<RegisterView> {
                     ],
                   ),
                 ),
-                GoogleButton(
-                  title: 'SignUp',
-                  onTap: () {},
-                )
+                // GoogleButton(
+                //   title: 'SignUp',
+                //   onTap: () {},
+                // )
               ],
             ),
           ),

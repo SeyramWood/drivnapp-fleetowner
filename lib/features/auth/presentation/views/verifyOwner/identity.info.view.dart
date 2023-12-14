@@ -1,6 +1,6 @@
-
 import 'package:drivn/features/auth/presentation/providers/user.auth.provider.dart';
 import 'package:drivn/features/auth/presentation/widget/elevated.button.dart';
+import 'package:drivn/shared/show.snacbar.dart';
 import 'package:drivn/shared/utils/constants/colors.dart';
 import 'package:drivn/shared/utils/extentions/on.custom.elevated.button.dart';
 import 'package:flutter/material.dart';
@@ -103,17 +103,17 @@ class ProofIDView extends StatelessWidget {
                       provider.userID,
                     )
                         .then((value) {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      if (value is String) {
-                        showErrorDialogue(context, value);
-                      }
-
-                      context.read<UserAuthProvider>().emptyFiles();
-                      return ScaffoldMessenger.of(context)
-                          .showSnackBar(const SnackBar(
-                        content: Text('Added successfully'),
-                      ));
+                      value.fold((failure) {
+                        Navigator.of(context).pop();
+                        showErrorDialogue(context, failure.message);
+                        Navigator.of(context).pop();
+                      }, (success) {
+                        Navigator.of(context).pop();
+                        context.read<UserAuthProvider>().emptyFiles();
+                        showCustomSnackBar(context,
+                            'Identity files submitted successfully', black);
+                        Navigator.of(context).pop();
+                      });
                     });
                   },
                   backgroundColor: black,
